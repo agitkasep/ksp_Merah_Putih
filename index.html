@@ -12,23 +12,38 @@
 
         .btn-active-effect:active { transform: scale(0.92); opacity: 0.8; transition: all 0.1s ease-out; }
         
-        .marquee-container { background-color: #e0e7ff; color: #4338ca; padding: 5px 0; overflow: hidden; white-space: nowrap; font-size: 10px; font-weight: 800; border-bottom: 1px solid #c7d2fe; flex-shrink: 0; }
-        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 18s linear infinite; }
-        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+        /* Area Scroll Produk Horizontal */
+        .promo-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 12px;
+            padding: 4px 16px 12px 16px;
+        }
+        .promo-scroll::-webkit-scrollbar { display: none; } /* Sembunyikan scrollbar agar rapi */
 
-        /* Container gambar promo seragam */
-        .img-container { width: 100%; height: 110px; background-color: #f1f5f9; overflow: hidden; border-radius: 12px; }
+        .promo-item {
+            flex: 0 0 160px; /* Lebar tiap kartu produk */
+            scroll-snap-align: start;
+            background: white;
+            border-radius: 16px;
+            padding: 8px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .img-container { width: 100%; height: 100px; background-color: #f8fafc; overflow: hidden; border-radius: 12px; }
         .img-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Area Scroll Khusus agar tidak mentok */
-        .scroll-area { flex: 1; overflow-y: auto; padding-bottom: 140px; }
-        .scroll-area::-webkit-scrollbar { width: 0px; }
+        /* Container utama untuk scroll vertikal */
+        .main-content { flex: 1; overflow-y: auto; padding-bottom: 160px; } /* Padding ditingkatkan agar tidak tertutup */
+        .main-content::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <div class="p-3 bg-white flex justify-between items-center shadow-sm z-10 border-b border-gray-50 flex-shrink-0">
+        <div class="p-3 bg-white flex justify-between items-center z-10 border-b border-gray-50 flex-shrink-0">
             <div class="flex items-center gap-3">
                 <div class="w-14 h-14 rounded-xl flex items-center justify-center border-2 border-gray-100 bg-white overflow-hidden p-0.5 shadow-inner">
                     <img src="logo.png" alt="Logo" class="w-full h-full object-cover rounded-lg">
@@ -37,49 +52,45 @@
                     <h1 class="font-black text-gray-900 text-[12px] leading-tight uppercase tracking-tighter">"KOPDESKEL<br>MERAH PUTIH"</h1>
                     <div class="flex items-center gap-1 mt-0.5 text-indigo-500">
                         <i class="fa fa-location-dot text-[9px]"></i>
-                        <p id="user-location" class="text-[8px] font-black uppercase">Mendeteksi...</p>
+                        <p class="text-[8px] font-black uppercase">PONDOK BAMBU, JAKARTA</p>
                     </div>
                 </div>
             </div>
             <div class="text-right">
-                <p id="current-day" class="text-[8px] font-bold text-gray-400 leading-none"></p>
-                <p id="current-time" class="text-[11px] text-indigo-700 font-mono font-black mt-1"></p>
+                <p id="current-day" class="text-[8px] font-bold text-gray-400 leading-none">Jumat, 17 Apr</p>
+                <p id="current-time" class="text-[11px] text-indigo-700 font-mono font-black mt-1">20:16:00 WIB</p>
             </div>
         </div>
 
-        <div class="marquee-container shadow-inner">
-            <div class="marquee-text">Selamat Datang di KOPDESKEL Merah Putih - Cek promo terbaru!</div>
-        </div>
-
-        <div class="scroll-area">
-            <div class="mx-4 my-3 p-3 bg-white rounded-2xl border-2 border-dashed border-indigo-100 text-center shadow-sm">
-                <p class="text-gray-500 text-[10px] mb-2.5 font-bold italic leading-none">"Silahkan Login atau Daftar terlebih dahulu"</p>
+        <div class="main-content">
+            <div class="mx-4 my-4 p-4 bg-white rounded-2xl border-2 border-dashed border-indigo-100 text-center shadow-sm">
+                <p class="text-gray-500 text-[10px] mb-3 font-bold italic leading-tight">"Silahkan Login atau Daftar terlebih dahulu untuk menggunakan layanan kami"</p>
                 <div class="flex gap-2">
-                    <button class="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black btn-active-effect">LOGIN</button>
-                    <button class="flex-1 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-xl text-[10px] font-black btn-active-effect">DAFTAR</button>
+                    <button class="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black btn-active-effect">LOGIN</button>
+                    <button class="flex-1 py-3 border-2 border-indigo-600 text-indigo-600 rounded-xl text-[10px] font-black btn-active-effect">DAFTAR</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-4 gap-3 px-4 mb-4">
-                <div class="text-center group btn-active-effect" onclick="alert('Silahkan Login')">
+            <div class="grid grid-cols-4 gap-3 px-4 mb-6">
+                <div class="text-center btn-active-effect">
                     <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-100">
                         <i class="fa fa-wallet text-indigo-500 text-xl"></i>
                     </div>
                     <p class="text-[7px] font-black text-gray-500 uppercase">SIMPANAN</p>
                 </div>
-                <div class="text-center group btn-active-effect" onclick="alert('Silahkan Login')">
+                <div class="text-center btn-active-effect">
                     <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-100">
                         <i class="fa fa-hand-holding-dollar text-green-500 text-xl"></i>
                     </div>
                     <p class="text-[7px] font-black text-gray-500 uppercase">PINJAMAN</p>
                 </div>
-                <div class="text-center group btn-active-effect" onclick="alert('Silahkan Login')">
+                <div class="text-center btn-active-effect">
                     <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-100">
                         <i class="fa fa-store text-orange-500 text-xl"></i>
                     </div>
                     <p class="text-[7px] font-black text-gray-500 uppercase">TOKO</p>
                 </div>
-                <div class="text-center group btn-active-effect" onclick="alert('Silahkan Login')">
+                <div class="text-center btn-active-effect">
                     <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-100">
                         <i class="fa fa-info-circle text-blue-500 text-xl"></i>
                     </div>
@@ -88,52 +99,62 @@
             </div>
 
             <div class="px-4 mb-2 flex justify-between items-center">
-                <h2 class="text-[11px] font-black text-gray-800 uppercase italic">Produk Promo 🔥</h2>
-                <button class="text-[8px] text-indigo-600 font-black uppercase border-b-2 border-indigo-200">Semua</button>
+                <h2 class="text-[11px] font-black text-gray-800 uppercase italic tracking-wider">Produk Promo 🔥</h2>
+                <button class="text-[8px] text-indigo-600 font-black uppercase border-b-2 border-indigo-200 btn-active-effect">SEMUA</button>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 px-4">
-                <div class="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm btn-active-effect">
+            <div class="promo-scroll">
+                <div class="promo-item btn-active-effect">
                     <div class="img-container"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300"></div>
-                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate uppercase">Smart Watch</p>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">SMART WATCH X1</p>
                     <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 150rb</p>
                 </div>
-                <div class="bg-white p-2 rounded-2xl border border-gray-100 shadow-sm btn-active-effect">
+                <div class="promo-item btn-active-effect">
                     <div class="img-container"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"></div>
-                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate uppercase">Bass Headset</p>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">BASS HEADSET</p>
                     <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 85rb</p>
+                </div>
+                <div class="promo-item btn-active-effect">
+                    <div class="img-container"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300"></div>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">SPORT SHOES</p>
+                    <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 210rb</p>
+                </div>
+                <div class="promo-item btn-active-effect">
+                    <div class="img-container"><img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300"></div>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">SUNGLASSES</p>
+                    <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 45rb</p>
+                </div>
+                <div class="promo-item btn-active-effect">
+                    <div class="img-container"><img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300"></div>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">POLAROID CAM</p>
+                    <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 450rb</p>
+                </div>
+                <div class="promo-item btn-active-effect">
+                    <div class="img-container"><img src="https://images.unsplash.com/photo-1585333120167-05273ca19885?w=300"></div>
+                    <p class="text-[9px] font-black text-gray-700 mt-2 truncate">WIRELESS MOUSE</p>
+                    <p class="text-[11px] font-black text-indigo-600 mt-0.5">Rp 120rb</p>
                 </div>
             </div>
         </div>
 
-        <div class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 flex justify-around items-start pt-3 pb-8 px-4 rounded-t-[35px] shadow-[0_-15px_30px_rgba(0,0,0,0.08)] z-50">
+        <div class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 flex justify-around items-start pt-4 pb-12 px-4 rounded-t-[40px] shadow-[0_-15px_35px_rgba(0,0,0,0.1)] z-50">
             <div class="text-center text-indigo-600 flex-1 btn-active-effect cursor-pointer">
                 <i class="fa fa-home text-2xl"></i>
-                <p class="text-[8px] font-black uppercase mt-1">Home</p>
+                <p class="text-[9px] font-black uppercase mt-1">HOME</p>
             </div>
             
-            <div class="flex-1 flex justify-center -mt-12">
-                <div onclick="alert('Silahkan Login')" class="w-16 h-16 bg-gradient-to-tr from-indigo-700 to-indigo-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white active:scale-75 transition duration-200 z-50 cursor-pointer shadow-indigo-300">
+            <div class="flex-1 flex justify-center -mt-14">
+                <div class="w-16 h-16 bg-gradient-to-tr from-indigo-700 to-indigo-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white active:scale-75 transition duration-200 z-50 cursor-pointer shadow-indigo-300">
                     <i class="fa fa-qrcode text-white text-3xl"></i>
                 </div>
             </div>
 
-            <div class="text-center text-gray-500 flex-1 btn-active-effect cursor-pointer" onclick="alert('Layanan Akun')">
+            <div class="text-center text-gray-500 flex-1 btn-active-effect cursor-pointer">
                 <i class="fa fa-user-astronaut text-2xl"></i>
-                <p class="text-[8px] font-black uppercase mt-1">Akun</p>
+                <p class="text-[9px] font-black uppercase mt-1">AKUN</p>
             </div>
         </div>
     </div>
 
-    <script>
-        function updateTime() {
-            const now = new Date();
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
-            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
-        }
-        setInterval(updateTime, 1000); updateTime();
-    </script>
 </body>
 </html>
