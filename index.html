@@ -188,62 +188,62 @@
 </div>
 
     <script>
-        // UPDATE JAM DIGITAL
-        function updateTime() {
-            const now = new Date();
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
-            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
-        }
-        setInterval(updateTime, 1000); updateTime();
-        // FUNGSI DETEKSI LOKASI REAL-TIME
-function getLocation() {
+      // ==========================================
+// 1. FUNGSI JAM DIGITAL (WIB)
+// ==========================================
+function updateTime() {
+    const now = new Date();
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    
+    if(document.getElementById('current-day')) {
+        document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+    }
+    if(document.getElementById('current-time')) {
+        document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+    }
+}
+setInterval(updateTime, 1000); 
+updateTime();
+
+// ==========================================
+// 2. FUNGSI DETEKSI LOKASI REAL-TIME
+// ==========================================
+async function getLocation() {
     const locationElement = document.getElementById('user-location');
+    if (!locationElement) return;
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            // Jika Berhasil
-            async (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                
-                try {
-                    // Kita pinjam layanan gratis OpenStreetMap untuk ubah koordinat jadi nama Kota
-                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-                    const data = await response.json();
-                    
-                    // Ambil nama kota atau daerah
-                    const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
-                    const country = data.address.country || "";
-                    
-                    locationElement.innerHTML = `<i class="fa fa-location-dot"></i> ${city}, ${country}`;
-                } catch (error) {
-                    locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`;
-                }
-            },
-            // Jika Gagal (User menolak izin)
-            () => {
-                locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Dimatikan`;
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                const data = await res.json();
+                const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
+                locationElement.innerHTML = `<i class="fa fa-location-dot"></i> ${city}, Indonesia`;
+            } catch (err) {
+                locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`;
             }
-        );
-    } else {
-        locationElement.innerHTML = "GPS Tidak Didukung";
+        }, () => {
+            locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Izin Lokasi Ditolak`;
+        });
+    }
+}
+getLocation();
+
+// ==========================================
+// 3. FUNGSI MODAL & LOGIN (PENYEBAB MACET TADI)
+// ==========================================
+const modalLogin = document.getElementById('loginModal');
+
+function openLogin() {
+    if(modalLogin) {
+        modalLogin.style.display = 'flex';
+        modalLogin.classList.remove('hidden');
     }
 }
 
-// Panggil fungsi saat web dibuka
-getLocation();
-        
-// --- LOGIKA LOGIN TERPADU ---
-const modal = document.getElementById('loginModal');
-
-function openLogin() { 
-    modal.classList.add('active'); // Membuka Modal
-}
-
-function closeLogin() { 
-    modal.classList.remove('active'); // Menutup Modal
+function closeLogin() {
+    if(modalLogin) modalLogin.style.display = 'none';
 }
 
 function validaSiLogin() {
@@ -252,11 +252,11 @@ function validaSiLogin() {
     const status = document.getElementById('user-status').value;
 
     if (!user || !pass || !status) {
-        alert("Mohon isi Username, Password, dan Pilih Status!");
+        alert("Waduh Pak, tolong isi Username, Password, dan Pilih Status!");
         return;
     }
 
-    // Cek Akun Tes Pak Agit
+    // Cek Data Tes (User: agit | Pass: 123)
     if (user === "agit" && pass === "123" && status === "anggota") {
         alert("Login Sukses! Selamat Datang, Pak Agit.");
         window.location.href = "anggota.html"; 
@@ -266,7 +266,7 @@ function validaSiLogin() {
         window.location.href = "admin.html";
     }
     else {
-        alert("Username atau Password Salah! \n(Gunakan user: agit / pass: 123)");
+        alert("Data Salah! Coba lagi.\n(Gunakan user 'agit' & pass '123')");
     }
 }
         }
