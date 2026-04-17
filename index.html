@@ -7,22 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Mengunci ukuran agar selalu proporsional di HP */
         body { 
             background-color: #f3f4f6; 
             font-family: 'sans-serif'; 
-            max-width: 480px; /* Lebar maksimal seukuran HP besar */
-            margin: 0 auto;  /* Rata tengah di PC */
+            max-width: 480px; 
+            margin: 0 auto;  
             min-height: 100vh;
             position: relative;
         }
         .dashed-border { border: 2px dashed #cbd5e1; }
-        
-        /* Gaya untuk Teks Berjalan */
         .marquee-container {
             background-color: #e0e7ff;
             color: #4f46e5;
-            padding: 4px 0;
+            padding: 6px 0;
             overflow: hidden;
             white-space: nowrap;
             font-size: 11px;
@@ -40,19 +37,19 @@
         }
     </style>
 </head>
-<body class="pb-24 bg-gray-50 shadow-2xl shadow-indigo-100">
+<body class="pb-24 bg-gray-50 shadow-2xl">
 
     <div class="p-4 bg-white flex justify-between items-center shadow-sm border-b border-gray-100">
         <div class="flex items-center gap-3">
-            <div class="w-16 h-16 rounded-xl flex items-center justify-center p-1 border border-gray-100 shadow-inner">
-                <img src="https://i.ibb.co/vz4D7p0/logo-kopdeskel.png" alt="Logo KOPDESKEL Merah Putih" class="w-full h-full object-contain">
+            <div class="w-14 h-14 rounded-lg flex items-center justify-center p-1 border border-gray-100 bg-white shadow-sm overflow-hidden">
+                <img src="logo.png" alt="Logo KOPDESKEL" class="w-full h-full object-contain">
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 italic leading-none">Aplikasi Resmi</p>
-                <h1 class="font-extrabold text-gray-900 text-sm tracking-tighter">"KOPDESKEL MERAH PUTIH"</h1>
+                <h1 class="font-extrabold text-gray-900 text-sm tracking-tighter uppercase">"Kopdeskel Merah Putih"</h1>
                 <div class="flex items-center gap-1 mt-0.5 text-indigo-500">
                     <i class="fa fa-location-dot text-[10px]"></i>
-                    <p id="user-location" class="text-[9px] font-bold uppercase mendeteksi">Mendeteksi Wilayah...</p>
+                    <p id="user-location" class="text-[9px] font-bold uppercase">Mendeteksi Wilayah...</p>
                 </div>
             </div>
         </div>
@@ -68,8 +65,8 @@
         </div>
     </div>
 
-    <div class="m-5 p-6 bg-white rounded-2xl dashed-border text-center shadow-sm hover:shadow-md transition-shadow">
-        <p class="text-gray-700 text-sm mb-6 leading-relaxed font-semibold">
+    <div class="m-5 p-6 bg-white rounded-2xl dashed-border text-center shadow-sm">
+        <p class="text-gray-700 text-sm mb-6 leading-relaxed font-semibold px-2">
             "Untuk menggunakan seluruh layanan kami silahkan Anda login atau daftar data terlebih dahulu"
         </p>
         <div class="flex gap-4 justify-center">
@@ -79,89 +76,65 @@
     </div>
 
     <div class="grid grid-cols-4 gap-4 px-5 mt-10">
-        <div class="text-center group cursor-pointer">
+        <div class="text-center group cursor-pointer" onclick="alert('Silahkan Login Terlebih Dahulu')">
             <div class="aspect-square bg-indigo-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-indigo-200 transition">
                 <i class="fa fa-wallet text-indigo-600 text-3xl"></i>
             </div>
-            <p class="text-[10px] font-bold text-gray-600 group-hover:text-indigo-700">SIMPANAN</p>
+            <p class="text-[10px] font-bold text-gray-600">SIMPANAN</p>
         </div>
-        <div class="text-center group cursor-pointer">
+        <div class="text-center group cursor-pointer" onclick="alert('Silahkan Login Terlebih Dahulu')">
             <div class="aspect-square bg-green-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-green-200 transition">
                 <i class="fa fa-hand-holding-dollar text-green-600 text-3xl"></i>
             </div>
-            <p class="text-[10px] font-bold text-gray-600 group-hover:text-green-700">PINJAMAN</p>
+            <p class="text-[10px] font-bold text-gray-600">PINJAMAN</p>
         </div>
-        <div class="text-center group cursor-pointer">
+        <div class="text-center group cursor-pointer" onclick="alert('Silahkan Login Terlebih Dahulu')">
             <div class="aspect-square bg-orange-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-orange-200 transition">
                 <i class="fa fa-store text-orange-600 text-3xl"></i>
             </div>
-            <p class="text-[10px] font-bold text-gray-600 group-hover:text-orange-700">TOKO</p>
+            <p class="text-[10px] font-bold text-gray-600">TOKO</p>
         </div>
-        <div class="text-center group cursor-pointer">
+        <div class="text-center group cursor-pointer" onclick="alert('Silahkan Login Terlebih Dahulu')">
             <div class="aspect-square bg-blue-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-blue-200 transition">
                 <i class="fa fa-info-circle text-blue-600 text-3xl"></i>
             </div>
-            <p class="text-[10px] font-bold text-gray-600 group-hover:text-blue-700">INFO KSP</p>
+            <p class="text-[10px] font-bold text-gray-600">INFO KSP</p>
         </div>
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 flex justify-center z-50">
-        <div class="w-full max-width-[480px] bg-white border-t border-gray-100 flex justify-around items-end py-3 px-4 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] rounded-t-3xl">
-            
-            <div class="text-center text-indigo-600 flex-1 hover:scale-110 transition-transform cursor-pointer">
-                <i class="fa fa-home text-2xl leading-none"></i>
+        <div class="w-full max-w-[480px] bg-white border-t border-gray-100 flex justify-around items-end py-3 px-4 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] rounded-t-3xl">
+            <div class="text-center text-indigo-600 flex-1 cursor-pointer">
+                <i class="fa fa-home text-2xl"></i>
                 <p class="text-[10px] font-bold uppercase mt-1">Home</p>
             </div>
-            
-            <div class="flex-1 flex justify-center -mt-6">
-                <div onclick="alert('Silahkan Login Terlebih Dahulu')" class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200 border-4 border-white cursor-pointer hover:bg-indigo-700 transition active:scale-90 z-20 relative">
+            <div class="flex-1 flex justify-center -mt-8">
+                <div onclick="alert('Silahkan Login Terlebih Dahulu')" class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200 border-4 border-white cursor-pointer active:scale-90 z-20">
                     <i class="fa fa-qrcode text-white text-3xl"></i>
                 </div>
-                <div class="absolute w-20 h-10 bg-white rounded-b-full z-10 -bottom-3 border-t-0"></div>
             </div>
-            
-            <div class="text-center text-gray-400 flex-1 hover:text-indigo-400 hover:scale-110 transition-transform cursor-pointer">
-                <i class="fa fa-user-circle text-2xl leading-none"></i>
+            <div class="text-center text-gray-400 flex-1 cursor-pointer" onclick="alert('Silahkan Login Terlebih Dahulu')">
+                <i class="fa fa-user-circle text-2xl"></i>
                 <p class="text-[10px] font-bold uppercase mt-1">Akun</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Fungsi Update Jam & Hari
         function updateTime() {
             const now = new Date();
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            
-            const dayName = days[now.getDay()];
-            const date = now.getDate();
-            const monthName = months[now.getMonth()];
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            document.getElementById('current-day').innerText = `${dayName}, ${date} ${monthName}`;
-            document.getElementById('current-time').innerText = `${hours}:${minutes}:${seconds} WIB`;
+            document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
         }
-
-        // 2. Fungsi Ambil Lokasi Kota (IP-Based Geolocation)
         async function getLocation() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
-                if(data.city) {
-                    document.getElementById('user-location').innerText = `${data.city}, ${data.region}`;
-                    document.getElementById('user-location').classList.remove('mendeteksi');
-                } else {
-                    document.getElementById('user-location').innerText = "Jakarta, ID";
-                }
-            } catch (error) {
-                document.getElementById('user-location').innerText = "Jakarta, ID";
-            }
+                document.getElementById('user-location').innerText = data.city ? `${data.city}, ${data.region}` : "Jakarta, ID";
+            } catch (error) { document.getElementById('user-location').innerText = "Jakarta, ID"; }
         }
-
-        // Jalankan Fungsi
         setInterval(updateTime, 1000);
         updateTime();
         getLocation();
