@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPanel Admin - KSP Digital</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="config.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-10">
+
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-indigo-700 p-8 rounded-t-[2rem] text-white shadow-xl">
+            <h1 class="text-3xl font-black italic tracking-tighter">CPANEL ADMIN</h1>
+            <p class="opacity-70 text-sm font-bold uppercase tracking-widest">Pengaturan Sistem KSP</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-b-[2rem] shadow-lg space-y-8 border-x border-b border-gray-200">
+            
+            <section class="space-y-4">
+                <div class="flex items-center gap-2 text-indigo-600 font-bold uppercase text-xs tracking-widest">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>Identitas Aplikasi</span>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-600 mb-2">Nama Koperasi / Aplikasi</label>
+                    <input type="text" id="app_name" placeholder="Contoh: KSP MERAH PUTIH" 
+                        class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 outline-none transition-all font-bold text-lg">
+                </div>
+                <button onclick="updateSettings()" id="btn-save" 
+                    class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> SIMPAN PERUBAHAN
+                </button>
+                <p id="status-msg" class="text-center text-sm font-bold text-green-600 hidden">✅ Data Berhasil Diperbarui!</p>
+            </section>
+
+            <hr class="border-dashed border-gray-200">
+
+            <section class="grid grid-cols-2 gap-4">
+                <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase">Koneksi Database</p>
+                    <p class="text-sm font-bold text-indigo-700">TERHUBUNG</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 text-right">
+                    <p class="text-[10px] font-black text-gray-400 uppercase">Engine</p>
+                    <p class="text-sm font-bold text-gray-700 italic">Supabase Realtime</p>
+                </div>
+            </section>
+        </div>
+
+        <p class="text-center mt-8 text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em]">Agit Studio © 2026 - Financial Tech v1.0</p>
+    </div>
+
+    <script>
+        // Ambil Data dari Settings
+        async function loadSettings() {
+            const { data, error } = await supabaseClient
+                .from('settings')
+                .select('*')
+                .eq('id', 1)
+                .single();
+
+            if (data) {
+                document.getElementById('app_name').value = data.app_name;
+            }
+        }
+
+        // Update Data ke Settings
+        async function updateSettings() {
+            const newName = document.getElementById('app_name').value;
+            const btn = document.getElementById('btn-save');
+            const msg = document.getElementById('status-msg');
+
+            btn.innerText = "MEMPROSES...";
+            btn.disabled = true;
+
+            const { error } = await supabaseClient
+                .from('settings')
+                .update({ app_name: newName })
+                .eq('id', 1);
+
+            if (!error) {
+                msg.classList.remove('hidden');
+                setTimeout(() => {
+                    msg.classList.add('hidden');
+                    btn.innerText = "SIMPAN PERUBAHAN";
+                    btn.disabled = false;
+                }, 2000);
+            } else {
+                alert("Gagal memperbarui: " + error.message);
+                btn.innerText = "SIMPAN PERUBAHAN";
+                btn.disabled = false;
+            }
+        }
+
+        // Jalankan saat halaman dibuka
+        loadSettings();
+    </script>
+</body>
+</html>
