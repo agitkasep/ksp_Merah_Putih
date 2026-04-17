@@ -7,169 +7,153 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { 
-            background-color: #cbd5e1; 
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
+        body { background-color: #cbd5e1; margin: 0; display: flex; justify-content: center; overflow: hidden; }
         
+        /* Wadah Utama Pakai Tinggi Layar Penuh (h-screen) */
         .app-container {
             width: 100%;
             max-width: 480px;
-            min-height: 100vh;
-            background-color: #f3f4f6;
+            height: 100vh;
+            background-color: #f8fafc;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            padding-bottom: 90px;
+            overflow: hidden; /* Mengunci scroll */
         }
 
         .marquee-container {
             background-color: #e0e7ff;
             color: #4f46e5;
-            padding: 5px 0;
+            padding: 4px 0;
             overflow: hidden;
             white-space: nowrap;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            border-bottom: 1px solid #c7d2fe;
         }
         .marquee-text {
             display: inline-block;
             padding-left: 100%;
             animation: marquee 20s linear infinite;
         }
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
-        }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         .promo-card {
             background: white;
-            border-radius: 15px;
-            padding: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #edf2f7;
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
         }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <div class="p-4 bg-white flex justify-between items-center shadow-sm border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="w-14 h-14 rounded-xl flex items-center justify-center border-2 border-gray-100 bg-white overflow-hidden p-0.5 shadow-sm">
-                    <img src="logo.png" alt="Logo" class="w-full h-full object-cover rounded-lg">
+        <div class="p-3 bg-white flex justify-between items-center shadow-sm z-10">
+            <div class="flex items-center gap-2">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center border border-gray-100 bg-white overflow-hidden p-0.5 shadow-sm">
+                    <img src="logo.png" alt="Logo" class="w-full h-full object-cover rounded-md">
                 </div>
                 <div>
-                    <p class="text-[9px] text-gray-400 italic leading-none">Aplikasi Resmi</p>
-                    <h1 class="font-extrabold text-gray-900 text-xs tracking-tighter uppercase leading-tight">"KOPDESKEL<br>MERAH PUTIH"</h1>
-                    <div class="flex items-center gap-1 mt-0.5 text-indigo-500">
-                        <i class="fa fa-location-dot text-[9px]"></i>
-                        <p id="user-location" class="text-[8px] font-bold uppercase">Mendeteksi Wilayah...</p>
-                    </div>
+                    <h1 class="font-extrabold text-gray-900 text-[11px] leading-tight uppercase">"KOPDESKEL<br>MERAH PUTIH"</h1>
+                    <p id="user-location" class="text-[8px] font-bold text-indigo-500 uppercase mt-0.5">Mendeteksi...</p>
                 </div>
             </div>
             <div class="text-right">
-                <p id="current-day" class="text-[9px] font-bold text-gray-500 leading-none"></p>
-                <p id="current-time" class="text-[10px] text-indigo-600 font-mono font-black"></p>
+                <p id="current-day" class="text-[8px] font-bold text-gray-400"></p>
+                <p id="current-time" class="text-[10px] text-indigo-600 font-black"></p>
             </div>
         </div>
 
         <div class="marquee-container shadow-inner">
-            <div class="marquee-text">
-                Selamat Datang di KOPDESKEL Merah Putih - Gunakan layanan kami dengan bijak - Cek promo produk terbaru di bawah ini!
+            <div class="marquee-text">Selamat Datang di KOPDESKEL Merah Putih - Cek promo produk terbaru kami di bawah ini!</div>
+        </div>
+
+        <div class="mx-4 my-2 p-3 bg-white rounded-xl border border-dashed border-indigo-200 text-center shadow-sm">
+            <p class="text-gray-500 text-[10px] mb-2 font-bold italic leading-none">"Silahkan Login/Daftar terlebih dahulu"</p>
+            <div class="flex gap-2">
+                <button onclick="window.location.href='login.html'" class="flex-1 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black shadow-md">LOGIN</button>
+                <button onclick="window.location.href='daftar.html'" class="flex-1 py-1.5 border border-indigo-600 text-indigo-600 rounded-lg text-[10px] font-black">DAFTAR</button>
             </div>
         </div>
 
-        <div class="mx-5 my-3 p-4 bg-white rounded-2xl border-2 border-dashed border-indigo-100 text-center shadow-sm">
-            <p class="text-gray-600 text-[11px] mb-3 font-semibold italic">
-                "Silahkan Login/Daftar untuk akses layanan lengkap"
-            </p>
-            <div class="flex gap-3 justify-center">
-                <button onclick="window.location.href='login.html'" class="flex-1 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md active:scale-95 transition">LOGIN</button>
-                <button onclick="window.location.href='daftar.html'" class="flex-1 py-2 border-2 border-indigo-600 text-indigo-600 rounded-xl text-xs font-bold active:scale-95 transition">DAFTAR</button>
+        <div class="grid grid-cols-4 gap-3 px-4 mb-2">
+            <div class="text-center" onclick="alert('Silahkan Login')">
+                <div class="aspect-square bg-white rounded-xl flex items-center justify-center mb-1 shadow-sm border border-gray-50">
+                    <i class="fa fa-wallet text-indigo-500 text-lg"></i>
+                </div>
+                <p class="text-[7px] font-black text-gray-500 uppercase">SIMPANAN</p>
+            </div>
+            <div class="text-center" onclick="alert('Silahkan Login')">
+                <div class="aspect-square bg-white rounded-xl flex items-center justify-center mb-1 shadow-sm border border-gray-50">
+                    <i class="fa fa-hand-holding-dollar text-green-500 text-lg"></i>
+                </div>
+                <p class="text-[7px] font-black text-gray-500 uppercase">PINJAMAN</p>
+            </div>
+            <div class="text-center" onclick="alert('Silahkan Login')">
+                <div class="aspect-square bg-white rounded-xl flex items-center justify-center mb-1 shadow-sm border border-gray-50">
+                    <i class="fa fa-store text-orange-500 text-lg"></i>
+                </div>
+                <p class="text-[7px] font-black text-gray-500 uppercase">TOKO</p>
+            </div>
+            <div class="text-center" onclick="alert('Silahkan Login')">
+                <div class="aspect-square bg-white rounded-xl flex items-center justify-center mb-1 shadow-sm border border-gray-50">
+                    <i class="fa fa-info-circle text-blue-500 text-lg"></i>
+                </div>
+                <p class="text-[7px] font-black text-gray-500 uppercase">INFO KSP</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-4 gap-3 px-5 mb-4">
-            <div class="text-center group" onclick="alert('Silahkan Login')">
-                <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-50 group-active:bg-gray-100 transition">
-                    <i class="fa fa-wallet text-indigo-600 text-xl"></i>
-                </div>
-                <p class="text-[8px] font-bold text-gray-500 uppercase tracking-tighter">SIMPANAN</p>
-            </div>
-            <div class="text-center group" onclick="alert('Silahkan Login')">
-                <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-50 group-active:bg-gray-100 transition">
-                    <i class="fa fa-hand-holding-dollar text-green-600 text-xl"></i>
-                </div>
-                <p class="text-[8px] font-bold text-gray-500 uppercase tracking-tighter">PINJAMAN</p>
-            </div>
-            <div class="text-center group" onclick="alert('Silahkan Login')">
-                <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-50 group-active:bg-gray-100 transition">
-                    <i class="fa fa-store text-orange-600 text-xl"></i>
-                </div>
-                <p class="text-[8px] font-bold text-gray-500 uppercase tracking-tighter">TOKO</p>
-            </div>
-            <div class="text-center group" onclick="alert('Silahkan Login')">
-                <div class="aspect-square bg-white rounded-2xl flex items-center justify-center mb-1 shadow-sm border border-gray-50 group-active:bg-gray-100 transition">
-                    <i class="fa fa-info-circle text-blue-600 text-xl"></i>
-                </div>
-                <p class="text-[8px] font-bold text-gray-500 uppercase tracking-tighter">INFO KSP</p>
-            </div>
+        <div class="px-4 mb-1 flex justify-between items-center">
+            <h2 class="text-[11px] font-black text-gray-800 uppercase italic">Produk Promo 🔥</h2>
+            <span class="text-[8px] text-indigo-600 font-bold uppercase">Semua</span>
         </div>
 
-        <div class="px-5 mb-2 flex justify-between items-center">
-            <h2 class="text-[12px] font-black text-gray-800 uppercase tracking-wide">Produk Promo 🔥</h2>
-            <span class="text-[9px] text-indigo-600 font-bold">Lihat Semua</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 px-5 pb-5">
+        <div class="flex-1 overflow-hidden grid grid-cols-2 gap-3 px-4 mb-24">
             <div class="promo-card">
-                <div class="h-28 bg-gray-200 rounded-lg mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="w-full h-full object-cover">
+                <div class="flex-1 bg-gray-100 rounded-md overflow-hidden min-h-[80px]">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200" class="w-full h-full object-cover">
                 </div>
-                <p class="text-[10px] font-bold text-gray-800 truncate">Jam Tangan Smart</p>
-                <p class="text-[11px] font-black text-indigo-600">Rp 150.000</p>
+                <p class="text-[9px] font-black text-gray-700 mt-1 truncate">Smart Watch</p>
+                <p class="text-[10px] font-black text-indigo-600 leading-none mb-1">Rp 150rb</p>
             </div>
             <div class="promo-card">
-                <div class="h-28 bg-gray-200 rounded-lg mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" class="w-full h-full object-cover">
+                <div class="flex-1 bg-gray-100 rounded-md overflow-hidden min-h-[80px]">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" class="w-full h-full object-cover">
                 </div>
-                <p class="text-[10px] font-bold text-gray-800 truncate">Headset Bluetooth</p>
-                <p class="text-[11px] font-black text-indigo-600">Rp 85.000</p>
+                <p class="text-[9px] font-black text-gray-700 mt-1 truncate">Headset BT</p>
+                <p class="text-[10px] font-black text-indigo-600 leading-none mb-1">Rp 85rb</p>
             </div>
             <div class="promo-card">
-                <div class="h-28 bg-gray-200 rounded-lg mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" class="w-full h-full object-cover">
+                <div class="flex-1 bg-gray-100 rounded-md overflow-hidden min-h-[80px]">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" class="w-full h-full object-cover">
                 </div>
-                <p class="text-[10px] font-bold text-gray-800 truncate">Sepatu Sport</p>
-                <p class="text-[11px] font-black text-indigo-600">Rp 210.000</p>
+                <p class="text-[9px] font-black text-gray-700 mt-1 truncate">Sport Shoes</p>
+                <p class="text-[10px] font-black text-indigo-600 leading-none mb-1">Rp 210rb</p>
             </div>
             <div class="promo-card">
-                <div class="h-28 bg-gray-200 rounded-lg mb-2 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400" class="w-full h-full object-cover">
+                <div class="flex-1 bg-gray-100 rounded-md overflow-hidden min-h-[80px]">
+                    <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200" class="w-full h-full object-cover">
                 </div>
-                <p class="text-[10px] font-bold text-gray-800 truncate">Kacamata Hitam</p>
-                <p class="text-[11px] font-black text-indigo-600">Rp 45.000</p>
+                <p class="text-[9px] font-black text-gray-700 mt-1 truncate">Sunglasses</p>
+                <p class="text-[10px] font-black text-indigo-600 leading-none mb-1">Rp 45rb</p>
             </div>
         </div>
 
-        <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-end py-3 px-4 rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
-            <div class="text-center text-indigo-600 flex-1 cursor-pointer">
+        <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-end py-2 px-4 rounded-t-2xl shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+            <div class="text-center text-indigo-600 flex-1">
                 <i class="fa fa-home text-xl"></i>
-                <p class="text-[9px] font-bold uppercase mt-1">Home</p>
+                <p class="text-[8px] font-black uppercase mt-0.5">Home</p>
             </div>
-            <div class="flex-1 flex justify-center -mt-10">
-                <div onclick="alert('Silahkan Login')" class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200 border-4 border-white cursor-pointer active:scale-90 transition z-20">
-                    <i class="fa fa-qrcode text-white text-3xl"></i>
+            <div class="flex-1 flex justify-center -mt-8">
+                <div onclick="alert('Silahkan Login')" class="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg border-4 border-white active:scale-90 transition">
+                    <i class="fa fa-qrcode text-white text-2xl"></i>
                 </div>
             </div>
-            <div class="text-center text-gray-400 flex-1 cursor-pointer" onclick="alert('Silahkan Login')">
+            <div class="text-center text-gray-400 flex-1" onclick="alert('Silahkan Login')">
                 <i class="fa fa-user-circle text-xl"></i>
-                <p class="text-[9px] font-bold uppercase mt-1">Akun</p>
+                <p class="text-[8px] font-black uppercase mt-0.5">Akun</p>
             </div>
         </div>
     </div>
