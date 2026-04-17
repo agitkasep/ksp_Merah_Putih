@@ -1,1 +1,193 @@
-saya adalah anggota
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dashboard Anggota - KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .card-grad { background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%); }
+        .btn-active:active { transform: scale(0.92); opacity: 0.8; }
+        
+        /* Animasi Chat */
+        #chat-window.hidden { display: none; }
+        #chat-window { display: flex; transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="p-6 bg-white flex justify-between items-center border-b sticky top-0 z-50">
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selamat Datang,</p>
+                <h1 class="text-lg font-black text-indigo-900 uppercase italic">Pak Agit 👋</h1>
+            </div>
+            <button onclick="location.href='index.html'" class="w-10 h-10 bg-red-50 text-red-500 rounded-full flex items-center justify-center shadow-sm btn-active">
+                <i class="fa fa-power-off"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 pb-24">
+            <div class="p-5">
+                <div class="card-grad p-6 rounded-[35px] text-white shadow-xl shadow-indigo-100 relative overflow-hidden">
+                    <div class="absolute -right-5 -top-5 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[9px] font-bold opacity-80 uppercase tracking-widest">Total Simpanan</p>
+                            <h2 class="text-2xl font-black mt-1 tracking-tighter">Rp 2.450.000</h2>
+                        </div>
+                        <i class="fa fa-shield-halved opacity-30 text-3xl"></i>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <p class="text-[8px] font-mono tracking-widest opacity-60 italic">AGIT-001/PB/2026</p>
+                        <div class="bg-white/20 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">Anggota Aktif</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 px-5 mb-8">
+                <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <i class="fa fa-piggy-bank text-indigo-600 mb-2"></i>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase">Simpanan Wajib</p>
+                    <p class="text-[12px] font-black text-gray-800">Rp 500.000</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <i class="fa fa-hand-holding-dollar text-emerald-600 mb-2"></i>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase">Sisa Pinjaman</p>
+                    <p class="text-[12px] font-black text-gray-800">Rp 0</p>
+                </div>
+            </div>
+
+            <div class="px-6 mb-4 flex justify-between items-center text-[11px] font-black text-gray-800 uppercase italic">
+                <h3>Aktivitas Terakhir</h3>
+                <span class="text-indigo-600">Lihat Semua</span>
+            </div>
+
+            <div class="px-5 space-y-3">
+                <div class="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                    <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600"><i class="fa fa-arrow-down"></i></div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-800 uppercase">Simpanan Sukarela</p>
+                        <p class="text-[8px] font-bold text-gray-400">Hari ini, 11:43 WIB</p>
+                    </div>
+                    <p class="text-[11px] font-black text-emerald-600">+ 50k</p>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                    <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-600"><i class="fa fa-cart-shopping"></i></div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-800 uppercase">Belanja Toko</p>
+                        <p class="text-[8px] font-bold text-gray-400">15 April 2026</p>
+                    </div>
+                    <p class="text-[11px] font-black text-red-600">- 120k</p>
+                </div>
+            </div>
+        </div>
+
+        <div onclick="aktifkanChat()" class="fixed bottom-24 right-6 w-14 h-14 bg-indigo-600 rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer z-[150] btn-active">
+            <i class="fa fa-comments text-xl"></i>
+        </div>
+
+        <div id="chat-window" class="fixed bottom-24 right-6 w-[320px] h-[450px] bg-white rounded-[35px] shadow-2xl z-[160] hidden flex-col overflow-hidden border">
+            <div class="bg-indigo-600 p-5 flex justify-between items-center text-white">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-[12px]"><i class="fa fa-headset"></i></div>
+                    <span class="text-[10px] font-black uppercase italic tracking-widest">Admin KOPDESKEL</span>
+                </div>
+                <button onclick="tutupChat()" class="opacity-50 hover:opacity-100"><i class="fa fa-times"></i></button>
+            </div>
+            
+            <div id="chat-content" class="flex-1 p-5 overflow-y-auto bg-gray-50 space-y-4">
+                <div class="bg-indigo-100 text-indigo-800 p-3 rounded-2xl rounded-tl-none text-[11px] font-medium shadow-sm">
+                    Halo Pak Agit, ada yang bisa kami bantu hari ini?
+                </div>
+            </div>
+
+            <div id="input-chat-area" class="p-3 bg-white border-t flex gap-2">
+                <input type="text" id="input-pesan" placeholder="Ketik pesan anda..." class="flex-1 bg-gray-100 rounded-2xl px-4 py-3 text-[11px] font-bold outline-none">
+                <button onclick="kirimPesan()" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center btn-active">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white p-6 flex justify-around border-t rounded-t-[40px] shadow-2xl z-[100]">
+            <i class="fa fa-home text-indigo-600 text-xl"></i>
+            <i class="fa fa-file-invoice-dollar text-gray-300 text-xl"></i>
+            <i class="fa fa-bell text-gray-300 text-xl"></i>
+            <i class="fa fa-gear text-gray-300 text-xl"></i>
+        </div>
+    </div>
+
+    <script>
+        function aktifkanChat() {
+            const chatWindow = document.getElementById('chat-window');
+            const content = document.getElementById('chat-content');
+            const inputArea = document.getElementById('input-chat-area');
+            
+            // Logika Cek Waktu (08.00 - 17.00)
+            const skrg = new Date();
+            const jam = skrg.getHours();
+
+            // Munculkan Jendela Chat
+            chatWindow.style.display = 'flex';
+            chatWindow.classList.remove('hidden');
+
+            // Cek apakah di luar jam kerja
+            if (jam < 8 || jam >= 17) {
+                // Sembunyikan input
+                inputArea.style.display = 'none';
+                // Tampilkan pesan penolakan singkat
+                content.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-center p-6">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <i class="fa fa-clock text-gray-300 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-600 font-black text-[11px] uppercase leading-relaxed tracking-wide">
+                            Maaf, live chat hanya bisa dilakukan pada saat jam kerja 08.00-17.00
+                        </p>
+                        <p class="text-[9px] font-bold text-gray-400 mt-2 italic uppercase">Silahkan hubungi kami kembali esok hari.</p>
+                    </div>
+                `;
+            } else {
+                // Dalam jam kerja
+                inputArea.style.display = 'flex';
+            }
+        }
+
+        function tutupChat() {
+            document.getElementById('chat-window').style.display = 'none';
+        }
+
+        function kirimPesan() {
+            const input = document.getElementById('input-pesan');
+            const content = document.getElementById('chat-content');
+            
+            if(input.value.trim() !== "") {
+                const bubble = `
+                    <div class="flex flex-col items-end">
+                        <div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[11px] font-medium shadow-md">
+                            ${input.value}
+                        </div>
+                        <span class="text-[7px] font-black text-gray-400 mt-1 uppercase">Terkirim</span>
+                    </div>`;
+                
+                content.innerHTML += bubble;
+                input.value = "";
+                content.scrollTop = content.scrollHeight;
+
+                // Balasan Otomatis Simulasi
+                setTimeout(() => {
+                    content.innerHTML += `
+                        <div class="bg-indigo-100 text-indigo-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-[11px] font-medium shadow-sm">
+                            Pesan Bapak telah kami terima. Mohon tunggu admin merespon.
+                        </div>`;
+                    content.scrollTop = content.scrollHeight;
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
