@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-
+<p id="ref-code" style="display:none">AQ.Ab8RN6IZnTJ5aD-rvgCrpk7Uq8HiaKgg6HsAr9yK-Z0AirRKOQ</p>
     <div class="app-container">
         <div class="p-5 bg-white flex justify-between items-center border-b">
             <div class="flex items-center gap-3">
@@ -210,48 +210,61 @@
     { "imports": { "@google/generative-ai": "https://esm.run/@google/generative-ai" } }
     </script>
 
-    <script type="module">
-        import { GoogleGenerativeAI } from "@google/generative-ai";
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    
+    // --- DI SINI TEMPATNYA ---
+    // Kita ambil kodenya dari elemen <p id="ref-code"> yang tadi Bapak selipkan di atas
+    let elemen = document.getElementById('ref-code');
+    let rahasia = elemen ? elemen.innerText : "";
+    
+    // Jika kode ditemukan, kita hubungkan ke mesin AI
+    if (rahasia) {
+        let genAI = new GoogleGenerativeAI(rahasia);
+        let model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-        // Memanggil kunci rahasia dari file app-data.js yang baru
-        import { dataAksesUtama } from './app-data.js'; 
+        // Kita simpan ke 'window' agar bisa dipanggil oleh fungsi tanyaGemini
+        window.aiModel = model;
+    }
+    // -------------------------
 
-        const identitas = dataAksesUtama; 
-        const genAI = new GoogleGenerativeAI(identitas);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    window.tanyaGemini = async () => {
+        let input = document.getElementById('ai-input');
+        let body = document.getElementById('ai-chat-body');
+        let loader = document.getElementById('ai-loading');
+        
+        // Cek apakah input kosong atau AI belum siap
+        if (!input.value.trim() || !window.aiModel) {
+            alert("Sistem sedang bersiap, Pak Agit. Tunggu sebentar.");
+            return;
+        }
 
-        // Fungsi agar tombol kirim pesan bisa jalan
-        window.tanyaGemini = async () => {
-            const input = document.getElementById('ai-input');
-            const body = document.getElementById('ai-chat-body');
-            const loader = document.getElementById('ai-loading');
+        let userText = input.value;
+        // Tampilkan chat user
+        body.innerHTML += `<div class="bg-indigo-600 text-white p-4 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[11px] font-bold shadow-md mb-4">${userText}</div>`;
+        
+        input.value = "";
+        loader.classList.remove('hidden');
+        body.scrollTop = body.scrollHeight;
+
+        try {
+            // Beri perintah ke AI
+            let result = await window.aiModel.generateContent(`Sapa Pak Agit dan jawab pertanyaannya: ${userText}`);
+            let response = await result.response;
             
-            if (!input.value.trim()) return;
+            loader.classList.add('hidden');
+            // Tampilkan jawaban AI
+            body.innerHTML += `<div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-indigo-100 text-[11px] text-gray-700 italic mb-4"><b>Gemini:</b><br>${response.text()}</div>`;
+        } catch (e) {
+            loader.classList.add('hidden');
+            body.innerHTML += `<div class="text-red-500 text-[9px] font-bold p-2">Gagal memproses pesan.</div>`;
+        }
+        body.scrollTop = body.scrollHeight;
+    };
 
-            const userText = input.value;
-            body.innerHTML += `<div class="bg-indigo-600 text-white p-4 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[11px] font-bold shadow-md mb-4">${userText}</div>`;
-            input.value = "";
-            loader.classList.remove('hidden');
-            body.scrollTop = body.scrollHeight;
-
-            try {
-                // Memberi instruksi khusus agar AI mengenali Bapak
-                const prompt = `Kamu adalah asisten AI KOPDESKEL. Sapa user dengan "Pak Agit". Jawab ramah dan solutif. Pertanyaan: ${userText}`;
-                const result = await model.generateContent(prompt);
-                const response = await result.response;
-                
-                loader.classList.add('hidden');
-                body.innerHTML += `<div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-indigo-100 text-[11px] text-gray-700 leading-relaxed italic mb-4"><b>Gemini AI:</b><br>${response.text()}</div>`;
-            } catch (err) {
-                loader.classList.add('hidden');
-                body.innerHTML += `<div class="text-red-500 text-[9px] font-bold p-2">Koneksi terputus. Pastikan file app-data.js sudah benar.</div>`;
-            }
-            body.scrollTop = body.scrollHeight;
-        };
-
-        // Fungsi buka tutup jendela AI
-        window.openAI = () => document.getElementById('ai-window').classList.remove('hidden');
-        window.closeAI = () => document.getElementById('ai-window').classList.add('hidden');
-    </script>
+    // Fungsi tombol buka/tutup
+    window.openAI = () => document.getElementById('ai-window').classList.remove('hidden');
+    window.closeAI = () => document.getElementById('ai-window').classList.add('hidden');
+</script>
 
 </body> </html>
