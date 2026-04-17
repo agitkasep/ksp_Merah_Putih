@@ -236,34 +236,38 @@ function getLocation() {
 getLocation();
         
 
-        // LOGIKA LOGIN
-        const modal = document.getElementById('loginModal');
-        function openLogin() { modal.classList.add('active'); }
-        function closeLogin() { modal.classList.remove('active'); }
+        // --- LOGIKA LOGIN TERPADU ---
+const modal = document.getElementById('loginModal');
 
-        function prosesLogin(role) {
-            alert("Membuka Pintu " + role.toUpperCase() + "...");
-            if(role === 'anggota') window.location.href = "anggota.html";
-            if(role === 'kolektor') window.location.href = "kolektor.html";
-            if(role === 'admin') window.location.href = "admin.html";
-            function validaSiLogin() {
+function openLogin() { 
+    modal.classList.add('active'); // Membuka Modal
+}
+
+function closeLogin() { 
+    modal.classList.remove('active'); // Menutup Modal
+}
+
+function validaSiLogin() {
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
     const status = document.getElementById('user-status').value;
 
-    // --- LOGIKA PENGECEKAN LOGIN ---
-    // Kita buat contoh: Username nya "agit" dan Password nya "123"
+    if (!user || !pass || !status) {
+        alert("Mohon isi Username, Password, dan Pilih Status!");
+        return;
+    }
+
+    // Cek Akun Tes Pak Agit
     if (user === "agit" && pass === "123" && status === "anggota") {
         alert("Login Sukses! Selamat Datang, Pak Agit.");
-        window.location.href = "anggota.html"; // Pastikan file anggota.html sudah dibuat
+        window.location.href = "anggota.html"; 
     } 
     else if (user === "admin" && pass === "admin123" && status === "admin") {
         alert("Login Admin Berhasil!");
         window.location.href = "admin.html";
     }
     else {
-        // Jika salah ketik atau belum isi
-        alert("Username atau Password Salah! \n(Coba: agit / 123)");
+        alert("Username atau Password Salah! \n(Gunakan user: agit / pass: 123)");
     }
 }
         }
