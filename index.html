@@ -136,21 +136,49 @@
             </div>
         </div>
 
-        <div id="loginModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] items-center justify-center p-6">
-            <div class="bg-white w-full max-w-[320px] rounded-[40px] p-8 shadow-2xl">
-                <div class="text-center mb-6">
-                    <h2 class="font-black text-gray-800 text-lg uppercase italic">Pintu Masuk</h2>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Pilih Kamar Anda</p>
+        <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
+        <div class="bg-indigo-600 p-6 text-center">
+            <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
+            <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
+        </div>
+
+        <div class="p-8 space-y-4">
+            <div>
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Username</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                    <i class="fa fa-user text-gray-300 mr-3"></i>
+                    <input type="text" id="username" placeholder="Nama Pengguna" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
                 </div>
-                <div class="space-y-3">
-                    <button onclick="prosesLogin('anggota')" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[11px] font-black btn-active-effect uppercase">Kamar Anggota</button>
-                    <button onclick="prosesLogin('kolektor')" class="w-full py-4 bg-emerald-600 text-white rounded-2xl text-[11px] font-black btn-active-effect uppercase">Kamar Kolektor</button>
-                    <button onclick="prosesLogin('admin')" class="w-full py-4 bg-gray-900 text-white rounded-2xl text-[11px] font-black btn-active-effect uppercase">Kamar Admin</button>
-                </div>
-                <button onclick="closeLogin()" class="mt-6 w-full text-[10px] font-black text-gray-400 uppercase tracking-widest">Batal</button>
             </div>
+
+            <div>
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                    <i class="fa fa-lock text-gray-300 mr-3"></i>
+                    <input type="password" id="password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3">
+                    <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
+                    <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none cursor-pointer">
+                        <option value="" disabled selected>-- PILIH STATUS --</option>
+                        <option value="anggota">ANGGOTA</option>
+                        <option value="admin">ADMIN</option>
+                        <option value="kolektor">KOLEKTOR</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 mt-4 uppercase">Masuk Sekarang</button>
+            
+            <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-2 tracking-widest">Batal</button>
         </div>
     </div>
+</div>
 
     <script>
         // UPDATE JAM DIGITAL
