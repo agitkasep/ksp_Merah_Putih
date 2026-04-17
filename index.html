@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Koperasi Merah Putih</title>
+    <title>KOPDESKEL Merah Putih</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -27,11 +27,12 @@
             white-space: nowrap;
             font-size: 11px;
             font-weight: bold;
+            border-bottom: 1px solid #c7d2fe;
         }
         .marquee-text {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 15s linear infinite;
+            animation: marquee 20s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translate(0, 0); }
@@ -43,16 +44,15 @@
 
     <div class="p-4 bg-white flex justify-between items-center shadow-sm border-b border-gray-100">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-indigo-600 rounded-full flex flex-col items-center justify-center shadow-md border-2 border-white">
-                <i class="fa fa-shield-blank text-white text-xl leading-none"></i>
-                <span class="text-[9px] font-black text-white -mt-0.5">KMP</span>
+            <div class="w-16 h-16 rounded-xl flex items-center justify-center p-1 border border-gray-100 shadow-inner">
+                <img src="https://i.ibb.co/vz4D7p0/logo-kopdeskel.png" alt="Logo KOPDESKEL Merah Putih" class="w-full h-full object-contain">
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 italic leading-none">Aplikasi Resmi</p>
-                <h1 class="font-extrabold text-gray-900 text-sm tracking-tighter">"KOPERASI MERAH PUTIH"</h1>
+                <h1 class="font-extrabold text-gray-900 text-sm tracking-tighter">"KOPDESKEL MERAH PUTIH"</h1>
                 <div class="flex items-center gap-1 mt-0.5 text-indigo-500">
                     <i class="fa fa-location-dot text-[10px]"></i>
-                    <p id="user-location" class="text-[9px] font-bold uppercase">Mendeteksi Wilayah...</p>
+                    <p id="user-location" class="text-[9px] font-bold uppercase mendeteksi">Mendeteksi Wilayah...</p>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
 
     <div class="marquee-container shadow-inner">
         <div class="marquee-text">
-            Selamat Datang di Koperasi Merah Putih - Layanan Simpan Pinjam Digital Terpercaya - Gunakan aplikasi dengan bijak - Cek promo terbaru di menu INFO KSP.
+            Selamat Datang di KOPDESKEL Merah Putih - Layanan Simpan Pinjam Digital Terpercaya - Gunakan aplikasi dengan bijak - Cek promo terbaru di menu INFO KSP.
         </div>
     </div>
 
@@ -79,25 +79,25 @@
     </div>
 
     <div class="grid grid-cols-4 gap-4 px-5 mt-10">
-        <div class="text-center group">
+        <div class="text-center group cursor-pointer">
             <div class="aspect-square bg-indigo-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-indigo-200 transition">
                 <i class="fa fa-wallet text-indigo-600 text-3xl"></i>
             </div>
             <p class="text-[10px] font-bold text-gray-600 group-hover:text-indigo-700">SIMPANAN</p>
         </div>
-        <div class="text-center group">
+        <div class="text-center group cursor-pointer">
             <div class="aspect-square bg-green-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-green-200 transition">
                 <i class="fa fa-hand-holding-dollar text-green-600 text-3xl"></i>
             </div>
             <p class="text-[10px] font-bold text-gray-600 group-hover:text-green-700">PINJAMAN</p>
         </div>
-        <div class="text-center group">
+        <div class="text-center group cursor-pointer">
             <div class="aspect-square bg-orange-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-orange-200 transition">
                 <i class="fa fa-store text-orange-600 text-3xl"></i>
             </div>
             <p class="text-[10px] font-bold text-gray-600 group-hover:text-orange-700">TOKO</p>
         </div>
-        <div class="text-center group">
+        <div class="text-center group cursor-pointer">
             <div class="aspect-square bg-blue-50 rounded-2xl flex items-center justify-center mb-2 shadow-inner group-active:bg-blue-200 transition">
                 <i class="fa fa-info-circle text-blue-600 text-3xl"></i>
             </div>
@@ -108,20 +108,21 @@
     <div class="fixed bottom-0 left-0 right-0 flex justify-center z-50">
         <div class="w-full max-width-[480px] bg-white border-t border-gray-100 flex justify-around items-end py-3 px-4 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] rounded-t-3xl">
             
-            <div class="text-center text-indigo-600 flex-1 hover:scale-110 transition-transform">
-                <i class="fa fa-home text-2xl"></i>
-                <p class="text-[10px] font-bold uppercase">Home</p>
+            <div class="text-center text-indigo-600 flex-1 hover:scale-110 transition-transform cursor-pointer">
+                <i class="fa fa-home text-2xl leading-none"></i>
+                <p class="text-[10px] font-bold uppercase mt-1">Home</p>
             </div>
             
             <div class="flex-1 flex justify-center -mt-6">
-                <div onclick="alert('Silahkan Login Terlebih Dahulu')" class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200 border-4 border-white cursor-pointer hover:bg-indigo-700 transition active:scale-90">
+                <div onclick="alert('Silahkan Login Terlebih Dahulu')" class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-indigo-200 border-4 border-white cursor-pointer hover:bg-indigo-700 transition active:scale-90 z-20 relative">
                     <i class="fa fa-qrcode text-white text-3xl"></i>
                 </div>
+                <div class="absolute w-20 h-10 bg-white rounded-b-full z-10 -bottom-3 border-t-0"></div>
             </div>
             
-            <div class="text-center text-gray-400 flex-1 hover:text-indigo-400 hover:scale-110 transition-transform">
-                <i class="fa fa-user-circle text-2xl"></i>
-                <p class="text-[10px] font-bold uppercase">Akun</p>
+            <div class="text-center text-gray-400 flex-1 hover:text-indigo-400 hover:scale-110 transition-transform cursor-pointer">
+                <i class="fa fa-user-circle text-2xl leading-none"></i>
+                <p class="text-[10px] font-bold uppercase mt-1">Akun</p>
             </div>
         </div>
     </div>
@@ -151,6 +152,7 @@
                 const data = await response.json();
                 if(data.city) {
                     document.getElementById('user-location').innerText = `${data.city}, ${data.region}`;
+                    document.getElementById('user-location').classList.remove('mendeteksi');
                 } else {
                     document.getElementById('user-location').innerText = "Jakarta, ID";
                 }
