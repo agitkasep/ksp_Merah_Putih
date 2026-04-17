@@ -7,187 +7,176 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; }
-        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .card-grad { background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%); }
-        .btn-active:active { transform: scale(0.92); opacity: 0.8; }
-        
-        /* Animasi Chat */
-        #chat-window.hidden { display: none; }
-        #chat-window { display: flex; transition: all 0.3s ease-in-out; }
+        body { background-color: #f8fafc; display: flex; justify-content: center; min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); }
+        .card-grad { background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); }
+        .btn-active:active { transform: scale(0.95); }
+        marquee { font-size: 10px; font-weight: 800; color: #4338ca; background: #eef2ff; padding: 5px 0; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <div class="p-6 bg-white flex justify-between items-center border-b sticky top-0 z-50">
-            <div>
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Selamat Datang,</p>
-                <h1 class="text-lg font-black text-indigo-900 uppercase italic">Pak Agit 👋</h1>
+        <div class="p-5 bg-white flex justify-between items-start border-b">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                    <i class="fa fa-user"></i>
+                </div>
+                <div>
+                    <p id="greeting" class="text-[10px] font-bold text-gray-400 uppercase italic leading-none"></p>
+                    <h1 class="text-[13px] font-black text-indigo-900 uppercase">Pak/Ibu AGIT</h1>
+                </div>
             </div>
-            <button onclick="location.href='index.html'" class="w-10 h-10 bg-red-50 text-red-500 rounded-full flex items-center justify-center shadow-sm btn-active">
-                <i class="fa fa-power-off"></i>
-            </button>
+            <div class="text-right">
+                <p id="real-location" class="text-[8px] font-black text-indigo-600 uppercase italic leading-none mb-1 text-right"></p>
+                <p id="real-date" class="text-[8px] font-bold text-gray-400 uppercase text-right"></p>
+                <p id="real-clock" class="text-[10px] font-black text-gray-800 text-right"></p>
+            </div>
         </div>
 
-        <div class="flex-1 pb-24">
+        <marquee scrollamount="3">Selamat datang di layanan digital KOPDESKEL Merah Putih - Tingkatkan terus saldo simpanan anda untuk kesejahteraan bersama - Tetap waspada terhadap penipuan mengatasnamakan pengurus.</marquee>
+
+        <div class="flex-1 pb-28">
             <div class="p-5">
-                <div class="card-grad p-6 rounded-[35px] text-white shadow-xl shadow-indigo-100 relative overflow-hidden">
-                    <div class="absolute -right-5 -top-5 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="card-grad p-6 rounded-[35px] text-white shadow-2xl relative overflow-hidden">
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <p class="text-[9px] font-bold opacity-80 uppercase tracking-widest">Total Simpanan</p>
-                            <h2 class="text-2xl font-black mt-1 tracking-tighter">Rp 2.450.000</h2>
+                            <p class="text-[9px] font-bold opacity-70 uppercase tracking-widest">Total Tabungan</p>
+                            <h2 class="text-2xl font-black tracking-tighter">Rp 2.450.000</h2>
                         </div>
-                        <i class="fa fa-shield-halved opacity-30 text-3xl"></i>
+                        <i class="fa fa-wallet opacity-20 text-4xl"></i>
                     </div>
-                    <div class="flex justify-between items-end">
-                        <p class="text-[8px] font-mono tracking-widest opacity-60 italic">AGIT-001/PB/2026</p>
-                        <div class="bg-white/20 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">Anggota Aktif</div>
+                    <div class="grid grid-cols-1 gap-2 border-t border-white/10 pt-4">
+                        <div class="flex justify-between text-[10px] font-medium uppercase italic">
+                            <span>Simpanan Wajib :</span>
+                            <span class="font-black">Rp 500.000</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-medium uppercase italic">
+                            <span>Simpanan Sukarela :</span>
+                            <span class="font-black">Rp 1.950.000</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-medium uppercase italic text-orange-300">
+                            <span>Sisa Pinjaman :</span>
+                            <span class="font-black">Rp 0</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 px-5 mb-8">
-                <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
-                    <i class="fa fa-piggy-bank text-indigo-600 mb-2"></i>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase">Simpanan Wajib</p>
-                    <p class="text-[12px] font-black text-gray-800">Rp 500.000</p>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
-                    <i class="fa fa-hand-holding-dollar text-emerald-600 mb-2"></i>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase">Sisa Pinjaman</p>
-                    <p class="text-[12px] font-black text-gray-800">Rp 0</p>
+            <div class="px-5 mb-4 flex justify-between items-center">
+                <h3 class="text-[11px] font-black text-indigo-900 uppercase italic tracking-wider">Toko KSP :</h3>
+                <div class="flex items-center bg-gray-100 rounded-full px-3 py-1.5 w-1/2 border">
+                    <i class="fa fa-search text-gray-400 text-[10px] mr-2"></i>
+                    <input type="text" placeholder="Cari Produk" class="bg-transparent text-[9px] font-bold outline-none w-full">
                 </div>
             </div>
 
-            <div class="px-6 mb-4 flex justify-between items-center text-[11px] font-black text-gray-800 uppercase italic">
-                <h3>Aktivitas Terakhir</h3>
-                <span class="text-indigo-600">Lihat Semua</span>
-            </div>
-
-            <div class="px-5 space-y-3">
-                <div class="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                    <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600"><i class="fa fa-arrow-down"></i></div>
-                    <div class="flex-1">
-                        <p class="text-[10px] font-black text-gray-800 uppercase">Simpanan Sukarela</p>
-                        <p class="text-[8px] font-bold text-gray-400">Hari ini, 11:43 WIB</p>
+            <div class="grid grid-cols-3 gap-3 px-5">
+                <div class="bg-white border rounded-2xl p-2 text-center shadow-sm">
+                    <div class="aspect-square bg-gray-50 rounded-xl mb-2 flex items-center justify-center">
+                        <i class="fa fa-clock text-gray-200 text-xl"></i>
                     </div>
-                    <p class="text-[11px] font-black text-emerald-600">+ 50k</p>
+                    <p class="text-[8px] font-black uppercase text-gray-800">Smartwatch</p>
                 </div>
-                <div class="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                    <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-600"><i class="fa fa-cart-shopping"></i></div>
-                    <div class="flex-1">
-                        <p class="text-[10px] font-black text-gray-800 uppercase">Belanja Toko</p>
-                        <p class="text-[8px] font-bold text-gray-400">15 April 2026</p>
+                <div class="bg-white border rounded-2xl p-2 text-center shadow-sm">
+                    <div class="aspect-square bg-gray-50 rounded-xl mb-2 flex items-center justify-center">
+                        <i class="fa fa-headphones text-gray-200 text-xl"></i>
                     </div>
-                    <p class="text-[11px] font-black text-red-600">- 120k</p>
+                    <p class="text-[8px] font-black uppercase text-gray-800">Headset</p>
+                </div>
+                <div class="bg-white border rounded-2xl p-2 text-center shadow-sm">
+                    <div class="aspect-square bg-gray-50 rounded-xl mb-2 flex items-center justify-center">
+                        <i class="fa fa-mobile-screen text-gray-200 text-xl"></i>
+                    </div>
+                    <p class="text-[8px] font-black uppercase text-gray-800">Handphone</p>
                 </div>
             </div>
         </div>
 
-        <div onclick="aktifkanChat()" class="fixed bottom-24 right-6 w-14 h-14 bg-indigo-600 rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer z-[150] btn-active">
-            <i class="fa fa-comments text-xl"></i>
+        <div id="chat-window" class="fixed bottom-24 right-6 w-[320px] h-[400px] bg-white rounded-[30px] shadow-2xl z-[200] hidden flex-col border border-gray-100 overflow-hidden">
+            <div class="bg-indigo-900 p-4 text-white flex justify-between items-center">
+                <span class="text-[10px] font-black uppercase italic tracking-widest">Live Chat Support</span>
+                <button onclick="tutupChat()"><i class="fa fa-times"></i></button>
+            </div>
+            <div id="chat-body" class="flex-1 p-5 overflow-y-auto bg-gray-50 flex flex-col justify-center text-center">
+                </div>
         </div>
 
-        <div id="chat-window" class="fixed bottom-24 right-6 w-[320px] h-[450px] bg-white rounded-[35px] shadow-2xl z-[160] hidden flex-col overflow-hidden border">
-            <div class="bg-indigo-600 p-5 flex justify-between items-center text-white">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-[12px]"><i class="fa fa-headset"></i></div>
-                    <span class="text-[10px] font-black uppercase italic tracking-widest">Admin KOPDESKEL</span>
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white pt-4 pb-8 flex justify-around border-t rounded-t-[40px] shadow-2xl z-[100]">
+            <div class="flex flex-col items-center gap-1">
+                <i class="fa fa-house text-indigo-600 text-lg"></i>
+                <span class="text-[8px] font-black uppercase italic text-indigo-600">Home</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 opacity-30">
+                <i class="fa fa-list-check text-lg"></i>
+                <span class="text-[8px] font-black uppercase italic">Aktifitas</span>
+            </div>
+            <div class="flex flex-col items-center -mt-8">
+                <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg border-4 border-white btn-active">
+                    <i class="fa fa-qrcode text-2xl"></i>
                 </div>
-                <button onclick="tutupChat()" class="opacity-50 hover:opacity-100"><i class="fa fa-times"></i></button>
+                <span class="text-[8px] font-black uppercase italic mt-1 text-indigo-600">QR Scan</span>
             </div>
-            
-            <div id="chat-content" class="flex-1 p-5 overflow-y-auto bg-gray-50 space-y-4">
-                <div class="bg-indigo-100 text-indigo-800 p-3 rounded-2xl rounded-tl-none text-[11px] font-medium shadow-sm">
-                    Halo Pak Agit, ada yang bisa kami bantu hari ini?
-                </div>
+            <div onclick="aktifkanChat()" class="flex flex-col items-center gap-1 cursor-pointer btn-active">
+                <i class="fa fa-message text-gray-400 text-lg"></i>
+                <span class="text-[8px] font-black uppercase italic text-gray-400">Live Chat</span>
             </div>
-
-            <div id="input-chat-area" class="p-3 bg-white border-t flex gap-2">
-                <input type="text" id="input-pesan" placeholder="Ketik pesan anda..." class="flex-1 bg-gray-100 rounded-2xl px-4 py-3 text-[11px] font-bold outline-none">
-                <button onclick="kirimPesan()" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center btn-active">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
+            <div class="flex flex-col items-center gap-1 opacity-30">
+                <i class="fa fa-circle-user text-lg"></i>
+                <span class="text-[8px] font-black uppercase italic">Akun</span>
             </div>
-        </div>
-
-        <div class="fixed bottom-0 w-full max-w-[480px] bg-white p-6 flex justify-around border-t rounded-t-[40px] shadow-2xl z-[100]">
-            <i class="fa fa-home text-indigo-600 text-xl"></i>
-            <i class="fa fa-file-invoice-dollar text-gray-300 text-xl"></i>
-            <i class="fa fa-bell text-gray-300 text-xl"></i>
-            <i class="fa fa-gear text-gray-300 text-xl"></i>
         </div>
     </div>
 
     <script>
-        function aktifkanChat() {
-            const chatWindow = document.getElementById('chat-window');
-            const content = document.getElementById('chat-content');
-            const inputArea = document.getElementById('input-chat-area');
+        // Update Waktu & Greeting
+        function updateDashboard() {
+            const now = new Date();
+            const jam = now.getHours();
             
-            // Logika Cek Waktu (08.00 - 17.00)
-            const skrg = new Date();
-            const jam = skrg.getHours();
+            // Greeting
+            let sapa = "Selamat Malam";
+            if(jam >= 5 && jam < 11) sapa = "Selamat Pagi";
+            else if(jam >= 11 && jam < 15) sapa = "Selamat Siang";
+            else if(jam >= 15 && jam < 18) sapa = "Selamat Sore";
+            document.getElementById('greeting').innerText = sapa;
 
-            // Munculkan Jendela Chat
-            chatWindow.style.display = 'flex';
-            chatWindow.classList.remove('hidden');
+            // Jam & Tanggal
+            document.getElementById('real-clock').innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+            const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+            document.getElementById('real-date').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
+        }
+        setInterval(updateDashboard, 1000); updateDashboard();
 
-            // Cek apakah di luar jam kerja
+        // Lokasi Sederhana
+        document.getElementById('real-location').innerText = "📍 JAKARTA TIMUR";
+
+        // Fitur Live Chat Sesuai Aturan Pak Agit
+        function aktifkanChat() {
+            const windowChat = document.getElementById('chat-window');
+            const bodyChat = document.getElementById('chat-body');
+            const jam = new Date().getHours();
+
+            windowChat.style.display = 'flex';
+            windowChat.classList.remove('hidden');
+
             if (jam < 8 || jam >= 17) {
-                // Sembunyikan input
-                inputArea.style.display = 'none';
-                // Tampilkan pesan penolakan singkat
-                content.innerHTML = `
-                    <div class="flex flex-col items-center justify-center h-full text-center p-6">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <i class="fa fa-clock text-gray-300 text-3xl"></i>
-                        </div>
-                        <p class="text-gray-600 font-black text-[11px] uppercase leading-relaxed tracking-wide">
-                            Maaf, live chat hanya bisa dilakukan pada saat jam kerja 08.00-17.00
-                        </p>
-                        <p class="text-[9px] font-bold text-gray-400 mt-2 italic uppercase">Silahkan hubungi kami kembali esok hari.</p>
-                    </div>
+                bodyChat.innerHTML = `
+                    <i class="fa fa-clock text-gray-200 text-5xl mb-4"></i>
+                    <p class="text-gray-600 font-black text-[11px] uppercase leading-relaxed">
+                        Maaf, live chat hanya bisa dilakukan pada saat jam kerja 08.00-17.00
+                    </p>
                 `;
             } else {
-                // Dalam jam kerja
-                inputArea.style.display = 'flex';
+                bodyChat.innerHTML = `
+                    <div class="bg-indigo-100 text-indigo-800 p-3 rounded-2xl rounded-tl-none text-[11px] text-left">
+                        Halo Pak/Ibu Agit, ada yang bisa Admin bantu?
+                    </div>
+                `;
             }
         }
 
-        function tutupChat() {
-            document.getElementById('chat-window').style.display = 'none';
-        }
-
-        function kirimPesan() {
-            const input = document.getElementById('input-pesan');
-            const content = document.getElementById('chat-content');
-            
-            if(input.value.trim() !== "") {
-                const bubble = `
-                    <div class="flex flex-col items-end">
-                        <div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[11px] font-medium shadow-md">
-                            ${input.value}
-                        </div>
-                        <span class="text-[7px] font-black text-gray-400 mt-1 uppercase">Terkirim</span>
-                    </div>`;
-                
-                content.innerHTML += bubble;
-                input.value = "";
-                content.scrollTop = content.scrollHeight;
-
-                // Balasan Otomatis Simulasi
-                setTimeout(() => {
-                    content.innerHTML += `
-                        <div class="bg-indigo-100 text-indigo-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-[11px] font-medium shadow-sm">
-                            Pesan Bapak telah kami terima. Mohon tunggu admin merespon.
-                        </div>`;
-                    content.scrollTop = content.scrollHeight;
-                }, 1000);
-            }
-        }
+        function tutupChat() { document.getElementById('chat-window').style.display = 'none'; }
     </script>
 </body>
 </html>
