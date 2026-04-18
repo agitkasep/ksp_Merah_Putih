@@ -165,42 +165,83 @@
         </div>
     </div>
 
-    <script>
+   <script type="importmap">
+    { "imports": { "@google/generative-ai": "https://esm.run/@google/generative-ai" } }
+    </script>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // Fungsi buka tutup jendela
+        window.openAI = () => document.getElementById('ai-window').classList.remove('hidden');
+        window.closeAI = () => document.getElementById('ai-window').classList.add('hidden');
+
+        // Fungsi utama Tanya AI
+        window.tanyaGemini = async () => {
+            const input = document.getElementById('ai-input');
+            const body = document.getElementById('ai-chat-body');
+            
+            if (input.value.trim() === "") return;
+
+            // 1. Ambil kunci dari memori sementara
+            let akses = sessionStorage.getItem("kopdeskel_key");
+
+            // 2. Jika belum ada, minta Bapak masukkan (Hanya muncul sekali)
+            if (!akses) {
+                akses = prompt("Sistem Keamanan: Masukkan Kode Akses AI Bapak:");
+                if (akses) {
+                    sessionStorage.setItem("kopdeskel_key", akses);
+                } else {
+                    alert("Akses ditolak. Kode diperlukan.");
+                    return;
+                }
+            }
+
+            const pesanUser = input.value;
+            body.innerHTML += `<div class="bg-indigo-600 text-white p-4 rounded-[25px] rounded-tr-none ml-auto max-w-[85%] text-[11px] shadow-md font-bold">${pesanUser}</div>`;
+            input.value = "";
+            body.scrollTop = body.scrollHeight;
+
+            try {
+                // Hubungkan ke mesin Google Gemini
+                const genAI = new GoogleGenerativeAI(akses);
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                
+                const result = await model.generateContent(`Kamu asisten KOPDESKEL. Sapa Pak Agit dengan ramah. Jawab: ${pesanUser}`);
+                const response = await result.response;
+                const teks = response.text();
+
+                body.innerHTML += `<div class="bg-white p-4 rounded-[25px] rounded-tl-none shadow-sm border text-[11px] text-gray-700 italic"><b>Gemini AI:</b><br>${teks}</div>`;
+            } catch (err) {
+                // Jika kunci salah, hapus dari memori supaya bisa tanya lagi
+                sessionStorage.removeItem("kopdeskel_key");
+                body.innerHTML += `<div class="text-red-500 text-[10px] p-2 font-bold">Kode Salah atau Sinyal Lemah. Silahkan coba lagi.</div>`;
+            }
+            body.scrollTop = body.scrollHeight;
+        };
+
+        // Fungsi Jam & Sapaan tetap ada
         function updateTime() {
             const now = new Date();
-            document.getElementById('real-clock').innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+            const clockEl = document.getElementById('real-clock');
+            if(clockEl) clockEl.innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+            
             const jam = now.getHours();
             let sapa = "Selamat Malam";
             if(jam >= 5 && jam < 11) sapa = "Selamat Pagi";
             else if(jam >= 11 && jam < 15) sapa = "Selamat Siang";
             else if(jam >= 15 && jam < 18) sapa = "Selamat Sore";
-            document.getElementById('greeting').innerText = sapa;
+            
+            const greetEl = document.getElementById('greeting');
+            if(greetEl) greetEl.innerText = sapa;
         }
         setInterval(updateTime, 1000); updateTime();
 
-        // Gemini & UI Logic
-        function openAI() { document.getElementById('ai-window').classList.remove('hidden'); }
-        function closeAI() { document.getElementById('ai-window').classList.add('hidden'); }
-
-        function aktifkanChat() {
+        window.aktifkanChat = () => {
             const jam = new Date().getHours();
             if (jam < 8 || jam >= 17) alert("Maaf Pak Agit, Live Chat Admin Tutup. Silahkan pakai 'Tanya AI' saja!");
             else alert("Menghubungkan ke Admin...");
-        }
-
-        async function tanyaGemini() {
-            const input = document.getElementById('ai-input');
-            const body = document.getElementById('ai-chat-body');
-            if (input.value.trim() === "") return;
-            body.innerHTML += `<div class="bg-indigo-600 text-white p-4 rounded-[25px] rounded-tr-none ml-auto max-w-[85%] text-[11px] shadow-md font-bold">${input.value}</div>`;
-            input.value = "";
-            body.scrollTop = body.scrollHeight;
-            // Simulasi respon AI (nanti hubungkan ke API KEY)
-            setTimeout(() => {
-                body.innerHTML += `<div class="bg-white p-4 rounded-[25px] rounded-tl-none shadow-sm border text-[11px] text-gray-700 italic"><b>Gemini AI:</b><br>Tentu Pak Agit, untuk layanan Waserba kami saat ini sedang ada promo sembako murah loh!</div>`;
-                body.scrollTop = body.scrollHeight;
-            }, 1000);
-        }
+        };
     </script>
 </body>
 </html>
