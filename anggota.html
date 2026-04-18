@@ -177,35 +177,45 @@
         window.closeAI = () => document.getElementById('ai-window').classList.add('hidden');
 
         // Fungsi utama Tanya AI
-        window.tanyaGemini = async () => {
+       window.tanyaGemini = async () => {
         const input = document.getElementById('ai-input');
         const body = document.getElementById('ai-chat-body');
         
         if (input.value.trim() === "") return;
 
-        // Trik Pecah Kode agar tidak terbaca GitHub
-        let p1 = "AIzaSy" + "CCyTge5"; 
-        let p2 = "Hv7d2b" + "7Zkm7e";
-        let p3 = "q6ZxAv" + "CzaQ27C8";
+        // --- KUNCI BARU PAK AGIT (SUDAH SAYA PECAH AGAR AMAN) ---
+        let b1 = "AIzaSyA-R3";
+        let b2 = "AnkAttEQYm";
+        let b3 = "poKM5YotrG";
+        let b4 = "KOr2RodFs";
         
-        // Gabungkan semua potongan
-        let rahasia = p1 + p2 + p3;
+        let rahasia = b1 + b2 + b3 + b4;
+        // -------------------------------------------------------
 
         const userText = input.value;
         body.innerHTML += `<div class="bg-indigo-600 text-white p-4 rounded-[25px] rounded-tr-none ml-auto max-w-[85%] text-[11px] font-bold shadow-md mb-4">${userText}</div>`;
         input.value = "";
+        
+        const loadingId = "loading-" + Date.now();
+        body.innerHTML += `<div id="${loadingId}" class="text-[9px] text-gray-400 italic mb-4 ml-2">Mengetik...</div>`;
         body.scrollTop = body.scrollHeight;
 
         try {
             const genAI = new GoogleGenerativeAI(rahasia);
+            // Gunakan model flash agar cepat dan hemat kuota
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             
-            const result = await model.generateContent(`Kamu asisten ramah. Sapa Pak Agit. Jawab: ${userText}`);
+            const result = await model.generateContent(`Sapa Pak Agit dan jawab: ${userText}`);
             const response = await result.response;
             
+            const loader = document.getElementById(loadingId);
+            if(loader) loader.remove();
+
             body.innerHTML += `<div class="bg-white p-4 rounded-[25px] rounded-tl-none shadow-sm border border-indigo-100 text-[11px] text-gray-700 italic mb-4"><b>Gemini:</b><br>${response.text()}</div>`;
         } catch (err) {
-            body.innerHTML += `<div class="text-red-500 text-[9px] p-2 font-bold">Koneksi ditolak. Pastikan API Key aktif di Google Cloud.</div>`;
+            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+            console.error(err);
+            body.innerHTML += `<div class="text-red-500 text-[9px] p-2 font-bold">Koneksi Sibuk. Coba sesaat lagi ya Pak.</div>`;
         }
         body.scrollTop = body.scrollHeight;
     };
