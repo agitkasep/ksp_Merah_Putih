@@ -27,7 +27,7 @@
             cursor: grabbing; 
         }
 
-        .promo-slider::-webkit-scrollbar { 
+      .promo-slider::-webkit-scrollbar { 
             display: none; 
         }
 
@@ -37,12 +37,19 @@
             flex-shrink: 0; 
             cursor: pointer;
             user-select: none;
-            transition: transform 0.2s;
+            transition: transform 0.2s ease;
+        }
+
+        .promo-card:active {
+            transform: scale(0.96);
+        }
         }
 
         .promo-card:active {
             transform: scale(0.96);
         } 
+
+        
 
         /* Gaya Icon Dashboard agar Tegas & Mewah */
         .icon-box {
@@ -57,7 +64,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 8px;
-        }
+        } 
 
         /* Warna Solid Berkelas */
         .bg-waserba { background: #f59e0b; } /* Amber Gold */
@@ -74,6 +81,8 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
+
+        
     </style>
 </head>
 <body>
