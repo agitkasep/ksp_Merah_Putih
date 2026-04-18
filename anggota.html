@@ -327,13 +327,19 @@
                 body.scrollTop = body.scrollHeight;
             }, 1000);
         }
-   // Pastikan pemanggilan class promo-slider sudah sesuai dengan di atas
-    const slider = document.querySelector('.promo-slider');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+  // Tunggu sampai semua elemen siap
+    window.addEventListener('load', () => {
+        const slider = document.querySelector('.promo-slider');
+        
+        if (!slider) {
+            console.log("Slider tidak ditemukan! Cek nama class-nya Pak.");
+            return;
+        }
 
-    if (slider) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
         slider.addEventListener('mousedown', (e) => {
             isDown = true;
             slider.style.cursor = 'grabbing';
@@ -360,7 +366,9 @@
             const walk = (x - startX) * 2; 
             slider.scrollLeft = scrollLeft - walk;
         });
-    }
+        
+        console.log("Fitur Geser PC Aktif!");
+    });
     </script>
 </body>
 </html>
