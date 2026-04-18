@@ -12,9 +12,21 @@
         .card-grad { background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); }
         .ai-grad { background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%); }
         .btn-active:active { transform: scale(0.92); }
-        .promo-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding: 5px; }
+        .promo-slider { 
+            display: flex; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            gap: 15px; 
+            padding: 10px 5px; 
+            -webkit-overflow-scrolling: touch; /* Ini biar halus di HP */
+            scroll-behavior: smooth;
+        }
         .promo-slider::-webkit-scrollbar { display: none; }
-        .promo-card { min-width: 120px; scroll-snap-align: start; }
+        .promo-card { 
+            min-width: 160px; /* Ukuran kartu lebih pas */
+            scroll-snap-align: center; 
+            flex-shrink: 0; /* Biar tidak gepeng */
+        }
     </style>
 </head>
 <body>
