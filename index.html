@@ -60,7 +60,7 @@
                 <p class="text-gray-400 text-[9px] mb-4 font-bold italic uppercase tracking-widest">Silahkan anda Login atau Daftar agar bisa menikmati layanan kami, terimakasih</p>
                 <div class="flex gap-3">
                     <button onclick="openLogin()" class="flex-1 py-3.5 bg-indigo-600 text-white rounded-2xl text-[11px] font-black btn-active-effect shadow-lg shadow-indigo-100">LOGIN</button>
-                    <button class="flex-1 py-3.5 border-2 border-indigo-600 text-indigo-600 rounded-2xl text-[11px] font-black btn-active-effect">DAFTAR</button>
+                    <button onclick="window.location.href='daftar.html'" class="flex-1 py-3.5 border-2 border-indigo-600 text-indigo-600 rounded-2xl text-[11px] font-black btn-active-effect">DAFTAR</button>
                 </div>
             </div>
 
@@ -251,22 +251,32 @@ function validaSiLogin() {
     const pass = document.getElementById('password').value;
     const status = document.getElementById('user-status').value;
 
+    // 1. Ambil data asli dari hasil pendaftaran anggota
+    const namaTerdaftar = localStorage.getItem('namaLengkapAnggota');
+    const nikTerdaftar = localStorage.getItem('nikAnggota');
+
     if (!user || !pass || !status) {
-        alert("Waduh Pak, tolong isi Username, Password, dan Pilih Status!");
+        alert("Waduh Pak/Bu, tolong isi Username, Password, dan Pilih Status!");
         return;
     }
 
-    // Cek Data Tes (User: agit | Pass: 123)
-    if (user === "agit" && pass === "123" && status === "anggota") {
-        alert("Login Sukses! Selamat Datang, Pak Agit.");
+    // 2. Logika Cek: Username (Nama) & Password (NIK) harus cocok dengan data daftar
+    if (namaTerdaftar && user.toLowerCase() === namaTerdaftar.toLowerCase() && pass === nikTerdaftar) {
+        
+        // Simpan sesi login agar nama & foto muncul otomatis di dashboard
+        const sessionData = { nama: namaTerdaftar, gender: "Pria" };
+        localStorage.setItem("user_login", JSON.stringify(sessionData));
+
+        alert("Login Sukses! Selamat Datang, " + namaTerdaftar.toUpperCase());
         window.location.href = "anggota.html"; 
     } 
+    // 3. Cadangan untuk Login Admin
     else if (user === "admin" && pass === "admin123" && status === "admin") {
         alert("Login Admin Berhasil!");
         window.location.href = "admin.html";
     }
     else {
-        alert("Data Salah! Coba lagi.\n(Gunakan user 'agit' & pass '123')");
+        alert("Data Salah! Pastikan Nama & NIK sesuai dengan yang Anda daftarkan.\n\nBelum daftar? Klik tombol DAFTAR dulu ya Pak.");
     }
 }
         
