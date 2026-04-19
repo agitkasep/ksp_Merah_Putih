@@ -57,29 +57,29 @@
         </div>
     </div>
 
-    <script>
-        const html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 15, qrbox: { width: 250, height: 250 } };
-
-        html5QrCode.start(
-            { facingMode: "environment" }, 
-            config,
-            (decodedText) => {
-                // LOGIKA DETEKSI OTOMATIS
-                if (decodedText.includes("TOKOKOP-")) {
-                    alert("🛒 MENU BAYAR\nID Toko: " + decodedText.split("-")[1]);
-                } else if (decodedText.includes("ANGGOTA-")) {
-                    alert("💸 MENU TRANSFER\nKe: " + decodedText.split("-")[1]);
-                } else {
-                    alert("✅ DATA TERDETEKSI\n" + decodedText);
-                }
-                // Jika ingin kembali setelah scan:
-                // window.location.href = 'anggota.html';
-            }
-        ).catch(err => {
-            console.error("Gagal Akses Kamera", err);
-            alert("Aktifkan Izin Kamera di Pengaturan Browser Bapak");
-        });
-    </script>
-</body>
-</html>
+  45  <script>
+46      const html5QrCode = new Html5Qrcode("reader");
+47      const config = { fps: 15, qrbox: { width: 250, height: 250 } };
+48
+49      html5QrCode.start(
+50          { facingMode: "environment" }, 
+51          config,
+52          (decodedText) => {
+53              html5QrCode.stop(); // Matikan kamera setelah scan berhasil
+54              
+55              // LOGIKA OTOMATIS: Kirim data ke halaman pembayaran
+56              if (decodedText.includes("TOKOKOP")) {
+57                  window.location.href = `pembayaran.html?produk=WASERBA&id=${decodedText}`;
+58              } else if (decodedText.includes("ANGGOTA")) {
+59                  window.location.href = `pembayaran.html?produk=TRANSFER&id=${decodedText}`;
+60              } else {
+61                  // Jika QR umum/struk, kirim sebagai info umum
+62                  window.location.href = `pembayaran.html?produk=SCAN%20QRIS&id=${decodedText}`;
+63              }
+64          }
+65      ).catch(err => {
+66          console.error("Gagal Akses Kamera", err);
+67      });
+68  </script>
+69 </body>
+70 </html>
