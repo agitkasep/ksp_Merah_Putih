@@ -57,29 +57,32 @@
         </div>
     </div>
 
-  45  <script>
-46      const html5QrCode = new Html5Qrcode("reader");
-47      const config = { fps: 15, qrbox: { width: 250, height: 250 } };
-48
-49      html5QrCode.start(
-50          { facingMode: "environment" }, 
-51          config,
-52          (decodedText) => {
-53              html5QrCode.stop(); // Matikan kamera setelah scan berhasil
-54              
-55              // LOGIKA OTOMATIS: Kirim data ke halaman pembayaran
-56              if (decodedText.includes("TOKOKOP")) {
-57                  window.location.href = `pembayaran.html?produk=WASERBA&id=${decodedText}`;
-58              } else if (decodedText.includes("ANGGOTA")) {
-59                  window.location.href = `pembayaran.html?produk=TRANSFER&id=${decodedText}`;
-60              } else {
-61                  // Jika QR umum/struk, kirim sebagai info umum
-62                  window.location.href = `pembayaran.html?produk=SCAN%20QRIS&id=${decodedText}`;
-63              }
-64          }
-65      ).catch(err => {
-66          console.error("Gagal Akses Kamera", err);
-67      });
-68  </script>
+ <script>
+    // Inisialisasi Scanner
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 15, qrbox: { width: 250, height: 250 } };
+
+    // Mulai Kamera
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+        config,
+        (decodedText) => {
+            // Jika Berhasil Scan, Matikan Kamera
+            html5QrCode.stop().then(() => {
+                // Arahkan ke Halaman Pembayaran
+                if (decodedText.includes("TOKOKOP")) {
+                    window.location.href = `pembayaran.html?produk=WASERBA&id=${decodedText}`;
+                } else if (decodedText.includes("ANGGOTA")) {
+                    window.location.href = `pembayaran.html?produk=TRANSFER&id=${decodedText}`;
+                } else {
+                    // Jika QR umum (seperti struk tadi)
+                    window.location.href = `pembayaran.html?produk=SCAN%20QRIS&id=${encodeURIComponent(decodedText)}`;
+                }
+            });
+        }
+    ).catch(err => {
+        console.error("Gagal Akses Kamera", err);
+    });
+</script>
 69 </body>
 70 </html>
