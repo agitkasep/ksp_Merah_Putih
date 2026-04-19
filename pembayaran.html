@@ -64,8 +64,8 @@
             <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa fa-lock text-2xl"></i>
             </div>
-            <h3 class="font-black italic text-slate-800 uppercase text-sm mb-2">PIN KEAMANAN</h3>
-            <p class="text-[9px] font-bold text-slate-400 uppercase mb-6">Masukkan 6 digit PIN Anda</p>
+            <h3 class="font-black italic text-slate-800 uppercase text-sm mb-2">konfirmasi keamanan</h3>
+            <p class="text-[9px] font-bold text-slate-400 uppercase mb-6">Masukkan nama lengkap</p>
             
             <input type="password" id="real-pin" maxlength="6" class="absolute opacity-0 pointer-events-none" inputmode="numeric">
             
@@ -138,13 +138,13 @@
 
         function verifikasiPin() {
             const nominal = document.getElementById('input-nominal').value;
-            const pinSesuai = "123456"; // PIN Default untuk tes
+            const pinSesuai = "agit"; // PIN Default untuk tes
 
             if(realPinInput.value === pinSesuai) {
                 alert("✅ PEMBAYARAN BERHASIL!\nSaldo terpotong Rp " + parseInt(nominal).toLocaleString());
                 window.location.href = 'anggota.html';
             } else {
-                alert("❌ PIN SALAH!\nSilahkan coba lagi.");
+                alert("❌ NAMA LENGKAP SALAH!\nSilahkan coba lagi.");
                 realPinInput.value = "";
                 dots.forEach(dot => dot.classList.remove('active'));
                 realPinInput.focus();
