@@ -6,6 +6,15 @@
     <title>Pembayaran - KOPDESKEL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Animasi titik PIN saat aktif */
+        .pin-dot.active {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            transform: scale(1.2);
+            transition: all 0.2s;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans">
 
@@ -44,36 +53,102 @@
             </div>
         </div>
 
-        <button onclick="prosesTransaksi()" class="w-full bg-indigo-950 text-white py-5 rounded-[25px] font-black italic shadow-2xl shadow-indigo-200 active:scale-95 transition-all flex items-center justify-center gap-3">
+        <button onclick="bukaModalPin()" class="w-full bg-indigo-950 text-white py-5 rounded-[25px] font-black italic shadow-2xl shadow-indigo-200 active:scale-95 transition-all flex items-center justify-center gap-3">
             <i class="fa fa-fingerprint text-xl"></i>
             KONFIRMASI & BAYAR SEKARANG
         </button>
     </div>
 
+    <div id="pin-modal" class="fixed inset-0 bg-indigo-950/90 backdrop-blur-sm z-[1000] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-xs rounded-[35px] p-8 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-lock text-2xl"></i>
+            </div>
+            <h3 class="font-black italic text-slate-800 uppercase text-sm mb-2">PIN KEAMANAN</h3>
+            <p class="text-[9px] font-bold text-slate-400 uppercase mb-6">Masukkan 6 digit PIN Anda</p>
+            
+            <input type="password" id="real-pin" maxlength="6" class="absolute opacity-0 pointer-events-none" inputmode="numeric">
+            
+            <div class="flex justify-center gap-3 mb-8" onclick="document.getElementById('real-pin').focus()">
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+                <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-200"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="tutupModalPin()" class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">Batal</button>
+                <button onclick="verifikasiPin()" class="bg-indigo-600 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-200">Konfirmasi</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Ambil data dari URL (misal: pembayaran.html?produk=WASERBA&id=TOKOKOP-01)
+        // 1. Inisialisasi Data dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const produk = urlParams.get('produk') || 'Transaksi';
         const id = urlParams.get('id') || '-';
         const harga = urlParams.get('harga') || '';
 
-        // Tampilkan Data ke Layar
         document.getElementById('nama-produk').innerText = produk;
         document.getElementById('detail-tujuan').innerText = "ID/Tujuan: " + id;
         if(harga) document.getElementById('input-nominal').value = harga;
 
-        // Logika Ikon Otomatis
+        // 2. Pengaturan Ikon Otomatis
         const iconDiv = document.getElementById('icon-produk');
         if(produk.includes('PULSA')) iconDiv.innerHTML = '<i class="fa fa-mobile-screen"></i>';
         if(produk.includes('LISTRIK')) iconDiv.innerHTML = '<i class="fa fa-bolt"></i>';
         if(produk.includes('WASERBA')) iconDiv.innerHTML = '<i class="fa fa-shop"></i>';
 
-        function prosesTransaksi() {
+        // 3. Logika PIN
+        const realPinInput = document.getElementById('real-pin');
+        const dots = document.querySelectorAll('.pin-dot');
+
+        function bukaModalPin() {
             const nominal = document.getElementById('input-nominal').value;
-            if(!nominal || nominal <= 0) return alert("Masukkan nominal dengan benar!");
+            if(!nominal || nominal <= 0) {
+                alert("Masukkan nominal dengan benar!");
+                return;
+            }
+            document.getElementById('pin-modal').classList.remove('hidden');
+            realPinInput.focus();
+        }
+
+        function tutupModalPin() {
+            document.getElementById('pin-modal').classList.add('hidden');
+            realPinInput.value = "";
+            dots.forEach(dot => dot.classList.remove('active'));
+        }
+
+        // Event saat mengetik PIN (Visual dots)
+        realPinInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            dots.forEach((dot, index) => {
+                if (index < val.length) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
             
-            alert("✅ TRANSAKSI BERHASIL!\nPembayaran " + produk + " sebesar Rp " + parseInt(nominal).toLocaleString() + " sukses.");
-            window.location.href = 'anggota.html';
+            // Otomatis verifikasi jika sudah 6 digit
+            if(val.length === 6) {
+                setTimeout(verifikasiPin, 300);
+            }
+        });
+
+        function verifikasiPin() {
+            const nominal = document.getElementById('input-nominal').value;
+            const pinSesuai = "123456"; // PIN Default untuk tes
+
+            if(realPinInput.value === pinSesuai) {
+                alert("✅ PEMBAYARAN BERHASIL!\nSaldo terpotong Rp " + parseInt(nominal).toLocaleString());
+                window.location.href = 'anggota.html';
+            } else {
+                alert("❌ PIN SALAH!\nSilahkan coba lagi.");
+                realPinInput.value = "";
+                dots.forEach(dot => dot.classList.remove('active'));
+                realPinInput.focus();
+            }
         }
     </script>
 </body>
