@@ -1,1 +1,178 @@
-daftar
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Anggota - KSP Merah Putih</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Styling untuk video kamera agar bulat dan rapi */
+        #camera-stream, #photo-preview-ktp, #photo-preview-face {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
+
+    <div class="p-8 bg-indigo-950 text-white rounded-b-[40px] shadow-2xl text-center relative overflow-hidden">
+        <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10">
+            <h1 class="font-black italic text-2xl tracking-tighter uppercase">KSP MERAH PUTIH</h1>
+            <p class="text-[10px] font-bold opacity-70 tracking-[4px] uppercase mt-1">Digital Desa Mandiri</p>
+        </div>
+    </div>
+
+    <div class="p-6 -mt-10 max-w-md mx-auto relative z-20">
+        
+        <div id="step-data" class="bg-white rounded-[35px] shadow-xl p-8 border border-slate-100">
+            <h2 class="text-center font-black text-indigo-950 uppercase italic text-sm mb-8 tracking-widest">Data Diri</h2>
+            <div class="mb-5">
+                <label class="text-[9px] font-black text-slate-400 uppercase block mb-2 ml-2">Nama Lengkap (Sesuai KTP) :</label>
+                <input type="text" id="nama-lengkap" class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl py-4 px-5 text-sm font-bold text-indigo-950 uppercase" placeholder="AGIT PAMUNGKAS">
+            </div>
+            <div class="mb-8">
+                <label class="text-[9px] font-black text-slate-400 uppercase block mb-2 ml-2">Nomor NIK KTP :</label>
+                <input type="number" id="nik" class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl py-4 px-5 text-sm font-bold text-indigo-950" placeholder="16 DIGIT NOMOR KTP">
+            </div>
+            <button onclick="lanjutKeFoto()" class="w-full bg-indigo-950 text-white py-5 rounded-[25px] font-black italic shadow-2xl flex items-center justify-center gap-3">
+                LANJUT KE FOTO VERIFIKASI
+                <i class="fa fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div id="step-photo" class="bg-white rounded-[35px] shadow-xl p-8 border border-slate-100 hidden">
+            <h2 class="text-center font-black text-indigo-950 uppercase italic text-sm mb-6 tracking-widest">Verifikasi Wajah & KTP</h2>
+            
+            <div class="relative w-full aspect-video bg-slate-100 rounded-[25px] mb-6 border-4 border-dashed border-slate-200 overflow-hidden" id="camera-container">
+                <video id="camera-stream" autoplay playsinline class="hidden"></video>
+                <canvas id="photo-canvas" class="hidden"></canvas>
+                
+                <div id="ktp-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                    <i class="fa fa-id-card text-5xl mb-3"></i>
+                    <p class="text-[10px] font-bold uppercase">Foto KTP Anda</p>
+                </div>
+                <div id="face-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 hidden">
+                    <i class="fa fa-user-circle text-5xl mb-3"></i>
+                    <p class="text-[10px] font-bold uppercase">Foto Wajah Setengah Badan</p>
+                </div>
+
+                <img id="photo-preview-ktp" class="absolute inset-0 hidden">
+                <img id="photo-preview-face" class="absolute inset-0 hidden">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button id="btn-ktp" onclick="ambilFoto('ktp')" class="bg-slate-100 text-indigo-950 py-4 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2">
+                    <i class="fa fa-id-card"></i> AMBIL FOTO KTP
+                </button>
+                <button id="btn-face" onclick="ambilFoto('face')" class="bg-slate-100 text-indigo-950 py-4 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 opacity-50" disabled>
+                    <i class="fa fa-camera"></i> AMBIL FOTO WAJAH
+                </button>
+            </div>
+
+            <button id="btn-submit" onclick="prosesDaftarAkhir()" class="w-full bg-emerald-600 text-white py-5 rounded-[25px] font-black italic shadow-2xl flex items-center justify-center gap-3 opacity-50" disabled>
+                <i class="fa fa-check-circle"></i> SELESAI & DAFTAR
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        let ktpPhotoData = null;
+        let facePhotoData = null;
+        let currentStream = null;
+
+        function lanjutKeFoto() {
+            const nama = document.getElementById('nama-lengkap').value;
+            const nik = document.getElementById('nik').value;
+
+            if(!nama || nik.length < 16) {
+                alert("Mohon isi Nama Lengkap dan NIK (16 digit) dengan benar!");
+                return;
+            }
+
+            document.getElementById('step-data').classList.add('hidden');
+            document.getElementById('step-photo').classList.remove('hidden');
+            startCamera();
+        }
+
+        async function startCamera() {
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+                const video = document.getElementById('camera-stream');
+                video.srcObject = currentStream;
+                video.classList.remove('hidden');
+            } catch (err) {
+                alert("Gagal mengakses kamera. Mohon izinkan akses kamera!");
+                console.error(err);
+            }
+        }
+
+        function ambilFoto(tipe) {
+            const video = document.getElementById('camera-stream');
+            const canvas = document.getElementById('photo-canvas');
+            const context = canvas.getContext('2d');
+
+            // Atur ukuran canvas sesuai video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Gambar video ke canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Ambil data gambar (Base64)
+            const photoData = canvas.toDataURL('image/jpeg', 0.8); // Kualitas 80% agar tidak terlalu besar
+
+            if (tipe === 'ktp') {
+                ktpPhotoData = photoData;
+                document.getElementById('ktp-placeholder').classList.add('hidden');
+                const preview = document.getElementById('photo-preview-ktp');
+                preview.src = photoData;
+                preview.classList.remove('hidden');
+                
+                // Aktifkan tombol foto wajah
+                document.getElementById('face-placeholder').classList.remove('hidden');
+                const btnFace = document.getElementById('btn-face');
+                btnFace.classList.remove('opacity-50', 'bg-slate-100');
+                btnFace.classList.add('bg-indigo-600', 'text-white');
+                btnFace.disabled = false;
+                alert("Foto KTP berhasil diambil! Sekarang silakan ambil foto wajah.");
+                
+            } else if (tipe === 'face') {
+                facePhotoData = photoData;
+                const preview = document.getElementById('photo-preview-face');
+                preview.src = photoData;
+                preview.classList.remove('hidden');
+                document.getElementById('face-placeholder').classList.add('hidden');
+                
+                // Aktifkan tombol submit
+                const btnSubmit = document.getElementById('btn-submit');
+                btnSubmit.classList.remove('opacity-50');
+                btnSubmit.disabled = false;
+                
+                // Matikan kamera
+                if(currentStream) currentStream.getTracks().forEach(track => track.stop());
+                video.classList.add('hidden');
+                alert("Foto Wajah berhasil diambil! Silakan klik 'SELESAI & DAFTAR'.");
+            }
+        }
+
+        function prosesDaftarAkhir() {
+            const nama = document.getElementById('nama-lengkap').value;
+            const nik = document.getElementById('nik').value;
+
+            // SIMPAN DATA KE LOCALSTORAGE (Database Sementara)
+            localStorage.setItem('namaLengkapAnggota', nama);
+            localStorage.setItem('nikAnggota', nik);
+            localStorage.setItem('fotoWajahAnggota', facePhotoData); // Ini yang akan kita pakai di Dashboard
+
+            alert("✅ PENDAFTARAN BERHASIL!\nSelamat bergabung, " + nama.toUpperCase() + ".");
+            window.location.href = 'anggota.html'; // Pindah ke Dashboard
+        }
+    </script>
+</body>
+</html>
