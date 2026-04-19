@@ -91,7 +91,17 @@
     <div class="app-container">
         <div class="p-4 bg-white flex justify-between items-center border-b sticky top-0 z-[200]">
             <div class="flex items-center gap-2">
-                <div class="w-9 h-9 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 shadow-sm"><i class="fa fa-user-circle text-lg"></i></div>
+                <div class="w-9 h-9 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 shadow-sm"><div class="flex items-center gap-2">
+    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 shadow-sm overflow-hidden border border-indigo-200">
+        <i id="default-icon" class="fa fa-user-circle text-lg"></i>
+        <img id="profile-photo" class="w-full h-full object-cover hidden">
+    </div>
+    <div>
+        <p id="greeting" class="text-[7px] font-bold text-gray-400 uppercase italic leading-none"></p>
+        <h1 id="display-name" class="text-[10px] font-black text-indigo-900 uppercase italic leading-tight">MEMUAT...</h1>
+        <p class="text-[7px] font-black text-indigo-600 uppercase italic leading-none">📍 Jakarta Timur</p>
+    </div>
+</div></div>
                 <div>
                     <p id="greeting" class="text-[7px] font-bold text-gray-400 uppercase italic leading-none"></p>
                     <h1 id="display-name" class="text-[10px] font-black text-indigo-900 uppercase italic leading-tight">MEMUAT...</h1>
@@ -294,26 +304,37 @@
     <script>
         // FUNGSI UPDATE DATA OTOMATIS
         function initApp() {
-            const now = new Date();
-            const jam = now.getHours();
-            
-            // 1. Logika Sapaan Waktu
-            let sapaWaktu = "Selamat Malam";
-            if(jam >= 5 && jam < 11) sapaWaktu = "Selamat Pagi";
-            else if(jam >= 11 && jam < 15) sapaWaktu = "Selamat Siang";
-            else if(jam >= 15 && jam < 18) sapaWaktu = "Selamat Sore";
-            document.getElementById('greeting').innerText = `${sapaWaktu}, Selamat Datang Kembali`;
+    const now = new Date();
+    const jam = now.getHours();
+    
+    // 1. Logika Sapaan Waktu
+    let sapaWaktu = "Selamat Malam";
+    if(jam >= 5 && jam < 11) sapaWaktu = "Selamat Pagi";
+    else if(jam >= 11 && jam < 15) sapaWaktu = "Selamat Siang";
+    else if(jam >= 15 && jam < 18) sapaWaktu = "Selamat Sore";
+    document.getElementById('greeting').innerText = `${sapaWaktu}, Selamat Datang Kembali`;
 
-            // 2. Logika Nama & Panggilan (Ambil dari data Login)
-            // Simulasi data dari login: { nama: "Agit", gender: "Pria" }
-            const userData = JSON.parse(localStorage.getItem("user_login")) || { nama: "Agit", gender: "Pria" };
-            const panggilan = (userData.gender === "Pria" || userData.gender === "Laki-laki") ? "Pa" : "Bu";
-            document.getElementById('display-name').innerText = `${panggilan} ${userData.nama}`;
+    // 2. Ambil data dari pendaftaran (Daftar.html)
+    const userData = JSON.parse(localStorage.getItem("user_login")) || { nama: "Agit", gender: "Pria" };
+    const fotoWajah = localStorage.getItem('fotoWajahAnggota'); // Ambil foto wajah dari pendaftaran
+    
+    const panggilan = (userData.gender === "Pria" || userData.gender === "Laki-laki") ? "Pa" : "Bu";
+    document.getElementById('display-name').innerText = `${panggilan} ${userData.nama}`;
 
-            // 3. Update Tanggal & Hari
-            const opsiTgl = { weekday: 'long', day: 'numeric', month: 'short' };
-            document.getElementById('real-date').innerText = now.toLocaleDateString('id-ID', opsiTgl);
-        }
+    // 3. LOGIKA TAMPILKAN FOTO OTOMATIS
+    const imgElement = document.getElementById('profile-photo');
+    const iconElement = document.getElementById('default-icon');
+
+    if (fotoWajah) {
+        imgElement.src = fotoWajah;
+        imgElement.classList.remove('hidden');
+        iconElement.classList.add('hidden');
+    }
+
+    // 4. Update Tanggal & Hari
+    const opsiTgl = { weekday: 'long', day: 'numeric', month: 'short' };
+    document.getElementById('real-date').innerText = now.toLocaleDateString('id-ID', opsiTgl);
+}
 
         function updateClock() {
             const now = new Date();
