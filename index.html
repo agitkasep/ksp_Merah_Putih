@@ -247,36 +247,43 @@ function closeLogin() {
 }
 
 function validaSiLogin() {
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
+    const userMasker = document.getElementById('username').value;
+    const passMasker = document.getElementById('password').value;
     const status = document.getElementById('user-status').value;
 
-    // 1. Ambil data asli dari hasil pendaftaran anggota
-    const namaTerdaftar = localStorage.getItem('namaLengkapAnggota');
-    const nikTerdaftar = localStorage.getItem('nikAnggota');
+    // 1. Ambil data Akun yang dibuat saat daftar tadi
+    const userTerdaftar = localStorage.getItem('usernameAnggota');
+    const passTerdaftar = localStorage.getItem('passwordAnggota');
+    const namaAsli = localStorage.getItem('namaLengkapAnggota');
+    const genderAsli = localStorage.getItem('genderAnggota');
 
-    if (!user || !pass || !status) {
+    if (!userMasker || !passMasker || !status) {
         alert("Waduh Pak/Bu, tolong isi Username, Password, dan Pilih Status!");
         return;
     }
 
-    // 2. Logika Cek: Username (Nama) & Password (NIK) harus cocok dengan data daftar
-    if (namaTerdaftar && user.toLowerCase() === namaTerdaftar.toLowerCase() && pass === nikTerdaftar) {
+    // 2. Logika Cek: Harus cocok dengan Username & Password buatan anggota
+    if (userTerdaftar && userMasker === userTerdaftar && passMasker === passTerdaftar) {
         
-        // Simpan sesi login agar nama & foto muncul otomatis di dashboard
-        const sessionData = { nama: namaTerdaftar, gender: "Pria" };
+        // Simpan sesi login untuk dibawa ke halaman anggota.html
+        const sapaan = (genderAsli === "LAKI-LAKI") ? "Bpk" : "Ibu";
+        const sessionData = { 
+            nama: namaAsli, 
+            sapaan: sapaan,
+            isLoggedIn: true 
+        };
         localStorage.setItem("user_login", JSON.stringify(sessionData));
 
-        alert("Login Sukses! Selamat Datang, " + namaTerdaftar.toUpperCase());
+        alert(`Login Sukses! Selamat Datang ${sapaan} ${namaAsli.toUpperCase()}`);
         window.location.href = "anggota.html"; 
     } 
-    // 3. Cadangan untuk Login Admin
-    else if (user === "admin" && pass === "admin123" && status === "admin") {
+    // 3. Cadangan Login Admin tetap berfungsi
+    else if (userMasker === "admin" && passMasker === "admin123" && status === "admin") {
         alert("Login Admin Berhasil!");
         window.location.href = "admin.html";
     }
     else {
-        alert("Data Salah! Pastikan Nama & NIK sesuai dengan yang Anda daftarkan.\n\nBelum daftar? Klik tombol DAFTAR dulu ya Pak.");
+        alert("Username atau Password Salah!\nPastikan sesuai dengan yang Anda buat saat mendaftar.");
     }
 }
         
