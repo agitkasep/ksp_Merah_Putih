@@ -69,7 +69,7 @@
                 <button id="btn-ktp" onclick="ambilFoto('ktp')" class="bg-slate-100 text-indigo-950 py-4 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2">
                     <i class="fa fa-id-card"></i> AMBIL FOTO KTP
                 </button>
-                <button id="btn-face" onclick="ambilFoto('face')" class="bg-slate-100 text-indigo-950 py-4 rounded-xl text-[10px] font-black uppercase flex items-center justify-center gap-2 opacity-50" disabled>
+                <button id="btn-face" onclick="ambilFoto('face')" disabled class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl font-bold opacity-50 flex items-center justify-center gap-3">
                     <i class="fa fa-camera"></i> AMBIL FOTO WAJAH
                 </button>
             </div>
@@ -81,10 +81,11 @@
 
     </div>
 
-    <script>
+   <script>
         let ktpPhotoData = null;
         let facePhotoData = null;
         let currentStream = null;
+        let modeKamera = "environment"; // Mulai dengan kamera belakang untuk KTP
 
         function lanjutKeFoto() {
             const nama = document.getElementById('nama-lengkap').value;
@@ -100,97 +101,82 @@
             startCamera();
         }
 
-       let modeKamera = "environment"; // Default kamera belakang
+        async function startCamera() {
+            // Matikan kamera sebelumnya jika masih nyala
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: modeKamera }, 
+                    audio: false 
+                });
+                const video = document.getElementById('camera-stream');
+                video.srcObject = currentStream;
+                video.classList.remove('hidden');
+            } catch (err) {
+                alert("Gagal akses kamera! Mohon izinkan akses kamera di pengaturan browser.");
+                console.error(err);
+            }
+        }
 
-async function startCamera() {
-    if (currentStream) {
-        currentStream.getTracks().forEach(track => track.stop());
-    }
-    try {
-        currentStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: modeKamera }, 
-            audio: false 
-        });
-        const video = document.getElementById('camera-stream');
-        video.srcObject = currentStream;
-        video.classList.remove('hidden');
-    } catch (err) {
-        alert("Gagal akses kamera!");
-    }
-}
+        function ambilFoto(tipe) {
+            const video = document.getElementById('camera-stream');
+            const canvas = document.getElementById('photo-canvas');
+            const context = canvas.getContext('2d');
 
-       video.srcObject = currentStream;
-        video.classList.remove('hidden');
-    } catch (err) {
-        alert("Gagal mengakses kamera. Mohon izinkan akses kamera!");
-        console.error(err);
-    }
-}
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-function ambilFoto(tipe) {
-    const video = document.getElementById('camera-stream');
-    const canvas = document.getElementById('photo-canvas');
-    const context = canvas.getContext('2d');
+            const photoData = canvas.toDataURL('image/jpeg', 0.8);
 
-    // Atur ukuran canvas sesuai video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // Gambar video ke canvas
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Ambil data gambar (Base64)
-    const photoData = canvas.toDataURL('image/jpeg', 0.8);
-
-    if (tipe === 'ktp') {
-        ktpPhotoData = photoData;
-        document.getElementById('ktp-placeholder').classList.add('hidden');
-        const preview = document.getElementById('photo-preview-ktp');
-        preview.src = photoData;
-        preview.classList.remove('hidden');
-        
-        // --- LOGIKA OTOMATIS PINDAH KAMERA DEPAN ---
-        modeKamera = "user"; // Set mode ke kamera selfie
-        startCamera(); // Jalankan ulang kamera
-        
-        // Aktifkan tombol foto wajah
-        document.getElementById('face-placeholder').classList.remove('hidden');
-        const btnFace = document.getElementById('btn-face');
-        btnFace.classList.remove('opacity-50', 'bg-slate-100');
-        btnFace.classList.add('bg-indigo-600', 'text-white');
-        btnFace.disabled = false;
-        alert("Foto KTP Berhasil! Sekarang kamera otomatis pindah ke DEPAN untuk Verifikasi Wajah.");
-        
-    } else if (tipe === 'face') {
-        facePhotoData = photoData;
-        const preview = document.getElementById('photo-preview-face');
-        preview.src = photoData;
-        preview.classList.remove('hidden');
-        document.getElementById('face-placeholder').classList.add('hidden');
-        
-        // Aktifkan tombol selesai
-        const btnSubmit = document.getElementById('btn-submit');
-        btnSubmit.classList.remove('opacity-50');
-        btnSubmit.disabled = false;
-        
-        // Matikan kamera setelah semua foto diambil
-        if(currentStream) currentStream.getTracks().forEach(track => track.stop());
-        video.classList.add('hidden');
-        alert("Foto Wajah Berhasil! Silakan klik 'SELESAI & DAFTAR'.");
-    }
-}
+            if (tipe === 'ktp') {
+                ktpPhotoData = photoData;
+                document.getElementById('ktp-placeholder').classList.add('hidden');
+                const preview = document.getElementById('photo-preview-ktp');
+                preview.src = photoData;
+                preview.classList.remove('hidden');
+                
+                // --- PROSES PINDAH KAMERA ---
+                alert("Foto KTP Berhasil! Sekarang kamera otomatis pindah ke DEPAN untuk Verifikasi Wajah.");
+                modeKamera = "user"; // Ganti ke selfie
+                startCamera(); 
+                
+                // Aktifkan tombol wajah
+                const btnFace = document.getElementById('btn-face');
+                btnFace.classList.remove('opacity-50', 'bg-slate-100');
+                btnFace.classList.add('bg-indigo-600', 'text-white');
+                btnFace.disabled = false;
+                
+            } else if (tipe === 'face') {
+                facePhotoData = photoData;
+                const preview = document.getElementById('photo-preview-face');
+                preview.src = photoData;
+                preview.classList.remove('hidden');
+                
+                // Aktifkan tombol selesai
+                const btnSubmit = document.getElementById('btn-submit');
+                btnSubmit.classList.remove('opacity-50');
+                btnSubmit.disabled = false;
+                
+                // Matikan kamera
+                if(currentStream) currentStream.getTracks().forEach(track => track.stop());
+                video.classList.add('hidden');
+                alert("Foto Wajah Berhasil! Silakan klik 'SELESAI & DAFTAR'.");
+            }
+        }
 
         function prosesDaftarAkhir() {
             const nama = document.getElementById('nama-lengkap').value;
             const nik = document.getElementById('nik').value;
 
-            // SIMPAN DATA KE LOCALSTORAGE (Database Sementara)
             localStorage.setItem('namaLengkapAnggota', nama);
             localStorage.setItem('nikAnggota', nik);
-            localStorage.setItem('fotoWajahAnggota', facePhotoData); // Ini yang akan kita pakai di Dashboard
+            localStorage.setItem('fotoWajahAnggota', facePhotoData); 
 
             alert("✅ PENDAFTARAN BERHASIL!\nSelamat bergabung, " + nama.toUpperCase() + ".");
-            window.location.href = 'anggota.html'; // Pindah ke Dashboard
+            window.location.href = 'anggota.html'; 
         }
     </script>
 </body>
