@@ -1,1 +1,243 @@
-cek pajak dan pajak tahunan kendaraan
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>E-Samsat - KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
+        
+        /* =========================================
+           EFEK TERBARU: METALLIC SCANNER & EMBOSS
+           ========================================= */
+        
+        /* 1. Efek Plat Nomor Kendaraan (Emboss) */
+        .plat-container {
+            background: #111827; /* Hitam Plat */
+            border: 3px solid #f8fafc;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .plat-container:focus-within {
+            transform: scale(1.02);
+            border-color: #ef4444; /* Merah Samsat */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 10px 25px -5px rgba(239, 68, 68, 0.4);
+        }
+        
+        .plat-input {
+            background: transparent;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            outline: none;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3); /* Efek tulisan timbul */
+        }
+        .plat-input::placeholder { color: #475569; text-shadow: none; }
+
+        /* 2. Efek Card Tagihan (Metallic Scanner) */
+        .scan-card {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #f1f5f9;
+        }
+        .scan-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s ease;
+        }
+        .scan-card:hover::before { left: 150%; } /* Kilatan cahaya menyapu */
+
+        /* 3. Efek Tombol (Strobe / Flash) */
+        .btn-strobe { position: relative; overflow: hidden; }
+        .btn-strobe::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 0; transform: scale(1); transition: all 0.2s ease;
+        }
+        .btn-strobe:active::after { opacity: 1; transform: scale(0); transition: 0s; }
+
+        .btn-active:active { transform: scale(0.96); }
+
+        /* Animasi Slide Masuk */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: slideUp 0.4s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="bg-red-700 p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[20px] shadow-lg">
+            <i onclick="window.history.back()" class="fa fa-arrow-left text-white text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">E-SAMSAT NASIONAL <i class="fa fa-shield-halved ml-1"></i></h1>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto">
+            
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-start gap-3 mb-6 animate-in shadow-sm">
+                <i class="fa fa-car-side text-red-600 mt-1 text-lg"></i>
+                <div>
+                    <p class="text-[9px] font-black text-slate-800 uppercase">Bayar Pajak Kendaraan (PKB)</p>
+                    <p class="text-[8px] font-bold text-slate-500 mt-1 leading-relaxed">Cek dan bayar pajak motor/mobil Anda tanpa harus antre di kantor Samsat. Siapkan STNK Anda.</p>
+                </div>
+            </div>
+
+            <div class="animate-in" style="animation-delay: 0.1s">
+                
+                <div class="mb-5">
+                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Wilayah Samsat (Provinsi)</label>
+                    <div class="relative">
+                        <i class="fa fa-map-location-dot absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <select id="wilayah" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl py-4 pl-10 pr-4 text-xs font-black text-slate-700 appearance-none cursor-pointer outline-none focus:border-red-500 transition-all">
+                            <option value="" disabled selected>-- Pilih Provinsi --</option>
+                            <option value="JABAR">Jawa Barat</option>
+                            <option value="DKI">DKI Jakarta</option>
+                            <option value="JATENG">Jawa Tengah</option>
+                            <option value="JATIM">Jawa Timur</option>
+                            <option value="BANTEN">Banten</option>
+                        </select>
+                        <i class="fa fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor Polisi (Plat)</label>
+                    <div class="plat-container rounded-[15px] p-2 flex gap-2 justify-center">
+                        <input type="text" id="plat-1" placeholder="E" maxlength="2" class="plat-input w-16 border-r-2 border-slate-600 border-dashed">
+                        <input type="number" id="plat-2" placeholder="1234" maxlength="4" class="plat-input w-24">
+                        <input type="text" id="plat-3" placeholder="XYZ" maxlength="3" class="plat-input w-20 border-l-2 border-slate-600 border-dashed">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">5 Digit Terakhir No. Rangka</label>
+                    <div class="relative">
+                        <i class="fa fa-fingerprint absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="no-rangka" placeholder="Contoh: 88712" maxlength="5" class="w-full bg-slate-50 border-2 border-slate-200 rounded-xl py-4 pl-10 pr-4 text-xs font-black text-slate-700 uppercase outline-none focus:border-red-500 transition-all tracking-[0.3em]">
+                    </div>
+                    <p class="text-[7px] text-red-500 font-bold ml-2 mt-1 italic">*Lihat pada lembar STNK Anda</p>
+                </div>
+
+                <button onclick="cekSamsat()" id="btn-cek" class="w-full py-4 bg-slate-800 text-white rounded-2xl text-[11px] font-black uppercase italic tracking-widest btn-active shadow-lg btn-strobe transition-colors">
+                    CARI DATA KENDARAAN <i class="fa fa-search ml-1"></i>
+                </button>
+
+            </div>
+
+            <div id="hasil-samsat" class="hidden mt-8 border-t-2 border-dashed border-slate-200 pt-6 animate-in">
+                <h3 class="text-[11px] font-black text-red-700 uppercase italic mb-4">Rincian Pajak :</h3>
+                
+                <div class="scan-card bg-white p-5 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] mb-4">
+                    
+                    <div class="flex justify-between items-center mb-4 border-b pb-3">
+                        <div>
+                            <p class="text-[8px] font-bold text-slate-400 uppercase">Nomor Polisi</p>
+                            <h4 id="res-plat" class="text-sm font-black text-slate-800 mt-1 tracking-widest">-</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[8px] font-black uppercase">Data Ditemukan</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase">Merek / Tipe</span>
+                            <span class="text-[9px] font-black text-slate-800 uppercase">HONDA / BEAT 110 FI</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase">Tahun Pembuatan</span>
+                            <span class="text-[9px] font-black text-slate-800 uppercase">2020</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase">Masa Berlaku STNK</span>
+                            <span class="text-[9px] font-black text-red-600 uppercase">15 AGU 2026</span>
+                        </div>
+                        
+                        <div class="border-t border-dashed pt-3 mt-3">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[9px] font-bold text-slate-500 uppercase">PKB Pokok</span>
+                                <span class="text-[9px] font-black text-slate-800">Rp 245.000</span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[9px] font-bold text-slate-500 uppercase">SWDKLLJ Pokok</span>
+                                <span class="text-[9px] font-black text-slate-800">Rp 35.000</span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[9px] font-bold text-slate-500 uppercase">Denda</span>
+                                <span class="text-[9px] font-black text-slate-800">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded-xl flex justify-between items-center mt-2 border border-slate-100">
+                            <span class="text-[10px] font-black text-red-700 uppercase">TOTAL BAYAR</span>
+                            <span class="text-base font-black text-red-700">Rp 280.000</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div id="footer-bayar" class="p-6 bg-white border-t rounded-t-[30px] shadow-[0_-15px_40px_rgba(0,0,0,0.06)] relative z-50 hidden animate-in">
+            <button onclick="bayarPajak()" class="w-full py-5 bg-red-600 hover:bg-red-700 transition-colors text-white rounded-[20px] text-[12px] font-black uppercase italic tracking-widest btn-active btn-strobe shadow-xl shadow-red-200">
+                BAYAR PAJAK SEKARANG <i class="fa fa-check-circle ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        function cekSamsat() {
+            const wilayah = document.getElementById('wilayah').value;
+            const p1 = document.getElementById('plat-1').value;
+            const p2 = document.getElementById('plat-2').value;
+            const p3 = document.getElementById('plat-3').value;
+            const rangka = document.getElementById('no-rangka').value;
+
+            if (!wilayah || !p1 || !p2 || !p3 || !rangka) {
+                alert("Mohon lengkapi Wilayah, Plat Nomor, dan 5 Digit Terakhir Rangka kendaraan Anda.");
+                return;
+            }
+
+            const nopol = `${p1.toUpperCase()} ${p2} ${p3.toUpperCase()}`;
+            const btn = document.getElementById('btn-cek');
+            const originalText = btn.innerHTML;
+            
+            // Efek Loading
+            btn.innerHTML = `<i class="fa fa-spinner fa-spin"></i> MENCARI KE DATABASE SAMSAT...`;
+            btn.classList.replace('bg-slate-800', 'bg-slate-500');
+            
+            setTimeout(() => {
+                // Kembalikan tombol
+                btn.innerHTML = originalText;
+                btn.classList.replace('bg-slate-500', 'bg-slate-800');
+                
+                // Tampilkan Hasil
+                document.getElementById('hasil-samsat').classList.remove('hidden');
+                document.getElementById('footer-bayar').classList.remove('hidden');
+                document.getElementById('res-plat').innerText = nopol;
+
+                // Auto scroll ke hasil
+                document.querySelector('.flex-1').scrollTo({ top: 500, behavior: 'smooth' });
+                
+                if (navigator.vibrate) navigator.vibrate(100);
+            }, 1500);
+        }
+
+        function bayarPajak() {
+            const nopol = document.getElementById('res-plat').innerText;
+            alert(`Sistem sedang memproses pembayaran pajak untuk kendaraan ${nopol}. \nSistem akan menerbitkan e-TBPKP setelah pembayaran berhasil.`);
+        }
+    </script>
+</body>
+</html>
