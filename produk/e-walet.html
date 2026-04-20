@@ -1,1 +1,153 @@
-ewalet
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Top Up E-Wallet - KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
+        
+        /* =========================================
+           EFEK TERBARU: NEON BORDER GLOW & MAGNETIC
+           ========================================= */
+        .wallet-card { 
+            position: relative; 
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 2px solid #f1f5f9;
+            background: white;
+            z-index: 1;
+        }
+
+        .wallet-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            z-index: 10;
+            border-color: transparent;
+        }
+
+        /* Cahaya Neon Berdasarkan Provider */
+        .glow-dana:hover { box-shadow: 0 0 20px rgba(26, 115, 232, 0.4); border-color: #1a73e8; }
+        .glow-gopay:hover { box-shadow: 0 0 20px rgba(0, 170, 19, 0.4); border-color: #00aa13; }
+        .glow-ovo:hover { box-shadow: 0 0 20px rgba(76, 43, 144, 0.4); border-color: #4c2b90; }
+        .glow-shopee:hover { box-shadow: 0 0 20px rgba(238, 77, 45, 0.4); border-color: #ee4d2d; }
+        .glow-linkaja:hover { box-shadow: 0 0 20px rgba(224, 44, 45, 0.4); border-color: #e02c2d; }
+
+        .wallet-img { transition: transform 0.3s ease; }
+        .wallet-card:hover .wallet-img { transform: rotate(5deg) scale(1.1); }
+
+        .btn-active:active { transform: scale(0.95); }
+        input:focus { border-color: #4f46e5 !important; background: white !important; outline: none; }
+
+        /* Animasi Masuk */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: slideUp 0.5s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="bg-white p-5 flex items-center border-b sticky top-0 z-50">
+            <i onclick="window.history.back()" class="fa fa-chevron-left text-indigo-600 text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] text-indigo-950 mr-8">TOP UP E-WALLET</h1>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto">
+            
+            <div class="mb-8 animate-in">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor HP / ID Dompet Digital</label>
+                <div class="relative">
+                    <i class="fa fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-lg"></i>
+                    <input type="number" id="wallet-number" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-5 pl-12 pr-4 text-sm font-black text-slate-700 transition-all shadow-inner tracking-widest">
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-5 animate-in" style="animation-delay: 0.1s">
+                <h3 class="text-[10px] font-black text-indigo-950 uppercase italic">Pilih E-Wallet :</h3>
+                <span class="text-[7px] font-bold text-gray-400 uppercase tracking-widest">Wajib dipilih</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-8 animate-in" style="animation-delay: 0.2s">
+                
+                <div onclick="selectWallet('DANA')" class="wallet-card glow-dana flex flex-col items-center justify-center p-5 rounded-[30px] cursor-pointer">
+                    <div class="w-20 h-10 mb-2 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_DANA.svg/512px-Logo_DANA.svg.png" alt="DANA" class="w-full h-full object-contain wallet-img">
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-800">DANA</span>
+                </div>
+
+                <div onclick="selectWallet('OVO')" class="wallet-card glow-ovo flex flex-col items-center justify-center p-5 rounded-[30px] cursor-pointer">
+                    <div class="w-20 h-10 mb-2 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Logo_ovo_purple.svg/512px-Logo_ovo_purple.svg.png" alt="OVO" class="w-full h-full object-contain wallet-img">
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-800">OVO</span>
+                </div>
+
+                <div onclick="selectWallet('GoPay')" class="wallet-card glow-gopay flex flex-col items-center justify-center p-5 rounded-[30px] cursor-pointer">
+                    <div class="w-20 h-10 mb-2 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" alt="GoPay" class="w-full h-full object-contain wallet-img">
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-800">GoPay</span>
+                </div>
+
+                <div onclick="selectWallet('ShopeePay')" class="wallet-card glow-shopee flex flex-col items-center justify-center p-5 rounded-[30px] cursor-pointer">
+                    <div class="w-20 h-10 mb-2 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_ShopeePay.svg/512px-Logo_ShopeePay.svg.png" alt="ShopeePay" class="w-full h-full object-contain wallet-img">
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-800">ShopeePay</span>
+                </div>
+
+                <div onclick="selectWallet('LinkAja')" class="wallet-card glow-linkaja flex flex-col items-center justify-center p-5 rounded-[30px] cursor-pointer">
+                    <div class="w-20 h-10 mb-2 flex items-center justify-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/LinkAja.svg/512px-LinkAja.svg.png" alt="LinkAja" class="w-full h-full object-contain wallet-img">
+                    </div>
+                    <span class="text-[9px] font-black uppercase text-slate-800">LinkAja</span>
+                </div>
+
+            </div>
+
+            <div id="nominal-section" class="hidden animate-in">
+                <h3 id="label-nominal" class="text-[10px] font-black text-indigo-950 uppercase italic mb-4">Nominal Top Up :</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="p-4 bg-white border-2 border-slate-100 rounded-2xl text-[11px] font-black text-slate-700 hover:border-indigo-600 hover:text-indigo-600 transition-all flex flex-col items-center">Rp 20.000 <span class="text-[7px] text-slate-400 mt-1">Admin: Rp 1.000</span></button>
+                    <button class="p-4 bg-white border-2 border-slate-100 rounded-2xl text-[11px] font-black text-slate-700 hover:border-indigo-600 hover:text-indigo-600 transition-all flex flex-col items-center">Rp 50.000 <span class="text-[7px] text-slate-400 mt-1">Admin: Rp 1.000</span></button>
+                    <button class="p-4 bg-white border-2 border-slate-100 rounded-2xl text-[11px] font-black text-slate-700 hover:border-indigo-600 hover:text-indigo-600 transition-all flex flex-col items-center">Rp 100.000 <span class="text-[7px] text-slate-400 mt-1">Admin: Rp 1.000</span></button>
+                    <button class="p-4 bg-white border-2 border-slate-100 rounded-2xl text-[11px] font-black text-slate-700 hover:border-indigo-600 hover:text-indigo-600 transition-all flex flex-col items-center">Lainnya</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-6 bg-white border-t rounded-t-[35px] shadow-[0_-15px_40px_rgba(0,0,0,0.06)]">
+            <button onclick="prosesTopUp()" class="w-full py-5 bg-indigo-950 text-white rounded-[20px] text-[12px] font-black uppercase italic tracking-widest btn-active shadow-xl shadow-indigo-100">
+                LANJUT KONFIRMASI <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        function selectWallet(name) {
+            document.getElementById('nominal-section').classList.remove('hidden');
+            document.getElementById('label-nominal').innerText = `Nominal Top Up ${name} :`;
+            
+            // Vibrasi feedback untuk HP
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        function prosesTopUp() {
+            const id = document.getElementById('wallet-number').value;
+            if (!id) {
+                alert("Waduh Pak, isi Nomor HP/ID-nya dulu ya!");
+                return;
+            }
+            alert("Memproses verifikasi akun " + id + "...");
+        }
+    </script>
+</body>
+</html>
