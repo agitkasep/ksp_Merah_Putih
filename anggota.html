@@ -300,38 +300,65 @@
     const now = new Date();
     const jam = now.getHours();
     
-    // 1. Logika Sapaan Waktu
-    let sapaWaktu = "Selamat Malam";
-    if(jam >= 5 && jam < 11) sapaWaktu = "Selamat Pagi";
-    else if(jam >= 11 && jam < 15) sapaWaktu = "Selamat Siang";
-    else if(jam >= 15 && jam < 18) sapaWaktu = "Selamat Sore";
-    document.getElementById('greeting').innerText = `${sapaWaktu}, Selamat Datang Kembali`;
-
-    // 2. Ambil data dari pendaftaran (Daftar.html)
-    const userData = JSON.parse(localStorage.getItem("user_login")) || { nama: "Agit", gender: "Pria" };
-    const fotoWajah = localStorage.getItem('fotoWajahAnggota'); // Ambil foto wajah dari pendaftaran
-    
-    const panggilan = (userData.gender === "Pria" || userData.gender === "Laki-laki") ? "Pa" : "Bu";
-    document.getElementById('display-name').innerText = `${panggilan} ${userData.nama}`;
-
-    // 3. LOGIKA TAMPILKAN FOTO OTOMATIS
-    const imgElement = document.getElementById('profile-photo');
-    const iconElement = document.getElementById('default-icon');
-
-    if (fotoWajah) {
-        imgElement.src = fotoWajah;
-        imgElement.classList.remove('hidden');
-        iconElement.classList.add('hidden');
-    }
-
-    // 4. Update Tanggal & Hari
-    const opsiTgl = { weekday: 'long', day: 'numeric', month: 'short' };
-    document.getElementById('real-date').innerText = now.toLocaleDateString('id-ID', opsiTgl);
-}
-
+ // 1. FUNGSI JAM, HARI & TANGGAL (WIB)
         function updateClock() {
             const now = new Date();
-            document.getElementById('real-clock').innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const hari = days[now.getDay()];
+            const tgl = now.getDate();
+            const bln = months[now.getMonth()];
+            const thn = now.getFullYear();
+            const jam = String(now.getHours()).padStart(2, '0');
+            const mnt = String(now.getMinutes()).padStart(2, '0');
+            const dtk = String(now.getSeconds()).padStart(2, '0');
+
+            if(document.getElementById('real-date')) {
+                document.getElementById('real-date').innerText = `${hari}, ${tgl} ${bln} ${thn}`;
+            }
+            if(document.getElementById('real-clock')) {
+                document.getElementById('real-clock').innerText = `${jam}:${mnt}:${dtk} WIB`;
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. LOGIKA SAPAAN PERSONAL & FOTO PROFIL
+        const session = JSON.parse(localStorage.getItem("user_login"));
+        const fotoTerdaftar = localStorage.getItem("fotoWajah");
+        const genderTerdaftar = localStorage.getItem("genderAnggota");
+        const usernameTerdaftar = localStorage.getItem("usernameAnggota");
+
+        if (session) {
+            // Tentukan Sapaan Waktu (Pagi/Siang/Sore/Malam)
+            const jamSkrg = new Date().getHours();
+            let sapaanWaktu = "Selamat Malam";
+            if (jamSkrg >= 5 && jamSkrg < 11) sapaanWaktu = "Selamat Pagi";
+            else if (jamSkrg >= 11 && jamSkrg < 15) sapaanWaktu = "Selamat Siang";
+            else if (jamSkrg >= 15 && jamSkrg < 18) sapaanWaktu = "Selamat Sore";
+
+            // Tentukan Sapaan Gender (Bpk/Ibu)
+            let sapaanGender = (genderTerdaftar === "PEREMPUAN") ? "Ibu" : "Bpk";
+            
+            // Tampilkan Sapaan Sesuai Permintaan Bapak
+            // Baris Atas: Selamat Malam Bpk [Username],
+            document.getElementById("greeting").innerText = `${sapaanWaktu} ${sapaanGender} ${usernameTerdaftar},`;
+            // Baris Bawah: selamat datang kembali yah..
+            document.getElementById("display-name").innerText = "selamat datang kembali yah..";
+
+            // Pasang Foto Profil Hasil Vermuk
+            const imgProfile = document.getElementById("profile-photo");
+            const iconDefault = document.getElementById("default-icon");
+
+            if (fotoTerdaftar) {
+                imgProfile.src = fotoTerdaftar;
+                imgProfile.classList.remove("hidden");
+                if(iconDefault) iconDefault.classList.add("hidden");
+            }
+        } else {
+            // Jika belum login, paksa kembali ke halaman login
+            window.location.href = "index.html";
         }
 
         setInterval(updateClock, 1000);
