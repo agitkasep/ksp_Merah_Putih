@@ -3,284 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Waserba - KOPDESKEL</title>
+    <title>Waserba KOPDESKEL - Belanja Desa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
         .app-container { width: 100%; max-width: 480px; background-color: #f8fafc; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
         
-        /* =========================================
-           EFEK TERBARU: E-COMMERCE FUSION STYLE
-           ========================================= */
+        /* [1. STYLE SEARCH & CAMERA] */
+        .search-container { transition: all 0.3s ease; }
+        .search-container:focus-within { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
         
-        /* 1. Efek Product Card (Zoom & Elevate) */
-        .product-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid #f1f5f9;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
-            border-color: #10b981; /* Emerald Tokopedia */
-        }
-        
-        /* 2. Efek Zoom Gambar Produk */
-        .product-img-wrapper { overflow: hidden; }
+        /* [2. STYLE PRODUCT CARDS] */
+        .product-card { background: white; border-radius: 16px; overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); border: 1px solid #f1f5f9; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15); border-color: #10b981; }
         .product-img { transition: transform 0.5s ease; }
         .product-card:hover .product-img { transform: scale(1.1); }
 
-        /* 3. Horizontal Scroll (Banners & Categories) - Sembunyikan Scrollbar */
-        .scroll-h::-webkit-scrollbar { display: none; }
-        .scroll-h { -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; }
-        .scroll-item { scroll-snap-align: center; }
-
-        /* 4. Efek Tombol Tambah (Bounce) */
-        .btn-add { transition: all 0.2s; }
-        .btn-add:active { transform: scale(0.8) rotate(15deg); background-color: #f97316; /* Orange Shopee */ }
-
-        /* 5. Efek Keranjang Bergetar */
+        /* [3. STYLE ANIMATIONS] */
         @keyframes cartWiggle {
-            0% { transform: rotate(0deg); }
+            0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-15deg); }
             50% { transform: rotate(15deg); }
             75% { transform: rotate(-15deg); }
-            100% { transform: rotate(0deg); }
         }
         .cart-animate { animation: cartWiggle 0.4s ease-in-out; }
 
-        .btn-active:active { transform: scale(0.95); }
-        input:focus { outline: none; }
+        @keyframes scanLine {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        .scan-anim { animation: scanLine 2s linear infinite; }
+
+        .scroll-h::-webkit-scrollbar { display: none; }
+        .btn-active:active { transform: scale(0.92); opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 sticky top-0 z-50 rounded-b-[20px] shadow-md flex items-center gap-3">
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 sticky top-0 z-[150] rounded-b-[20px] shadow-md flex items-center gap-3">
             <i onclick="window.history.back()" class="fa fa-arrow-left text-white text-lg cursor-pointer btn-active"></i>
             
-            <div class="flex-1 bg-white rounded-full flex items-center px-3 py-2 shadow-inner">
+            <div class="flex-1 bg-white rounded-full flex items-center px-3 py-2 shadow-inner search-container border-2 border-transparent">
                 <i class="fa fa-search text-slate-400 text-sm"></i>
-                <input type="text" placeholder="Cari beras, minyak, gula..." class="w-full bg-transparent ml-2 text-xs font-bold text-slate-700">
+                <input type="text" placeholder="Cari kebutuhan dapur..." class="w-full bg-transparent ml-2 text-[11px] font-bold text-slate-700 outline-none">
+                
+                <div onclick="openCameraSearch()" class="pl-2 border-l border-slate-200 ml-1 cursor-pointer btn-active">
+                    <i class="fa fa-camera text-emerald-500 text-sm"></i>
+                </div>
             </div>
 
-            <div class="relative cursor-pointer btn-active" onclick="alert('Buka Halaman Keranjang')">
-                <i class="fa fa-cart-shopping text-white text-xl"></i>
-                <span id="cart-badge" class="absolute -top-1 -right-2 bg-orange-500 text-white text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm transition-all">0</span>
+            <div class="relative cursor-pointer btn-active" onclick="alert('Halaman Keranjang Sedang Disiapkan')">
+                <i id="cart-icon" class="fa fa-cart-shopping text-white text-xl"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-2 bg-orange-500 text-white text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm">0</span>
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto pb-24">
+        <div class="flex-1 overflow-y-auto pb-28">
             
             <div class="flex overflow-x-auto scroll-h gap-3 px-4 pt-4 pb-2">
-                <div class="scroll-item flex-shrink-0 w-[85%] h-28 bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-4 text-white relative overflow-hidden shadow-md">
-                    <i class="fa fa-bullhorn absolute -right-4 -bottom-4 text-6xl text-white opacity-20"></i>
+                <div class="flex-shrink-0 w-[85%] h-28 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-4 text-white relative overflow-hidden shadow-lg">
+                    <i class="fa fa-bolt absolute -right-4 -bottom-4 text-7xl text-white/20"></i>
                     <h3 class="font-black italic text-sm uppercase">Flash Sale Sembako!</h3>
-                    <p class="text-[9px] font-bold mt-1">Diskon up to 40% khusus anggota.</p>
-                    <button class="mt-3 bg-white text-orange-600 px-3 py-1 rounded-full text-[8px] font-black uppercase">Cek Sekarang</button>
+                    <p class="text-[9px] font-bold mt-1 opacity-90">Hanya untuk Anggota KOPDESKEL</p>
+                    <button class="mt-3 bg-white text-orange-600 px-4 py-1.5 rounded-full text-[8px] font-black uppercase shadow-sm btn-active">Serbu Sekarang</button>
                 </div>
-                <div class="scroll-item flex-shrink-0 w-[85%] h-28 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-4 text-white relative overflow-hidden shadow-md">
-                    <i class="fa fa-truck absolute -right-4 -bottom-4 text-6xl text-white opacity-20"></i>
-                    <h3 class="font-black italic text-sm uppercase">Gratis Ongkir!</h3>
-                    <p class="text-[9px] font-bold mt-1">Antar sampai depan rumah desa.</p>
-                    <button class="mt-3 bg-white text-blue-600 px-3 py-1 rounded-full text-[8px] font-black uppercase">Klaim Voucher</button>
+                <div class="flex-shrink-0 w-[85%] h-28 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-4 text-white relative overflow-hidden shadow-lg">
+                    <i class="fa fa-truck-fast absolute -right-4 -bottom-4 text-7xl text-white/20"></i>
+                    <h3 class="font-black italic text-sm uppercase">Gratis Ongkir Desa</h3>
+                    <p class="text-[9px] font-bold mt-1 opacity-90">Tanpa Minimal Belanja!</p>
+                    <button class="mt-3 bg-white text-indigo-600 px-4 py-1.5 rounded-full text-[8px] font-black uppercase shadow-sm btn-active">Ambil Voucher</button>
                 </div>
             </div>
 
-            <div class="bg-white m-4 rounded-2xl p-4 shadow-sm">
-                <div class="grid grid-cols-4 gap-y-4">
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center"><i class="fa fa-bowl-rice text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Sembako</span>
+            <div class="bg-white m-4 rounded-3xl p-5 shadow-sm border border-slate-100">
+                <div class="grid grid-cols-4 gap-y-5">
+                    <div class="flex flex-col items-center gap-1.5 btn-active cursor-pointer">
+                        <div class="w-11 h-11 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center shadow-sm"><i class="fa fa-bowl-rice text-xl"></i></div>
+                        <span class="text-[8px] font-black uppercase text-slate-500">Beras</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex items-center justify-center"><i class="fa fa-bottle-water text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Minuman</span>
+                    <div class="flex flex-col items-center gap-1.5 btn-active cursor-pointer">
+                        <div class="w-11 h-11 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center shadow-sm"><i class="fa fa-leaf text-xl"></i></div>
+                        <span class="text-[8px] font-black uppercase text-slate-500">Sayur</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-yellow-100 text-yellow-600 rounded-xl flex items-center justify-center"><i class="fa fa-cookie text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Snack</span>
+                    <div class="flex flex-col items-center gap-1.5 btn-active cursor-pointer">
+                        <div class="w-11 h-11 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center shadow-sm"><i class="fa fa-droplet text-xl"></i></div>
+                        <span class="text-[8px] font-black uppercase text-slate-500">Minyak</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center"><i class="fa fa-soap text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Pembersih</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center"><i class="fa fa-baby-carriage text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Kebutuhan Bayi</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center"><i class="fa fa-pump-soap text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Kosmetik</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center"><i class="fa fa-plug text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Elektronik</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                        <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center"><i class="fa fa-ellipsis text-lg"></i></div>
-                        <span class="text-[8px] font-black uppercase text-slate-600">Lainnya</span>
+                    <div class="flex flex-col items-center gap-1.5 btn-active cursor-pointer">
+                        <div class="w-11 h-11 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center shadow-sm"><i class="fa fa-fire-burner text-xl"></i></div>
+                        <span class="text-[8px] font-black uppercase text-slate-500">Gas LPG</span>
                     </div>
                 </div>
             </div>
 
-            <div class="px-4 mb-2 flex justify-between items-center">
-                <h2 class="text-[12px] font-black text-slate-800 uppercase italic">Produk Terlaris <i class="fa fa-fire text-orange-500"></i></h2>
-                <span class="text-[8px] font-bold text-emerald-600 uppercase cursor-pointer">Lihat Semua</span>
+            <div class="px-5 mb-3 flex justify-between items-end">
+                <h2 class="text-[12px] font-black text-slate-800 uppercase italic">Rekomendasi Untukmu 🔥</h2>
+                <span class="text-[8px] font-black text-emerald-600 border-b-2 border-emerald-100">LIHAT SEMUA</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 px-4 pb-6">
+            <div class="grid grid-cols-2 gap-4 px-4">
                 
-                <div class="product-card cursor-pointer flex flex-col relative">
-                    <div class="absolute top-2 left-0 bg-red-500 text-white text-[7px] font-black px-2 py-1 rounded-r-md z-10">-10%</div>
-                    <div class="product-img-wrapper h-36 bg-slate-100 flex items-center justify-center">
-                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=400&q=80" alt="Beras" class="w-full h-full object-cover product-img">
+                <div class="product-card flex flex-col cursor-pointer">
+                    <div class="h-40 bg-slate-100 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e8ac?w=400" class="w-full h-full object-cover product-img">
+                        <div class="absolute top-2 left-2 bg-red-500 text-white text-[7px] font-black px-2 py-1 rounded-lg shadow-lg">FLASH SALE</div>
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-[10px] font-black text-slate-700 leading-tight mb-1 line-clamp-2">Beras Premium Slyp Super 5Kg Asli Cianjur</h3>
-                            <div class="flex items-center gap-1 mb-1">
-                                <span class="bg-emerald-100 text-emerald-600 text-[6px] font-black px-1 rounded uppercase">Grosir</span>
-                                <i class="fa fa-star text-yellow-400 text-[8px]"></i>
-                                <span class="text-[8px] text-slate-400 font-bold">4.9 | 1.2rb Terjual</span>
+                        <h4 class="text-[10px] font-black text-slate-700 leading-tight line-clamp-2">Beras Rojolele Premium 5Kg Super Putih</h4>
+                        <div class="mt-2">
+                            <p class="text-[8px] text-slate-400 line-through font-bold">Rp 85.000</p>
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-black text-emerald-600">Rp 74.500</p>
+                                <button onclick="addToCart(event, 74500)" class="w-7 h-7 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-100 btn-active">
+                                    <i class="fa fa-plus text-[10px]"></i>
+                                </button>
                             </div>
-                        </div>
-                        <div class="mt-2 flex justify-between items-end">
-                            <div>
-                                <p class="text-[8px] text-slate-400 line-through font-bold">Rp 75.000</p>
-                                <p class="text-xs font-black text-emerald-600">Rp 67.500</p>
-                            </div>
-                            <button onclick="tambahKeranjang(event)" class="btn-add w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-md">
-                                <i class="fa fa-plus text-[10px]"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="product-card cursor-pointer flex flex-col relative">
-                    <div class="product-img-wrapper h-36 bg-slate-100 flex items-center justify-center p-2">
-                        <img src="https://images.unsplash.com/photo-1629831411210-9111baefd6eb?w=400&q=80" alt="Minyak" class="w-full h-full object-cover rounded-lg product-img">
+                <div class="product-card flex flex-col cursor-pointer">
+                    <div class="h-40 bg-slate-100 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1629831411210-9111baefd6eb?w=400" class="w-full h-full object-cover product-img">
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-[10px] font-black text-slate-700 leading-tight mb-1 line-clamp-2">Minyak Goreng Bimoli / Sunco Pouch 2 Liter</h3>
+                        <h4 class="text-[10px] font-black text-slate-700 leading-tight line-clamp-2">Minyak Goreng Sania Pouch 2 Liter</h4>
+                        <div class="mt-2">
                             <div class="flex items-center gap-1 mb-1">
                                 <i class="fa fa-star text-yellow-400 text-[8px]"></i>
-                                <span class="text-[8px] text-slate-400 font-bold">4.8 | 850 Terjual</span>
+                                <span class="text-[7px] font-bold text-slate-400">4.8 | 500+ Terjual</span>
                             </div>
-                        </div>
-                        <div class="mt-2 flex justify-between items-end">
-                            <div>
-                                <p class="text-xs font-black text-emerald-600">Rp 34.000</p>
+                            <div class="flex justify-between items-end">
+                                <p class="text-xs font-black text-emerald-600">Rp 34.200</p>
+                                <button onclick="addToCart(event, 34200)" class="w-7 h-7 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-100 btn-active">
+                                    <i class="fa fa-plus text-[10px]"></i>
+                                </button>
                             </div>
-                            <button onclick="tambahKeranjang(event)" class="btn-add w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-md">
-                                <i class="fa fa-plus text-[10px]"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card cursor-pointer flex flex-col relative">
-                    <div class="absolute top-2 left-0 bg-red-500 text-white text-[7px] font-black px-2 py-1 rounded-r-md z-10">Flash Sale</div>
-                    <div class="product-img-wrapper h-36 bg-slate-100 flex items-center justify-center p-2">
-                        <img src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&q=80" alt="Mie Instan" class="w-full h-full object-cover rounded-lg product-img">
-                    </div>
-                    <div class="p-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-[10px] font-black text-slate-700 leading-tight mb-1 line-clamp-2">Indomie Goreng Original 1 Dus (Isi 40 Bungkus)</h3>
-                            <div class="flex items-center gap-1 mb-1">
-                                <span class="bg-orange-100 text-orange-600 text-[6px] font-black px-1 rounded uppercase">Terlaris</span>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex justify-between items-end">
-                            <div>
-                                <p class="text-[8px] text-slate-400 line-through font-bold">Rp 120.000</p>
-                                <p class="text-xs font-black text-emerald-600">Rp 112.500</p>
-                            </div>
-                            <button onclick="tambahKeranjang(event)" class="btn-add w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-md">
-                                <i class="fa fa-plus text-[10px]"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card cursor-pointer flex flex-col relative">
-                    <div class="product-img-wrapper h-36 bg-slate-100 flex items-center justify-center p-2">
-                        <img src="https://images.unsplash.com/photo-1581428982868-e410dd187a90?w=400&q=80" alt="Gula" class="w-full h-full object-cover rounded-lg product-img">
-                    </div>
-                    <div class="p-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-[10px] font-black text-slate-700 leading-tight mb-1 line-clamp-2">Gula Pasir Putih Lokal / Gulaku 1 Kg Premium</h3>
-                            <div class="flex items-center gap-1 mb-1">
-                                <i class="fa fa-star text-yellow-400 text-[8px]"></i>
-                                <span class="text-[8px] text-slate-400 font-bold">5.0 | 3rb+ Terjual</span>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex justify-between items-end">
-                            <div>
-                                <p class="text-xs font-black text-emerald-600">Rp 16.500</p>
-                            </div>
-                            <button onclick="tambahKeranjang(event)" class="btn-add w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-md">
-                                <i class="fa fa-plus text-[10px]"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
 
             </div>
-
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t rounded-t-[25px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-[100] p-4 flex items-center justify-between">
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white p-4 border-t rounded-t-[30px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-[100] flex items-center justify-between">
             <div class="flex flex-col">
-                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Total Belanjaan</span>
-                <span id="total-price" class="text-sm font-black text-orange-600">Rp 0</span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Total Belanja</span>
+                <span id="total-amount" class="text-sm font-black text-orange-600 italic">Rp 0</span>
             </div>
-            <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase italic tracking-widest btn-active shadow-lg shadow-emerald-200">
-                CHECKOUT <i class="fa fa-chevron-right ml-1"></i>
+            <button class="bg-emerald-600 text-white px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase italic tracking-widest shadow-xl shadow-emerald-100 btn-active">
+                Checkout Sekarang <i class="fa fa-chevron-right ml-1"></i>
             </button>
+        </div>
+
+        <div id="camera-modal" class="fixed inset-0 bg-black z-[200] hidden flex-col">
+            <div class="p-6 flex justify-between items-center text-white relative z-10">
+                <i onclick="closeCameraSearch()" class="fa fa-times text-xl p-2 cursor-pointer btn-active"></i>
+                <h2 class="text-xs font-black uppercase tracking-[0.2em] italic">Visual Search AI</h2>
+                <i class="fa fa-bolt text-lg p-2"></i>
+            </div>
+            
+            <div class="flex-1 relative flex items-center justify-center">
+                <div class="w-64 h-64 border-2 border-white/30 rounded-[40px] relative overflow-hidden">
+                    <div class="w-full h-1 bg-emerald-400 shadow-[0_0_15px_#34d399] absolute scan-anim"></div>
+                    
+                    <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-emerald-500 rounded-tl-xl"></div>
+                    <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-emerald-500 rounded-tr-xl"></div>
+                    <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-emerald-500 rounded-bl-xl"></div>
+                    <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-emerald-500 rounded-br-xl"></div>
+                </div>
+                <p class="absolute bottom-12 text-white text-[9px] font-black uppercase tracking-widest bg-emerald-600/80 px-5 py-2 rounded-full">Arahkan ke Barcode / Produk</p>
+            </div>
+
+            <div class="p-12 flex justify-center bg-gradient-to-t from-black to-transparent">
+                <div onclick="snapPhoto()" class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center p-2 border-2 border-white/50">
+                    <div class="w-full h-full bg-white rounded-full btn-active flex items-center justify-center">
+                        <div class="w-12 h-12 border-2 border-slate-200 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
     <script>
-        let keranjangTotal = 0;
-        let totalHarga = 0;
+        let cartCount = 0;
+        let totalPrice = 0;
 
-        function tambahKeranjang(event) {
-            // Mencegah klik masuk ke halaman detail produk
-            event.stopPropagation();
-
-            // Animasi Ikon Keranjang di Header
-            const cartIcon = document.querySelector('.fa-cart-shopping').parentElement;
+        // 1. Logika Keranjang
+        function addToCart(e, price) {
+            e.stopPropagation();
+            cartCount++;
+            totalPrice += price;
+            
+            // Update UI
+            document.getElementById('cart-badge').innerText = cartCount;
+            document.getElementById('total-amount').innerText = 'Rp ' + totalPrice.toLocaleString('id-ID');
+            
+            // Animasi Keranjang
+            const cartIcon = document.getElementById('cart-icon');
             cartIcon.classList.remove('cart-animate');
-            void cartIcon.offsetWidth; // trigger reflow
+            void cartIcon.offsetWidth; 
             cartIcon.classList.add('cart-animate');
 
-            // Get Harga (Simulasi simpel ngambil teks dari tombol ke harga)
-            const card = event.target.closest('.product-card');
-            const hargaText = card.querySelector('.text-emerald-600').innerText;
-            const hargaAngka = parseInt(hargaText.replace(/[^0-9]/g, ''));
-
-            // Update Badge Angka
-            keranjangTotal++;
-            const badge = document.getElementById('cart-badge');
-            badge.innerText = keranjangTotal;
-            
-            // Animasi Pop Badge
-            badge.style.transform = 'scale(1.5)';
-            setTimeout(() => { badge.style.transform = 'scale(1)'; }, 200);
-
-            // Update Total Harga Bawah
-            totalHarga += hargaAngka;
-            document.getElementById('total-price').innerText = 'Rp ' + totalHarga.toLocaleString('id-ID');
-
-            // Feedback Haptic (Getar)
             if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        // 2. Logika Kamera Search
+        function openCameraSearch() {
+            const modal = document.getElementById('camera-modal');
+            modal.classList.replace('hidden', 'flex');
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        function closeCameraSearch() {
+            const modal = document.getElementById('camera-modal');
+            modal.classList.replace('flex', 'hidden');
+        }
+
+        function snapPhoto() {
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+            alert("Sedang mencocokkan produk dengan AI KOPDESKEL...");
+            setTimeout(() => {
+                alert("Produk ditemukan! Mengalihkan ke hasil pencarian...");
+                closeCameraSearch();
+            }, 1200);
         }
     </script>
 </body>
