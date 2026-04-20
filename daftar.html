@@ -85,8 +85,9 @@
         let ktpPhotoData = null;
         let facePhotoData = null;
         let currentStream = null;
-        let modeKamera = "environment"; // Mulai dengan kamera belakang untuk KTP
+        let modeKamera = "environment"; // Mulai dengan kamera belakang
 
+        // 1. Fungsi Navigasi Halaman
         function lanjutKeFoto() {
             const nama = document.getElementById('nama-lengkap').value;
             const nik = document.getElementById('nik').value;
@@ -101,18 +102,19 @@
             startCamera();
         }
 
-        // FUNGSI KAMERA STABIL ALA GOJEK/DANA
+        // 2. Fungsi Kamera Stabil (Cegah Layar Hitam)
         async function startCamera() {
             const video = document.getElementById('camera-stream');
             
-            // 1. Bersihkan stream lama secara total
+            // Matikan total stream lama agar sensor lepas dari memori
             if (currentStream) {
                 currentStream.getTracks().forEach(track => track.stop());
                 video.srcObject = null;
+                currentStream = null;
             }
 
-            // 2. Beri jeda 300ms agar hardware kamera punya waktu untuk switching
-            await new Promise(resolve => setTimeout(resolve, 300));
+            // Jeda 500ms agar hardware HP tidak 'crash' saat ganti lensa
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             try {
                 const constraints = {
@@ -124,27 +126,29 @@
                     audio: false
                 };
 
-                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = currentStream;
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                currentStream = stream;
+                video.srcObject = stream;
 
-                // 3. Pastikan video diputar segera setelah metadata dimuat
+                // Paksa video render ke layar
                 video.onloadedmetadata = () => {
                     video.play();
                 };
 
                 video.classList.remove('hidden');
             } catch (err) {
-                console.error("Gagal akses kamera:", err);
-                alert("Gagal akses kamera! Pastikan izin kamera sudah diberikan.");
+                console.error("Gagal kamera:", err);
+                alert("Gagal mengakses kamera. Pastikan izin kamera sudah di-Allow!");
             }
         }
 
+        // 3. Fungsi Ambil Foto & Logika Pindah Kamera Otomatis
         function ambilFoto(tipe) {
             const video = document.getElementById('camera-stream');
             const canvas = document.getElementById('photo-canvas');
             const context = canvas.getContext('2d');
 
-            // Atur ukuran canvas sesuai video asli agar tajam
+            // Tangkap gambar sesuai resolusi video
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -153,57 +157,65 @@
 
             if (tipe === 'ktp') {
                 ktpPhotoData = photoData;
-                document.getElementById('ktp-placeholder').classList.add('hidden');
-                const preview = document.getElementById('photo-preview-ktp');
-                preview.src = photoData;
-                preview.classList.remove('hidden');
                 
-                // --- PROSES TRANSISI PROFESIONAL ---
-                // Sembunyikan stream sebentar agar tidak 'flicker' atau hitam
+                // Tampilkan hasil foto KTP
+                document.getElementById('ktp-placeholder').classList.add('hidden');
+                const previewKtp = document.getElementById('photo-preview-ktp');
+                previewKtp.src = photoData;
+                previewKtp.classList.remove('hidden');
+                
+                // Sembunyikan video sebentar biar transisi bersih
                 video.classList.add('hidden');
                 
                 alert("Foto KTP Berhasil! Siapkan wajah Anda untuk verifikasi.");
                 
-                modeKamera = "user"; // Pindah ke kamera depan
+                // PINDAH KE KAMERA DEPAN
+                modeKamera = "user"; 
                 
-                // Aktifkan tombol wajah
+                // Aktifkan tombol foto wajah
                 const btnFace = document.getElementById('btn-face');
                 btnFace.classList.remove('opacity-50', 'bg-slate-100');
                 btnFace.classList.add('bg-indigo-600', 'text-white');
                 btnFace.disabled = false;
 
-                // Jalankan kamera depan
+                // Nyalakan ulang kamera (Otomatis ganti ke depan)
                 startCamera();
                 
             } else if (tipe === 'face') {
                 facePhotoData = photoData;
-                const preview = document.getElementById('photo-preview-face');
-                preview.src = photoData;
-                preview.classList.remove('hidden');
                 
-                // Sembunyikan video karena sudah selesai
+                // Tampilkan hasil foto wajah
+                const previewFace = document.getElementById('photo-preview-face');
+                previewFace.src = photoData;
+                previewFace.classList.remove('hidden');
+                document.getElementById('face-placeholder').classList.add('hidden');
+                
+                // Matikan kamera karena sudah selesai
+                if(currentStream) currentStream.getTracks().forEach(track => track.stop());
                 video.classList.add('hidden');
-                
-                // Aktifkan tombol selesai
+
+                // Aktifkan tombol SELESAI
                 const btnSubmit = document.getElementById('btn-submit');
                 btnSubmit.classList.remove('opacity-50');
                 btnSubmit.disabled = false;
                 
-                // Matikan kamera total
-                if(currentStream) currentStream.getTracks().forEach(track => track.stop());
-                alert("Verifikasi Wajah Berhasil! Silakan selesaikan pendaftaran.");
+                alert("Verifikasi Wajah Berhasil! Silakan klik 'SELESAI & DAFTAR'.");
             }
         }
 
+        // 4. Proses Simpan Akhir ke Database (LocalStorage)
         function prosesDaftarAkhir() {
             const nama = document.getElementById('nama-lengkap').value;
             const nik = document.getElementById('nik').value;
 
+            // Simpan semua data anggota
             localStorage.setItem('namaLengkapAnggota', nama);
             localStorage.setItem('nikAnggota', nik);
-            localStorage.setItem('fotoWajahAnggota', facePhotoData); 
+            localStorage.setItem('fotoWajahAnggota', facePhotoData);
 
-            alert("✅ PENDAFTARAN BERHASIL!\nSelamat bergabung, " + nama.toUpperCase() + ".");
+            alert("✅ PENDAFTARAN BERHASIL!\nSelamat bergabung di KSP Merah Putih, " + nama.toUpperCase() + ".");
+            
+            // Langsung lempar ke Dashboard Anggota
             window.location.href = 'anggota.html'; 
         }
     </script>
