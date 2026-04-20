@@ -10,161 +10,162 @@
         body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
         .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
         
-        /* EFEK KARTU SALDO (Glassmorphism) */
-        .wallet-card {
-            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.3);
-        }
-        .wallet-card::before {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 100%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            transform: rotate(30deg);
-        }
-
-        /* EFEK PROVIDER SELECT */
-        .provider-item {
+        /* EFEK NEON & MAGNETIC */
+        .wallet-card-item { 
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             border: 2px solid #f1f5f9;
-            transition: all 0.2s ease;
+            background: white;
             cursor: pointer;
         }
-        .provider-item.active {
-            border-color: #2563eb;
+        .wallet-card-item:hover {
+            transform: translateY(-5px);
+            border-color: #4f46e5;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+        }
+        .wallet-card-item.active {
+            border-color: #4f46e5;
             background-color: #eff6ff;
-            transform: scale(1.05);
+            box-shadow: inset 0 0 10px rgba(79, 70, 229, 0.1);
         }
 
-        /* NOMINAL GRID */
+        /* NOMINAL BUTTONS */
         .nominal-btn {
             border: 1px solid #e2e8f0;
             transition: all 0.2s;
+            font-style: italic;
         }
-        .nominal-btn:active { transform: scale(0.95); background-color: #f8fafc; }
         .nominal-btn.selected {
-            background-color: #2563eb;
+            background-color: #4f46e5;
             color: white;
-            border-color: #2563eb;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            border-color: #4f46e5;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
         }
 
-        .btn-active:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-active:active { transform: scale(0.95); opacity: 0.9; }
         
-        /* ANIMASI */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-up { animation: fadeIn 0.4s ease forwards; }
+        /* HEADER GRADIENT */
+        .header-grad { background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <div class="p-6 flex items-center justify-between">
-            <i onclick="window.history.back()" class="fa fa-chevron-left text-slate-800 text-lg cursor-pointer btn-active"></i>
-            <h1 class="text-sm font-black text-slate-800 uppercase tracking-widest italic">E-Wallet Center</h1>
-            <i class="fa fa-circle-question text-slate-400 text-lg"></i>
+        <div class="header-grad p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[25px] shadow-lg">
+            <i onclick="window.history.back()" class="fa fa-arrow-left text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">E-Wallet Kopdeskel</h1>
         </div>
 
-        <div class="px-6 flex-1 overflow-y-auto pb-24">
+        <div class="flex-1 p-6 overflow-y-auto pb-32">
             
-            <div class="wallet-card p-6 text-white mb-8 animate-up">
-                <div class="flex justify-between items-start mb-8">
-                    <div>
-                        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest">Total Saldo Terintegrasi</p>
-                        <h2 class="text-2xl font-black mt-1">Rp 2.450.000</h2>
-                    </div>
-                    <i class="fa fa-wallet text-3xl opacity-30"></i>
-                </div>
-                <div class="flex justify-between items-center bg-white/10 p-3 rounded-xl backdrop-blur-md">
-                    <span class="text-[9px] font-bold uppercase">ID Anggota: KOP-2026-AGIT</span>
-                    <button class="bg-white text-blue-600 px-3 py-1 rounded-lg text-[8px] font-black uppercase">Riwayat</button>
-                </div>
-            </div>
-
-            <div class="mb-6 animate-up" style="animation-delay: 0.1s">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pilih Layanan E-Wallet</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <div onclick="selectProvider(this, 'DANA')" class="provider-item p-4 rounded-2xl flex flex-col items-center justify-center gap-2">
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white"><i class="fa fa-gem"></i></div>
-                        <span class="text-[9px] font-black uppercase text-slate-600">DANA</span>
-                    </div>
-                    <div onclick="selectProvider(this, 'OVO')" class="provider-item p-4 rounded-2xl flex flex-col items-center justify-center gap-2">
-                        <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white"><i class="fa fa-circle"></i></div>
-                        <span class="text-[9px] font-black uppercase text-slate-600">OVO</span>
-                    </div>
-                    <div onclick="selectProvider(this, 'GOPAY')" class="provider-item p-4 rounded-2xl flex flex-col items-center justify-center gap-2">
-                        <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white"><i class="fa fa-motorcycle"></i></div>
-                        <span class="text-[9px] font-black uppercase text-slate-600">GOPAY</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-6 animate-up" style="animation-delay: 0.2s">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Nomor HP Terdaftar</h3>
+            <div class="mb-8">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor HP / ID Akun</label>
                 <div class="relative">
-                    <i class="fa fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="number" id="phone" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-xs font-black text-slate-700 focus:border-blue-500 outline-none transition-all">
+                    <i class="fa fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-lg"></i>
+                    <input type="number" id="id-dompet" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-black text-slate-700 outline-none focus:border-indigo-500 transition-all">
                 </div>
             </div>
 
-            <div class="animate-up" style="animation-delay: 0.3s">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pilih Nominal Top Up</h3>
+            <h3 class="text-[10px] font-black text-indigo-900 uppercase italic mb-4">Pilih Dompet Digital :</h3>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                
+                <div onclick="pilihWallet(this, 'DANA')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg class="w-16 h-8" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="8" fill="#108EE9"/>
+                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">DANA</text>
+                    </svg>
+                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo DANA</span>
+                </div>
+
+                <div onclick="pilihWallet(this, 'OVO')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg class="w-16 h-8" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="8" fill="#4C2B90"/>
+                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">OVO</text>
+                    </svg>
+                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo OVO</span>
+                </div>
+
+                <div onclick="pilihWallet(this, 'GOPAY')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg class="w-16 h-8" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="8" fill="#00AA13"/>
+                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="12" fill="white" text-anchor="middle" font-style="italic">GOPAY</text>
+                    </svg>
+                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo GoPay</span>
+                </div>
+
+                <div onclick="pilihWallet(this, 'SHOPEEPAY')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg class="w-16 h-8" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="8" fill="#EE4D2D"/>
+                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="10" fill="white" text-anchor="middle" font-style="italic">ShopeePay</text>
+                    </svg>
+                    <span class="text-[9px] font-black uppercase text-slate-600">ShopeePay</span>
+                </div>
+
+                <div onclick="pilihWallet(this, 'LINKAJA')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg class="w-16 h-8" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="8" fill="#E02C2D"/>
+                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="10" fill="white" text-anchor="middle" font-style="italic">LinkAja</text>
+                    </svg>
+                    <span class="text-[9px] font-black uppercase text-slate-600">LinkAja</span>
+                </div>
+
+            </div>
+
+            <div id="nominal-area" class="hidden">
+                <h3 id="label-nominal" class="text-[10px] font-black text-indigo-900 uppercase italic mb-4">Pilih Nominal :</h3>
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="selectNominal(this, 20000)" class="nominal-btn p-4 rounded-xl text-[11px] font-black italic">Rp 20.000</button>
-                    <button onclick="selectNominal(this, 50000)" class="nominal-btn p-4 rounded-xl text-[11px] font-black italic">Rp 50.000</button>
-                    <button onclick="selectNominal(this, 100000)" class="nominal-btn p-4 rounded-xl text-[11px] font-black italic">Rp 100.000</button>
-                    <button onclick="selectNominal(this, 200000)" class="nominal-btn p-4 rounded-xl text-[11px] font-black italic">Rp 200.000</button>
+                    <button onclick="setNominal(this, 10000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 10.000</button>
+                    <button onclick="setNominal(this, 20000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 20.000</button>
+                    <button onclick="setNominal(this, 50000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 50.000</button>
+                    <button onclick="setNominal(this, 100000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 100.000</button>
                 </div>
             </div>
 
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t p-6 flex flex-col gap-3 rounded-t-[30px] shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-            <div class="flex justify-between items-center px-2">
-                <span class="text-[9px] font-black text-slate-400 uppercase">Total Bayar</span>
-                <span id="display-total" class="text-base font-black text-blue-600">Rp 0</span>
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t p-5 rounded-t-[35px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
+            <div class="flex justify-between items-center mb-4 px-2">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Total Transfer Saldo</span>
+                <span id="total-bayar" class="text-base font-black text-indigo-700 italic">Rp 0</span>
             </div>
-            <button onclick="prosesBayar()" class="w-full bg-blue-600 text-white py-4 rounded-2xl text-[11px] font-black uppercase italic tracking-widest btn-active shadow-lg shadow-blue-100">
-                Konfirmasi Top Up <i class="fa fa-arrow-right ml-1"></i>
+            <button onclick="prosesEwallet()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black uppercase italic tracking-widest shadow-xl shadow-indigo-200 btn-active">
+                Konfirmasi Top Up <i class="fa fa-arrow-right ml-2"></i>
             </button>
         </div>
 
     </div>
 
     <script>
-        let selectedProvider = "";
-        let selectedPrice = 0;
+        let wallet = "";
+        let nominal = 0;
 
-        function selectProvider(element, name) {
-            // Reset active state
-            document.querySelectorAll('.provider-item').forEach(el => el.classList.remove('active'));
-            // Set current active
-            element.classList.add('active');
-            selectedProvider = name;
+        function pilihWallet(el, name) {
+            document.querySelectorAll('.wallet-card-item').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            wallet = name;
+            document.getElementById('nominal-area').classList.remove('hidden');
+            document.getElementById('label-nominal').innerText = `Nominal ${name} :`;
             if (navigator.vibrate) navigator.vibrate(40);
         }
 
-        function selectNominal(element, price) {
-            // Reset active state
-            document.querySelectorAll('.nominal-btn').forEach(el => el.classList.remove('selected'));
-            // Set current active
-            element.classList.add('selected');
-            selectedPrice = price;
-            
-            // Tambahkan biaya admin Rp 1.000
-            const total = price + 1000;
-            document.getElementById('display-total').innerText = 'Rp ' + total.toLocaleString('id-ID');
+        function setNominal(el, price) {
+            document.querySelectorAll('.nominal-btn').forEach(x => x.classList.remove('selected'));
+            el.classList.add('selected');
+            nominal = price;
+            // Admin Rp 1.500
+            let total = price + 1500;
+            document.getElementById('total-bayar').innerText = 'Rp ' + total.toLocaleString('id-ID');
             if (navigator.vibrate) navigator.vibrate(40);
         }
 
-        function prosesBayar() {
-            const phone = document.getElementById('phone').value;
-            if(!selectedProvider || !phone || selectedPrice === 0) {
-                alert("Mohon pilih E-Wallet, isi nomor HP, dan pilih nominal!");
+        function prosesEwallet() {
+            const id = document.getElementById('id-dompet').value;
+            if(!wallet || !id || nominal === 0) {
+                alert("Waduh Pak, tolong lengkapi Nomor Akun dan Pilih Nominalnya!");
                 return;
             }
-            alert(`Memproses Top Up ${selectedProvider} ke ${phone} sebesar Rp ${selectedPrice.toLocaleString('id-ID')}. \nSilakan tunggu notifikasi berhasil.`);
+            alert(`Sistem sedang memproses Top Up ${wallet} ke nomor ${id}. \nSaldo akan masuk dalam 1-3 menit.`);
         }
     </script>
 </body>
