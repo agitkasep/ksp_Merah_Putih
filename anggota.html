@@ -294,115 +294,76 @@
         </div>
     </div>
 
-    <script>
-        // FUNGSI UPDATE DATA OTOMATIS
-        function initApp() {
-    const now = new Date();
-    const jam = now.getHours();
+<script>
+document.addEventListener("DOMContentLoaded", function() {
     
- // 1. FUNGSI JAM, HARI & TANGGAL (WIB)
-        function updateClock() {
-            const now = new Date();
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            
-            const hari = days[now.getDay()];
-            const tgl = now.getDate();
-            const bln = months[now.getMonth()];
-            const thn = now.getFullYear();
-            const jam = String(now.getHours()).padStart(2, '0');
-            const mnt = String(now.getMinutes()).padStart(2, '0');
-            const dtk = String(now.getSeconds()).padStart(2, '0');
-
-            if(document.getElementById('real-date')) {
-                document.getElementById('real-date').innerText = `${hari}, ${tgl} ${bln} ${thn}`;
-            }
-            if(document.getElementById('real-clock')) {
-                document.getElementById('real-clock').innerText = `${jam}:${mnt}:${dtk} WIB`;
-            }
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // 2. LOGIKA SAPAAN PERSONAL & FOTO PROFIL
-        const session = JSON.parse(localStorage.getItem("user_login"));
-        const fotoTerdaftar = localStorage.getItem("fotoWajah");
-        const genderTerdaftar = localStorage.getItem("genderAnggota");
-        const usernameTerdaftar = localStorage.getItem("usernameAnggota");
-
-        if (session) {
-            // Tentukan Sapaan Waktu (Pagi/Siang/Sore/Malam)
-            const jamSkrg = new Date().getHours();
-            let sapaanWaktu = "Selamat Malam";
-            if (jamSkrg >= 5 && jamSkrg < 11) sapaanWaktu = "Selamat Pagi";
-            else if (jamSkrg >= 11 && jamSkrg < 15) sapaanWaktu = "Selamat Siang";
-            else if (jamSkrg >= 15 && jamSkrg < 18) sapaanWaktu = "Selamat Sore";
-
-            // Tentukan Sapaan Gender (Bpk/Ibu)
-            let sapaanGender = (genderTerdaftar === "PEREMPUAN") ? "Ibu" : "Bpk";
-            
-            // Tampilkan Sapaan Sesuai Permintaan Bapak
-            // Baris Atas: Selamat Malam Bpk [Username],
-            document.getElementById("greeting").innerText = `${sapaanWaktu} ${sapaanGender} ${usernameTerdaftar},`;
-            // Baris Bawah: selamat datang kembali yah..
-            document.getElementById("display-name").innerText = "selamat datang kembali yah..";
-
-            // Pasang Foto Profil Hasil Vermuk
-            const imgProfile = document.getElementById("profile-photo");
-            const iconDefault = document.getElementById("default-icon");
-
-            if (fotoTerdaftar) {
-                imgProfile.src = fotoTerdaftar;
-                imgProfile.classList.remove("hidden");
-                if(iconDefault) iconDefault.classList.add("hidden");
-            }
-        } else {
-            // Jika belum login, paksa kembali ke halaman login
-            window.location.href = "index.html";
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-        initApp();
-
-        function logout() {
-            if(confirm("Pak/Bu, yakin ingin keluar aplikasi?")) {
-                localStorage.removeItem("user_login");
-                window.location.href = "index.html"; // Arahkan ke halaman login
-            }
-        }
-
-        function openAI() { document.getElementById('ai-window').classList.remove('hidden'); }
-        function closeAI() { document.getElementById('ai-window').classList.add('hidden'); }
+    // ==========================================
+    // 1. FUNGSI JAM, HARI & TANGGAL (WIB)
+    // ==========================================
+    function updateClock() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         
-        // (Fungsi tanyaGemini Bapak tetap sama tapi panggil 'Pa/Bu' secara dinamis)
-        async function tanyaGemini() {
-            const input = document.getElementById('ai-input');
-            const body = document.getElementById('ai-chat-body');
-            const userData = JSON.parse(localStorage.getItem("user_login")) || { nama: "Agit", gender: "Pria" };
-            const panggilan = (userData.gender === "Pria") ? "Pa" : "Bu";
-            
-            if (input.value.trim() === "") return;
-            body.innerHTML += `<div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[10px] font-bold shadow-sm">${input.value}</div>`;
-            
-            let query = input.value;
-            input.value = "";
-            body.scrollTop = body.scrollHeight;
+        const hari = days[now.getDay()];
+        const tgl = now.getDate();
+        const bln = months[now.getMonth()];
+        const thn = now.getFullYear();
+        const jam = String(now.getHours()).padStart(2, '0');
+        const mnt = String(now.getMinutes()).padStart(2, '0');
+        const dtk = String(now.getSeconds()).padStart(2, '0');
 
-            setTimeout(() => {
-                body.innerHTML += `<div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border text-[10px] text-gray-700 italic"><b>Assistant:</b><br>Halo ${panggilan} ${userData.nama}, ada yang bisa dibantu?</div>`;
-                body.scrollTop = body.scrollHeight;
-            }, 1000);
-        }
-  // Tunggu sampai semua elemen siap
-    window.addEventListener('load', () => {
-        const slider = document.querySelector('.promo-slider');
+        const elDate = document.getElementById('real-date');
+        const elClock = document.getElementById('real-clock');
+
+        if(elDate) elDate.innerText = `${hari}, ${tgl} ${bln} ${thn}`;
+        if(elClock) elClock.innerText = `${jam}:${mnt}:${dtk} WIB`;
+    }
+    
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ==========================================
+    // 2. LOGIKA DATA ANGGOTA & SAPAAN PERSONAL
+    // ==========================================
+    const session = JSON.parse(localStorage.getItem("user_login"));
+    const fotoTerdaftar = localStorage.getItem("fotoWajah");
+    const genderTerdaftar = localStorage.getItem("genderAnggota");
+    const usernameTerdaftar = localStorage.getItem("usernameAnggota");
+
+    if (session) {
+        const jamSkrg = new Date().getHours();
+        let sapaanWaktu = "Selamat Malam";
+        if (jamSkrg >= 5 && jamSkrg < 11) sapaanWaktu = "Selamat Pagi";
+        else if (jamSkrg >= 11 && jamSkrg < 15) sapaanWaktu = "Selamat Siang";
+        else if (jamSkrg >= 15 && jamSkrg < 18) sapaanWaktu = "Selamat Sore";
+
+        let sapaanGender = (genderTerdaftar === "PEREMPUAN") ? "Ibu" : "Bpk";
         
-        if (!slider) {
-            console.log("Slider tidak ditemukan! Cek nama class-nya Pak.");
-            return;
-        }
+        const elGreeting = document.getElementById("greeting");
+        const elDisplayName = document.getElementById("display-name");
 
+        if(elGreeting) elGreeting.innerText = `${sapaanWaktu} ${sapaanGender} ${usernameTerdaftar || 'Anggota'},`;
+        if(elDisplayName) elDisplayName.innerText = "selamat datang kembali yah..";
+
+        const imgProfile = document.getElementById("profile-photo");
+        const iconDefault = document.getElementById("default-icon");
+
+        if (fotoTerdaftar && imgProfile) {
+            imgProfile.src = fotoTerdaftar;
+            imgProfile.classList.remove("hidden");
+            if(iconDefault) iconDefault.classList.add("hidden");
+        }
+    } else {
+        window.location.href = "index.html";
+    }
+
+    // ==========================================
+    // 3. FITUR GESER PROMO (CODINGAN LAMA BAPAK)
+    // ==========================================
+    const slider = document.querySelector('.promo-slider');
+    
+    if (slider) {
         let isDown = false;
         let startX;
         let scrollLeft;
@@ -434,8 +395,40 @@
             slider.scrollLeft = scrollLeft - walk;
         });
         
-        console.log("Fitur Geser PC Aktif!");
-    });
-    </script>
+        console.log("Fitur Geser Lama Aktif & Lancar!");
+    }
+});
+
+// ==========================================
+// 4. FUNGSI TOMBOL (LOGOUT & AI)
+// ==========================================
+function logout() {
+    if(confirm("Pak/Bu, yakin ingin keluar aplikasi?")) {
+        localStorage.removeItem("user_login");
+        window.location.href = "index.html";
+    }
+}
+
+function openAI() { document.getElementById('ai-window').classList.remove('hidden'); }
+function closeAI() { document.getElementById('ai-window').classList.add('hidden'); }
+
+async function tanyaGemini() {
+    const input = document.getElementById('ai-input');
+    const body = document.getElementById('ai-chat-body');
+    const userData = JSON.parse(localStorage.getItem("user_login")) || { nama: "Anggota", gender: "Pria" };
+    const panggilan = (userData.gender === "Wanita") ? "Bu" : "Pa";
+    
+    if (!input.value.trim()) return;
+    
+    body.innerHTML += `<div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none ml-auto max-w-[85%] text-[10px] font-bold shadow-sm">${input.value}</div>`;
+    input.value = "";
+    body.scrollTop = body.scrollHeight;
+
+    setTimeout(() => {
+        body.innerHTML += `<div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border text-[10px] text-gray-700 italic"><b>Assistant:</b><br>Halo ${panggilan} ${userData.nama}, ada yang bisa dibantu?</div>`;
+        body.scrollTop = body.scrollHeight;
+    }, 1000);
+}
+</script>
 </body>
 </html>
