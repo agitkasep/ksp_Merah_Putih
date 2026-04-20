@@ -167,7 +167,7 @@
 </div>
             </div>
 
-            <div>
+            <div class="px-8 pb-4">
                 <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
                 <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3">
                     <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
@@ -180,9 +180,10 @@
                 </div>
             </div>
 
-            <button onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 mt-4 uppercase">Masuk Sekarang</button>
-            
-            <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-2 tracking-widest">Batal</button>
+            <div class="px-8 pb-8">
+                <button onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 mt-4 uppercase">Masuk Sekarang</button>
+                <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-2 tracking-widest">Batal</button>
+            </div>
         </div>
     </div>
 </div>
@@ -231,7 +232,7 @@ async function getLocation() {
 getLocation();
 
 // ==========================================
-// 3. FUNGSI MODAL & LOGIN (PENYEBAB MACET TADI)
+// 3. FUNGSI MODAL & LOGIN DENGAN DETEKTIF
 // ==========================================
 const modalLogin = document.getElementById('loginModal');
 
@@ -247,46 +248,58 @@ function closeLogin() {
 }
 
 function validaSiLogin() {
-    const userMasker = document.getElementById('username').value;
-    const passMasker = document.getElementById('password').value;
+    // 1. Ambil input dengan .trim() untuk membuang spasi otomatis HP
+    const userMasker = document.getElementById('username').value.trim();
+    const passMasker = document.getElementById('password').value.trim();
     const status = document.getElementById('user-status').value;
 
-    // 1. Ambil data Akun yang dibuat saat daftar tadi
+    // 2. Ambil data Akun yang dibuat saat daftar tadi
     const userTerdaftar = localStorage.getItem('usernameAnggota');
     const passTerdaftar = localStorage.getItem('passwordAnggota');
     const namaAsli = localStorage.getItem('namaLengkapAnggota');
     const genderAsli = localStorage.getItem('genderAnggota');
 
+    // Pengecekan Jika Kosong
     if (!userMasker || !passMasker || !status) {
         alert("Waduh Pak/Bu, tolong isi Username, Password, dan Pilih Status!");
         return;
     }
 
-    // 2. Logika Cek: Harus cocok dengan Username & Password buatan anggota
+    if (!userTerdaftar) {
+        alert("Sistem kosong! Belum ada data pendaftaran yang tersimpan.\nSilakan klik DAFTAR terlebih dahulu.");
+        return;
+    }
+
+    // 3. Logika Cek: Harus cocok dengan Username & Password buatan anggota
     if (userTerdaftar && userMasker === userTerdaftar && passMasker === passTerdaftar) {
         
         // Simpan sesi login untuk dibawa ke halaman anggota.html
-        const sapaan = (genderAsli === "LAKI-LAKI") ? "Bpk" : "Ibu";
+        let sapaan = "Bpk/Ibu";
+        if (genderAsli) {
+            const g = genderAsli.toUpperCase();
+            sapaan = (g.includes("PEREMPUAN") || g.includes("WANITA")) ? "Ibu" : "Bpk";
+        }
+
         const sessionData = { 
-            nama: namaAsli, 
+            nama: namaAsli || userTerdaftar, 
             sapaan: sapaan,
             isLoggedIn: true 
         };
         localStorage.setItem("user_login", JSON.stringify(sessionData));
 
-        alert(`Login Sukses! Selamat Datang ${sapaan} ${namaAsli.toUpperCase()}`);
+        alert(`Login Sukses! Selamat Datang ${sapaan} ${(namaAsli || userTerdaftar).toUpperCase()}`);
         window.location.href = "anggota.html"; 
     } 
-    // 3. Cadangan Login Admin tetap berfungsi
+    // 4. Cadangan Login Admin tetap berfungsi
     else if (userMasker === "admin" && passMasker === "admin123" && status === "admin") {
         alert("Login Admin Berhasil!");
         window.location.href = "admin.html";
     }
+    // 5. FITUR DETEKTIF: Kalau Gagal, kasih tau perbedaannya
     else {
-        alert("Username atau Password Salah!\nPastikan sesuai dengan yang Anda buat saat mendaftar.");
+        alert(`❌ LOGIN GAGAL!\n\nMari kita cek bedanya:\n\nYang Anda Ketik:\nUser: [${userMasker}]\nPass: [${passMasker}]\n\nYang Terdaftar di Sistem:\nUser: [${userTerdaftar}]\nPass: [${passTerdaftar}]\n\nKelihatan bedanya? Silakan samakan ketikannya.`);
     }
 }
-        
     </script>
 </body>
 </html>
