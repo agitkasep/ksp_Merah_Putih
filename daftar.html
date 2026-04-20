@@ -101,22 +101,41 @@
             startCamera();
         }
 
+        // FUNGSI KAMERA STABIL ALA GOJEK/DANA
         async function startCamera() {
-            // Matikan kamera sebelumnya jika masih nyala
+            const video = document.getElementById('camera-stream');
+            
+            // 1. Bersihkan stream lama secara total
             if (currentStream) {
                 currentStream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
             }
+
+            // 2. Beri jeda 300ms agar hardware kamera punya waktu untuk switching
+            await new Promise(resolve => setTimeout(resolve, 300));
+
             try {
-                currentStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: modeKamera }, 
-                    audio: false 
-                });
-                const video = document.getElementById('camera-stream');
+                const constraints = {
+                    video: { 
+                        facingMode: modeKamera,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = currentStream;
+
+                // 3. Pastikan video diputar segera setelah metadata dimuat
+                video.onloadedmetadata = () => {
+                    video.play();
+                };
+
                 video.classList.remove('hidden');
             } catch (err) {
-                alert("Gagal akses kamera! Mohon izinkan akses kamera di pengaturan browser.");
-                console.error(err);
+                console.error("Gagal akses kamera:", err);
+                alert("Gagal akses kamera! Pastikan izin kamera sudah diberikan.");
             }
         }
 
@@ -125,6 +144,7 @@
             const canvas = document.getElementById('photo-canvas');
             const context = canvas.getContext('2d');
 
+            // Atur ukuran canvas sesuai video asli agar tajam
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -138,16 +158,22 @@
                 preview.src = photoData;
                 preview.classList.remove('hidden');
                 
-                // --- PROSES PINDAH KAMERA ---
-                alert("Foto KTP Berhasil! Sekarang kamera otomatis pindah ke DEPAN untuk Verifikasi Wajah.");
-                modeKamera = "user"; // Ganti ke selfie
-                startCamera(); 
+                // --- PROSES TRANSISI PROFESIONAL ---
+                // Sembunyikan stream sebentar agar tidak 'flicker' atau hitam
+                video.classList.add('hidden');
+                
+                alert("Foto KTP Berhasil! Siapkan wajah Anda untuk verifikasi.");
+                
+                modeKamera = "user"; // Pindah ke kamera depan
                 
                 // Aktifkan tombol wajah
                 const btnFace = document.getElementById('btn-face');
                 btnFace.classList.remove('opacity-50', 'bg-slate-100');
                 btnFace.classList.add('bg-indigo-600', 'text-white');
                 btnFace.disabled = false;
+
+                // Jalankan kamera depan
+                startCamera();
                 
             } else if (tipe === 'face') {
                 facePhotoData = photoData;
@@ -155,15 +181,17 @@
                 preview.src = photoData;
                 preview.classList.remove('hidden');
                 
+                // Sembunyikan video karena sudah selesai
+                video.classList.add('hidden');
+                
                 // Aktifkan tombol selesai
                 const btnSubmit = document.getElementById('btn-submit');
                 btnSubmit.classList.remove('opacity-50');
                 btnSubmit.disabled = false;
                 
-                // Matikan kamera
+                // Matikan kamera total
                 if(currentStream) currentStream.getTracks().forEach(track => track.stop());
-                video.classList.add('hidden');
-                alert("Foto Wajah Berhasil! Silakan klik 'SELESAI & DAFTAR'.");
+                alert("Verifikasi Wajah Berhasil! Silakan selesaikan pendaftaran.");
             }
         }
 
