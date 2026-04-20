@@ -43,7 +43,17 @@
                 <div>
                     <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nama Lengkap Sesuai KTP</label>
                     <input type="text" id="nama_lengkap" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase">
-                </div>
+                </div> 
+                <div class="grid grid-cols-2 gap-3">
+    <div>
+        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Username</label>
+        <input type="text" id="reg_user" required placeholder="Contoh: agit123" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+    </div>
+    <div>
+        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
+        <input type="password" id="reg_pass" required placeholder="****" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+    </div>
+</div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -216,16 +226,28 @@
         }
 
         function simpanKeDatabase() {
-            if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
-            
-            const nama = document.getElementById('nama_lengkap').value;
-            // Simpan data ke localStorage (Database lokal)
-            localStorage.setItem('namaLengkapAnggota', nama);
-            localStorage.setItem('fotoWajah', tempFace);
-            
-            alert(`SELAMAT BERGABUNG BPK/IBU ${nama.toUpperCase()} DI KSP MERAH PUTIH!`);
-            window.location.href = 'index.html';
-        }
+    if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
+    
+    // Ambil semua data dari input
+    const nama = document.getElementById('nama_lengkap').value;
+    const userBaru = document.getElementById('reg_user').value;
+    const passBaru = document.getElementById('reg_pass').value;
+    const gender = document.getElementById('gender').value;
+
+    if(!userBaru || !passBaru) return alert("Username dan Password harus diisi Pak!");
+
+    // SIMPAN KE DATABASE LOKAL (LocalStorage)
+    localStorage.setItem('namaLengkapAnggota', nama);
+    localStorage.setItem('usernameAnggota', userBaru);
+    localStorage.setItem('passwordAnggota', passBaru);
+    localStorage.setItem('genderAnggota', gender);
+    localStorage.setItem('fotoWajah', tempFace);
+    
+    const sapaan = (gender === "LAKI-LAKI") ? "Bpk" : "Ibu";
+    
+    alert(`SELAMAT BERGABUNG ${sapaan} ${nama.toUpperCase()}!\nSekarang silakan login menggunakan Username & Password yang Anda buat.`);
+    window.location.href = 'index.html';
+}
     </script>
 </body>
 </html>
