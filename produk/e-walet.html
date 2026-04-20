@@ -10,59 +10,37 @@
         body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
         .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
         
-        /* EFEK NEON & MAGNETIC */
-        .wallet-card-item { 
+        /* EFEK MAGNETIC & GLOW */
+        .wallet-item { 
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             border: 2px solid #f1f5f9;
             background: white;
             cursor: pointer;
         }
-        .wallet-card-item:hover {
-            transform: translateY(-5px);
-            border-color: #4f46e5;
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
-        }
-        .wallet-card-item.active {
-            border-color: #4f46e5;
-            background-color: #eff6ff;
-            box-shadow: inset 0 0 10px rgba(79, 70, 229, 0.1);
-        }
+        .wallet-item:hover { transform: translateY(-5px); border-color: #4338ca; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.15); }
+        .wallet-item.active { border-color: #4338ca; background-color: #eef2ff; }
 
-        /* NOMINAL BUTTONS */
-        .nominal-btn {
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
-            font-style: italic;
-        }
-        .nominal-btn.selected {
-            background-color: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-        }
+        .nom-btn { border: 1.5px solid #e2e8f0; transition: all 0.2s; font-style: italic; }
+        .nom-btn.selected { background-color: #4338ca; color: white; border-color: #4338ca; box-shadow: 0 8px 20px rgba(67, 56, 202, 0.3); }
 
-        .btn-active:active { transform: scale(0.95); opacity: 0.9; }
-        
-        /* HEADER GRADIENT */
-        .header-grad { background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); }
+        .header-bg { background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); }
+        .btn-active:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
-        <div class="header-grad p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[25px] shadow-lg">
+        <div class="header-bg p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[25px] shadow-lg">
             <i onclick="window.history.back()" class="fa fa-arrow-left text-lg cursor-pointer p-2 btn-active"></i>
-            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">E-Wallet Kopdeskel</h1>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">Top Up E-Wallet</h1>
         </div>
 
         <div class="flex-1 p-6 overflow-y-auto pb-32">
-            
             <div class="mb-8">
-                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor HP / ID Akun</label>
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">ID Akun / No HP Tujuan</label>
                 <div class="relative">
-                    <i class="fa fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-lg"></i>
-                    <input type="number" id="id-dompet" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-black text-slate-700 outline-none focus:border-indigo-500 transition-all">
+                    <i class="fa fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                    <input type="number" id="id-tujuan" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-black text-slate-700 outline-none focus:border-indigo-500 transition-all">
                 </div>
             </div>
 
@@ -70,102 +48,91 @@
             
             <div class="grid grid-cols-2 gap-4 mb-8">
                 
-                <div onclick="pilihWallet(this, 'DANA')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
-                    <svg class="w-16 h-8" viewBox="0 0 100 40">
-                        <rect width="100" height="40" rx="8" fill="#108EE9"/>
-                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">DANA</text>
+                <div onclick="setWallet(this, 'DANA')" class="wallet-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg width="60" height="30" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="10" fill="#108EE9"/>
+                        <text x="50" y="26" font-family="Arial" font-weight="900" font-size="16" fill="white" text-anchor="middle" font-style="italic">DANA</text>
                     </svg>
-                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo DANA</span>
+                    <span class="text-[9px] font-black uppercase text-slate-500">DANA</span>
                 </div>
 
-                <div onclick="pilihWallet(this, 'OVO')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
-                    <svg class="w-16 h-8" viewBox="0 0 100 40">
-                        <rect width="100" height="40" rx="8" fill="#4C2B90"/>
-                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">OVO</text>
+                <div onclick="setWallet(this, 'OVO')" class="wallet-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg width="60" height="30" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="10" fill="#4C2B90"/>
+                        <text x="50" y="26" font-family="Arial" font-weight="900" font-size="16" fill="white" text-anchor="middle" font-style="italic">OVO</text>
                     </svg>
-                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo OVO</span>
+                    <span class="text-[9px] font-black uppercase text-slate-500">OVO</span>
                 </div>
 
-                <div onclick="pilihWallet(this, 'GOPAY')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
-                    <svg class="w-16 h-8" viewBox="0 0 100 40">
-                        <rect width="100" height="40" rx="8" fill="#00AA13"/>
-                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="12" fill="white" text-anchor="middle" font-style="italic">GOPAY</text>
+                <div onclick="setWallet(this, 'GOPAY')" class="wallet-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg width="60" height="30" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="10" fill="#00AA13"/>
+                        <text x="50" y="26" font-family="Arial" font-weight="900" font-size="14" fill="white" text-anchor="middle" font-style="italic">GOPAY</text>
                     </svg>
-                    <span class="text-[9px] font-black uppercase text-slate-600">Saldo GoPay</span>
+                    <span class="text-[9px] font-black uppercase text-slate-500">GOPAY</span>
                 </div>
 
-                <div onclick="pilihWallet(this, 'SHOPEEPAY')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
-                    <svg class="w-16 h-8" viewBox="0 0 100 40">
-                        <rect width="100" height="40" rx="8" fill="#EE4D2D"/>
-                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="10" fill="white" text-anchor="middle" font-style="italic">ShopeePay</text>
+                <div onclick="setWallet(this, 'SHOPEEPAY')" class="wallet-item p-4 rounded-[25px] flex flex-col items-center gap-2">
+                    <svg width="60" height="30" viewBox="0 0 100 40">
+                        <rect width="100" height="40" rx="10" fill="#EE4D2D"/>
+                        <text x="50" y="26" font-family="Arial" font-weight="900" font-size="12" fill="white" text-anchor="middle" font-style="italic">SHOPEE</text>
                     </svg>
-                    <span class="text-[9px] font-black uppercase text-slate-600">ShopeePay</span>
-                </div>
-
-                <div onclick="pilihWallet(this, 'LINKAJA')" class="wallet-card-item p-4 rounded-[25px] flex flex-col items-center gap-2">
-                    <svg class="w-16 h-8" viewBox="0 0 100 40">
-                        <rect width="100" height="40" rx="8" fill="#E02C2D"/>
-                        <text x="50" y="25" font-family="Arial" font-weight="900" font-size="10" fill="white" text-anchor="middle" font-style="italic">LinkAja</text>
-                    </svg>
-                    <span class="text-[9px] font-black uppercase text-slate-600">LinkAja</span>
+                    <span class="text-[9px] font-black uppercase text-slate-500">SHOPEEPAY</span>
                 </div>
 
             </div>
 
-            <div id="nominal-area" class="hidden">
-                <h3 id="label-nominal" class="text-[10px] font-black text-indigo-900 uppercase italic mb-4">Pilih Nominal :</h3>
+            <div id="nom-area" class="hidden">
+                <h3 id="label-nom" class="text-[10px] font-black text-indigo-900 uppercase italic mb-4">Pilih Nominal :</h3>
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="setNominal(this, 10000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 10.000</button>
-                    <button onclick="setNominal(this, 20000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 20.000</button>
-                    <button onclick="setNominal(this, 50000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 50.000</button>
-                    <button onclick="setNominal(this, 100000)" class="nominal-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 100.000</button>
+                    <button onclick="setNominal(this, 10000)" class="nom-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 10.000</button>
+                    <button onclick="setNominal(this, 20000)" class="nom-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 20.000</button>
+                    <button onclick="setNominal(this, 50000)" class="nom-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 50.000</button>
+                    <button onclick="setNominal(this, 100000)" class="nom-btn p-4 rounded-2xl text-xs font-black text-slate-700">Rp 100.000</button>
                 </div>
             </div>
-
         </div>
 
         <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t p-5 rounded-t-[35px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
             <div class="flex justify-between items-center mb-4 px-2">
-                <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Total Transfer Saldo</span>
-                <span id="total-bayar" class="text-base font-black text-indigo-700 italic">Rp 0</span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Bayar</span>
+                <span id="total-txt" class="text-base font-black text-indigo-700 italic">Rp 0</span>
             </div>
-            <button onclick="prosesEwallet()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black uppercase italic tracking-widest shadow-xl shadow-indigo-200 btn-active">
+            <button onclick="prosesEw()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black uppercase italic tracking-widest shadow-xl btn-active">
                 Konfirmasi Top Up <i class="fa fa-arrow-right ml-2"></i>
             </button>
         </div>
-
     </div>
 
     <script>
-        let wallet = "";
-        let nominal = 0;
+        let wName = "";
+        let nVal = 0;
 
-        function pilihWallet(el, name) {
-            document.querySelectorAll('.wallet-card-item').forEach(x => x.classList.remove('active'));
+        function setWallet(el, name) {
+            document.querySelectorAll('.wallet-item').forEach(x => x.classList.remove('active'));
             el.classList.add('active');
-            wallet = name;
-            document.getElementById('nominal-area').classList.remove('hidden');
-            document.getElementById('label-nominal').innerText = `Nominal ${name} :`;
+            wName = name;
+            document.getElementById('nom-area').classList.remove('hidden');
+            document.getElementById('label-nom').innerText = `Nominal ${name} :`;
             if (navigator.vibrate) navigator.vibrate(40);
         }
 
         function setNominal(el, price) {
-            document.querySelectorAll('.nominal-btn').forEach(x => x.classList.remove('selected'));
+            document.querySelectorAll('.nom-btn').forEach(x => x.classList.remove('selected'));
             el.classList.add('selected');
-            nominal = price;
-            // Admin Rp 1.500
-            let total = price + 1500;
-            document.getElementById('total-bayar').innerText = 'Rp ' + total.toLocaleString('id-ID');
+            nVal = price;
+            let total = price + 1500; // Admin Rp 1.500
+            document.getElementById('total-txt').innerText = 'Rp ' + total.toLocaleString('id-ID');
             if (navigator.vibrate) navigator.vibrate(40);
         }
 
-        function prosesEwallet() {
-            const id = document.getElementById('id-dompet').value;
-            if(!wallet || !id || nominal === 0) {
-                alert("Waduh Pak, tolong lengkapi Nomor Akun dan Pilih Nominalnya!");
+        function prosesEw() {
+            const id = document.getElementById('id-tujuan').value;
+            if(!wName || !id || nVal === 0) {
+                alert("Waduh Pak, tolong isi nomor HP dan pilih nominalnya dulu!");
                 return;
             }
-            alert(`Sistem sedang memproses Top Up ${wallet} ke nomor ${id}. \nSaldo akan masuk dalam 1-3 menit.`);
+            alert(`Siap Pak Agit! Top Up ${wName} ke nomor ${id} sedang diproses.`);
         }
     </script>
 </body>
