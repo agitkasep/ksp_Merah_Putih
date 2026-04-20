@@ -24,13 +24,8 @@
             cursor: grab;
         }
 
-        .promo-slider:active { 
-            cursor: grabbing; 
-        }
-
-      .promo-slider::-webkit-scrollbar { 
-            display: none; 
-        }
+        .promo-slider:active { cursor: grabbing; }
+        .promo-slider::-webkit-scrollbar { display: none; }
 
         .promo-card { 
             min-width: 160px; 
@@ -41,16 +36,7 @@
             transition: transform 0.2s ease;
         }
 
-        .promo-card:active {
-            transform: scale(0.96);
-        }
-        }
-
-        .promo-card:active {
-            transform: scale(0.96);
-        } 
-
-        
+        .promo-card:active { transform: scale(0.96); }
 
         /* Gaya Icon Dashboard agar Tegas & Mewah */
         .icon-box {
@@ -83,7 +69,10 @@
             letter-spacing: 0.3px;
         }
 
-        
+        /* [TAMBAHAN: STYLE RUNNING TEXT] */
+        .marquee-container { background: #f0f4ff; color: #3730a3; padding: 7px 0; overflow: hidden; white-space: nowrap; font-size: 10px; font-weight: 800; border-bottom: 1px solid #e0e7ff; border-top: 1px solid #e0e7ff; flex-shrink: 0; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -113,7 +102,7 @@
             </div>
         </div>
 
-        <div id="main-content" class="flex-1 overflow-y-auto pb-24">        <div id="main-content" class="flex-1 overflow-y-auto pb-24">
+        <div id="main-content" class="flex-1 overflow-y-auto pb-24">
             <div class="p-4">
                 <div class="card-grad p-4 rounded-[30px] text-white shadow-xl relative overflow-hidden">
                     <p class="text-[8px] font-bold opacity-60 uppercase tracking-widest">Total Tabungan</p>
@@ -123,6 +112,10 @@
                         <span>S. SUKARELA: Rp 1.95k</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="marquee-container mb-4">
+                <div class="marquee-text">Selamat Datang di Dashboard Anggota KOPDESKEL Merah Putih - Nikmati kemudahan layanan simpan pinjam dan dapatkan promo spesial khusus hari ini di Toko Koperasi!</div>
             </div>
 
             <div class="px-4 mb-4">
@@ -235,22 +228,7 @@
 </div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-[480px] bg-white pt-3 pb-6 flex justify-around border-t rounded-t-[30px] shadow-2xl z-[100]">
-            <div onclick="location.reload()" class="flex flex-col items-center gap-1 cursor-pointer">
-                <i class="fa fa-house text-indigo-600 text-base"></i>
-                <span class="text-[7px] font-black uppercase italic text-indigo-600">Home</span>
-            </div>
-            <div onclick="openAI()" class="flex flex-col items-center gap-1 cursor-pointer btn-active">
-                <i class="fa fa-robot text-purple-600 text-base"></i>
-                <span class="text-[7px] font-black uppercase italic text-purple-600">Tanya AI</span>
-            </div>
-            <div class="flex flex-col items-center -mt-6">
-                <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg border-4 border-white active:scale-90 transition-all">
-                    <i class="fa fa-qrcode text-xl"></i>
-                </div>
-                <span class="text-[7px] font-black uppercase italic mt-1 text-indigo-600">QR Scan</span>
-            </div>
-           <div class="fixed bottom-0 w-full max-w-[480px] bg-white pt-3 pb-8 flex justify-around border-t rounded-t-[35px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-[100]">
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white pt-3 pb-8 flex justify-around border-t rounded-t-[35px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)] z-[100]">
             <div onclick="location.reload()" class="flex flex-col items-center gap-1 cursor-pointer group">
                 <i class="fa fa-house text-indigo-950 text-xl transition-transform group-active:scale-90"></i>
                 <span class="text-[8px] font-black uppercase text-indigo-950 tracking-tighter">Beranda</span>
@@ -273,7 +251,6 @@
                 <i class="fa fa-user-gear text-indigo-950 text-xl transition-transform group-active:scale-90"></i>
                 <span class="text-[8px] font-black uppercase text-indigo-950 tracking-tighter">Akun</span>
             </div>
-        </div>
         </div>
     </div>
 
