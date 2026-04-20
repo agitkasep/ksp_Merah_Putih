@@ -144,9 +144,9 @@
         let currentMode = 'face'; 
         let tempFace, tempKtp;
 
-        // Fungsi Memulai Verifikasi (Wajah)
+        // Fungsi Memulai Verifikasi (Wajah) - DITAMBAHKAN .trim()
         async function startVerification() {
-            const nama = document.getElementById('nama_lengkap').value;
+            const nama = document.getElementById('nama_lengkap').value.trim();
             if(!nama) return alert("Isi data form dulu Pak!");
             
             document.getElementById('step-form').classList.add('hidden');
@@ -226,28 +226,28 @@
         }
 
         function simpanKeDatabase() {
-    if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
+            if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
     
-    // Ambil semua data dari input
-    const nama = document.getElementById('nama_lengkap').value;
-    const userBaru = document.getElementById('reg_user').value;
-    const passBaru = document.getElementById('reg_pass').value;
-    const gender = document.getElementById('gender').value;
+            // Ambil semua data dari input - DITAMBAHKAN .trim() DISINI AGAR BERSIH DARI SPASI HP
+            const nama = document.getElementById('nama_lengkap').value.trim();
+            const userBaru = document.getElementById('reg_user').value.trim();
+            const passBaru = document.getElementById('reg_pass').value.trim();
+            const gender = document.getElementById('gender').value;
 
-    if(!userBaru || !passBaru) return alert("Username dan Password harus diisi Pak!");
+            if(!userBaru || !passBaru) return alert("Username dan Password harus diisi Pak!");
 
-    // SIMPAN KE DATABASE LOKAL (LocalStorage)
-    localStorage.setItem('namaLengkapAnggota', nama);
-    localStorage.setItem('usernameAnggota', userBaru);
-    localStorage.setItem('passwordAnggota', passBaru);
-    localStorage.setItem('genderAnggota', gender);
-    localStorage.setItem('fotoWajah', tempFace);
-    
-    const sapaan = (gender === "LAKI-LAKI") ? "Bpk" : "Ibu";
-    
-    alert(`SELAMAT BERGABUNG ${sapaan} ${nama.toUpperCase()}!\nSekarang silakan login menggunakan Username & Password yang Anda buat.`);
-    window.location.href = 'index.html';
-}
+            // SIMPAN KE DATABASE LOKAL (LocalStorage)
+            localStorage.setItem('namaLengkapAnggota', nama);
+            localStorage.setItem('usernameAnggota', userBaru);
+            localStorage.setItem('passwordAnggota', passBaru);
+            localStorage.setItem('genderAnggota', gender);
+            localStorage.setItem('fotoWajah', tempFace);
+            
+            const sapaan = (gender === "LAKI-LAKI") ? "Bpk" : "Ibu";
+            
+            alert(`SELAMAT BERGABUNG ${sapaan} ${nama.toUpperCase()}!\nSekarang silakan login menggunakan Username & Password yang Anda buat.`);
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>
