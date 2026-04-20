@@ -1,1 +1,105 @@
-warung serba ada
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester Efek Kursor KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
+        
+        /* Box Dasar (Mirip menu di aplikasi Bapak) */
+        .menu-box { width: 90px; height: 90px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #f8fafc; border: 2px solid #f1f5f9; margin: 10px; }
+        .menu-box i { font-size: 32px; margin-bottom: 8px; color: #4f46e5; }
+        .menu-box span { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* =========================================
+           1. EFEK MELAYANG & BERCAHAYA
+           ========================================= */
+        .hover-elevate { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-elevate:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.4); 
+            border-color: #c7d2fe;
+            background: white;
+        }
+
+        /* =========================================
+           2. EFEK DENYUT JANTUNG (PULSE)
+           ========================================= */
+        @keyframes denyut {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .hover-pulse { transition: background 0.3s; }
+        .hover-pulse:hover { background: #fee2e2; border-color: #fecaca; }
+        .hover-pulse:hover i { animation: denyut 0.8s infinite; color: #ef4444; }
+
+        /* =========================================
+           3. EFEK PUTAR KOIN 3D (FLIP)
+           ========================================= */
+        .hover-flip { transition: background 0.3s; perspective: 1000px; }
+        .hover-flip i { transition: transform 0.6s ease; transform-style: preserve-3d; }
+        .hover-flip:hover i { transform: rotateY(360deg); color: #f59e0b; }
+        .hover-flip:hover { background: #fef3c7; border-color: #fde68a; }
+
+        /* =========================================
+           4. EFEK MENGEMBANG LEMBUT (ZOOM IN)
+           ========================================= */
+        .hover-zoom { transition: all 0.2s ease-in-out; }
+        .hover-zoom:hover { 
+            transform: scale(1.15); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            background: white;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="text-xl font-black italic text-indigo-900 uppercase mb-2">Tester Efek Kursor</h2>
+        <p class="text-xs font-bold text-gray-400 mb-8 uppercase tracking-widest">Arahkan kursor ke kotak di bawah</p>
+
+        <div class="flex flex-wrap justify-center gap-4">
+            
+            <div class="text-center">
+                <div class="menu-box hover-elevate">
+                    <i class="fa fa-wallet"></i>
+                    <span>Simpanan</span>
+                </div>
+                <p class="text-[9px] font-bold text-gray-500 mt-2">1. Melayang</p>
+            </div>
+
+            <div class="text-center">
+                <div class="menu-box hover-pulse">
+                    <i class="fa fa-heart"></i>
+                    <span>Pinjaman</span>
+                </div>
+                <p class="text-[9px] font-bold text-gray-500 mt-2">2. Berdenyut</p>
+            </div>
+
+            <div class="text-center">
+                <div class="menu-box hover-flip">
+                    <i class="fa fa-store"></i>
+                    <span>Toko</span>
+                </div>
+                <p class="text-[9px] font-bold text-gray-500 mt-2">3. Putar Koin</p>
+            </div>
+
+            <div class="text-center">
+                <div class="menu-box hover-zoom">
+                    <i class="fa fa-circle-info"></i>
+                    <span>Info KSP</span>
+                </div>
+                <p class="text-[9px] font-bold text-gray-500 mt-2">4. Mengembang</p>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
