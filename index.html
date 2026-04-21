@@ -6,6 +6,9 @@
     <title>KOPDESKEL Merah Putih</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         /* [CSS UTAMA] */
         body { background-color: #cbd5e1; margin: 0; display: flex; justify-content: center; height: 100vh; font-family: sans-serif; overflow: hidden; }
@@ -35,15 +38,18 @@
 <body>
 
     <div class="app-container">
+        
         <div class="p-4 bg-white flex justify-between items-center z-50">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg border overflow-hidden"><img src="logo.png" class="w-full h-full object-cover"></div>
+                <div class="w-10 h-10 rounded-lg border overflow-hidden">
+                    <img src="logo.png" class="w-full h-full object-cover">
+                </div>
                 <div>
-    <h1 class="font-black text-gray-900 text-[10px] leading-tight uppercase italic">"KOPDESKEL MERAH PUTIH"</h1>
-    <p id="user-location" class="text-[8px] font-bold text-indigo-500 uppercase">
-        <i class="fa fa-location-dot"></i> Mendeteksi Lokasi...
-    </p>
-</div>
+                    <h1 class="font-black text-gray-900 text-[10px] leading-tight uppercase italic">"KOPDESKEL MERAH PUTIH"</h1>
+                    <p id="user-location" class="text-[8px] font-bold text-indigo-500 uppercase">
+                        <i class="fa fa-location-dot"></i> Mendeteksi Lokasi...
+                    </p>
+                </div>
             </div>
             <div class="text-right">
                 <p id="current-day" class="text-[7px] font-bold text-gray-400 uppercase tracking-tighter"></p>
@@ -56,11 +62,12 @@
         </div>
 
         <div class="main-content">
+            
             <div class="mx-4 my-5 p-6 bg-white rounded-[30px] border border-indigo-50 shadow-sm text-center">
                 <p class="text-gray-400 text-[9px] mb-4 font-bold italic uppercase tracking-widest">Silahkan anda Login atau Daftar agar bisa menikmati layanan kami, terimakasih</p>
                 <div class="flex gap-3">
                     <button onclick="openLogin()" class="flex-1 py-3.5 bg-indigo-600 text-white rounded-2xl text-[11px] font-black btn-active-effect shadow-lg shadow-indigo-100">LOGIN</button>
-                   <button onclick="window.location.href='daftar.html'" class="flex-1 py-3.5 border-2 border-indigo-600 text-indigo-600 rounded-2xl text-[11px] font-black btn-active-effect">DAFTAR</button>
+                    <button onclick="window.location.href='daftar.html'" class="flex-1 py-3.5 border-2 border-indigo-600 text-indigo-600 rounded-2xl text-[11px] font-black btn-active-effect">DAFTAR</button>
                 </div>
             </div>
 
@@ -85,43 +92,44 @@
 
             <div class="px-5 mb-2 flex justify-between items-end">
                 <h2 class="text-[12px] font-black text-gray-800 uppercase italic">Produk Promo 🔥</h2>
-                <span class="text-[8px] font-black text-indigo-600 border-b border-indigo-200">SEMUA</span>
+                <span class="text-[8px] font-black text-indigo-600 border-b border-indigo-200 cursor-pointer">SEMUA</span>
             </div>
             <div class="promo-wrapper">
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
                     <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" class="w-full h-full object-cover"></div>
                     <p class="text-[10px] font-black text-gray-700 uppercase">Smart Watch X1</p>
                     <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 150rb</p>
                 </div>
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
                     <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" class="w-full h-full object-cover"></div>
                     <p class="text-[10px] font-black text-gray-700 uppercase">Bass Headset</p>
                     <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 85rb</p>
                 </div>
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
                     <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" class="w-full h-full object-cover"></div>
                     <p class="text-[10px] font-black text-gray-700 uppercase">Nike Sport</p>
                     <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 210rb</p>
-                </div> <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
-                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" class="w-full h-full object-cover"></div>
-                    <p class="text-[10px] font-black text-gray-700 uppercase">Smart Watch X1</p>
-                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 150rb</p>
                 </div>
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
-                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" class="w-full h-full object-cover"></div>
-                    <p class="text-[10px] font-black text-gray-700 uppercase">Bass Headset</p>
-                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 85rb</p>
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
+                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=300" class="w-full h-full object-cover"></div>
+                    <p class="text-[10px] font-black text-gray-700 uppercase">Kacamata Anti UV</p>
+                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 45rb</p>
                 </div>
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
-                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" class="w-full h-full object-cover"></div>
-                    <p class="text-[10px] font-black text-gray-700 uppercase">Nike Sport</p>
-                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 210rb</p>
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
+                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=300" class="w-full h-full object-cover"></div>
+                    <p class="text-[10px] font-black text-gray-700 uppercase">Powerbank 10rb mAh</p>
+                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 120rb</p>
+                </div>
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
+                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300" class="w-full h-full object-cover"></div>
+                    <p class="text-[10px] font-black text-gray-700 uppercase">Tas Ransel Polo</p>
+                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 185rb</p>
                 </div>
             </div>
         </div>
 
         <div class="footer-nav">
-            <div class="text-center text-indigo-600 flex-1 btn-active-effect">
+            <div class="text-center text-indigo-600 flex-1 btn-active-effect cursor-pointer">
                 <i class="fa fa-home text-2xl"></i>
                 <p class="text-[9px] font-black mt-1 uppercase">Home</p>
             </div>
@@ -130,176 +138,186 @@
                     <i class="fa fa-qrcode text-white text-3xl"></i>
                 </div>
             </div>
-            <div onclick="openLogin()" class="text-center text-gray-400 flex-1 btn-active-effect">
+            <div onclick="openLogin()" class="text-center text-gray-400 flex-1 btn-active-effect cursor-pointer">
                 <i class="fa fa-user-circle text-2xl"></i>
                 <p class="text-[9px] font-black mt-1 uppercase">Akun</p>
             </div>
         </div>
 
         <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
-        <div class="bg-indigo-600 p-6 text-center">
-            <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
-            <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
-        </div>
+            <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
+                <div class="bg-indigo-600 p-6 text-center">
+                    <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
+                    <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
+                </div>
 
-        <div class="p-8 space-y-4">
-            <div>
-                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Username</label>
-                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
-                    <i class="fa fa-user text-gray-300 mr-3"></i>
-                    <input type="text" id="username" placeholder="Nama Pengguna" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                <div class="p-8 space-y-4">
+                    <div>
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Email Akun</label>
+                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                            <i class="fa fa-envelope text-gray-300 mr-3"></i>
+                            <input type="email" id="email" placeholder="contoh@email.com" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
+                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                            <i class="fa fa-lock text-gray-300 mr-3"></i>
+                            <input type="password" id="password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                        </div>
+                        <div class="text-right mt-2 px-1">
+                            <a href="#" onclick="alert('Silahkan hubungi Admin KOPDESKEL untuk reset password.')" class="text-[8px] font-black text-indigo-400 hover:text-indigo-600 uppercase tracking-tighter">
+                                Lupa Email / Password?
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
+                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500">
+                            <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
+                            <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none cursor-pointer">
+                                <option value="" disabled selected>-- PILIH STATUS --</option>
+                                <option value="anggota">ANGGOTA</option>
+                                <option value="admin">ADMIN</option>
+                                <option value="kolektor">KOLEKTOR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-8 pb-8">
+                    <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 uppercase">Masuk Sekarang</button>
+                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest hover:text-gray-600">Batal</button>
                 </div>
             </div>
-
-            <div>
-    <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
-    <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
-        <i class="fa fa-lock text-gray-300 mr-3"></i>
-        <input type="password" id="password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
-    </div>
-    
-    <div class="text-right mt-2 px-1">
-        <a href="#" onclick="alert('Silahkan hubungi Admin KOPDESKEL untuk reset password.')" class="text-[8px] font-black text-indigo-400 hover:text-indigo-600 uppercase tracking-tighter">
-            Lupa Username / Password?
-        </a>
-    </div>
-</div>
-            </div>
-
-            <div class="px-8 pb-4">
-                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
-                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3">
-                    <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
-                    <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none cursor-pointer">
-                        <option value="" disabled selected>-- PILIH STATUS --</option>
-                        <option value="anggota">ANGGOTA</option>
-                        <option value="admin">ADMIN</option>
-                        <option value="kolektor">KOLEKTOR</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="px-8 pb-8">
-                <button onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 mt-4 uppercase">Masuk Sekarang</button>
-                <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-2 tracking-widest">Batal</button>
-            </div>
         </div>
+
     </div>
-</div>
 
     <script>
-      // ==========================================
-// 1. FUNGSI JAM DIGITAL (WIB)
-// ==========================================
-function updateTime() {
-    const now = new Date();
-    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-    
-    if(document.getElementById('current-day')) {
-        document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
-    }
-    if(document.getElementById('current-time')) {
-        document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
-    }
-}
-setInterval(updateTime, 1000); 
-updateTime();
+        // ==========================================
+        // 0. INISIALISASI SUPABASE DATABASE
+        // ==========================================
+        // Wajib Ganti URL dan KEY ini dengan milik Bapak di Dashboard Supabase!
+        const supabaseUrl = 'URL_SUPABASE_BAPAK'; 
+        const supabaseKey = 'KEY_SUPABASE_BAPAK'; 
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// ==========================================
-// 2. FUNGSI DETEKSI LOKASI REAL-TIME
-// ==========================================
-async function getLocation() {
-    const locationElement = document.getElementById('user-location');
-    if (!locationElement) return;
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
-                const data = await res.json();
-                const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
-                locationElement.innerHTML = `<i class="fa fa-location-dot"></i> ${city}, Indonesia`;
-            } catch (err) {
-                locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`;
+        // ==========================================
+        // 1. FUNGSI JAM DIGITAL (WIB)
+        // ==========================================
+        function updateTime() {
+            const now = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
+            if(document.getElementById('current-day')) {
+                document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
             }
-        }, () => {
-            locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Izin Lokasi Ditolak`;
-        });
-    }
-}
-getLocation();
+            if(document.getElementById('current-time')) {
+                document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+            }
+        }
+        setInterval(updateTime, 1000); 
+        updateTime();
 
-// ==========================================
-// 3. FUNGSI MODAL & LOGIN DENGAN DETEKTIF
-// ==========================================
-const modalLogin = document.getElementById('loginModal');
+        // ==========================================
+        // 2. FUNGSI DETEKSI LOKASI REAL-TIME
+        // ==========================================
+        async function getLocation() {
+            const locationElement = document.getElementById('user-location');
+            if (!locationElement) return;
 
-function openLogin() {
-    if(modalLogin) {
-        modalLogin.style.display = 'flex';
-        modalLogin.classList.remove('hidden');
-    }
-}
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                        const data = await res.json();
+                        const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
+                        locationElement.innerHTML = `<i class="fa fa-location-dot"></i> ${city}, Indonesia`;
+                    } catch (err) {
+                        locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`;
+                    }
+                }, () => {
+                    locationElement.innerHTML = `<i class="fa fa-location-dot"></i> Izin Lokasi Ditolak`;
+                });
+            }
+        }
+        getLocation();
 
-function closeLogin() {
-    if(modalLogin) modalLogin.style.display = 'none';
-}
-
-function validaSiLogin() {
-    // 1. Ambil input dengan .trim() untuk membuang spasi otomatis HP
-    const userMasker = document.getElementById('username').value.trim();
-    const passMasker = document.getElementById('password').value.trim();
-    const status = document.getElementById('user-status').value;
-
-    // 2. Ambil data Akun yang dibuat saat daftar tadi
-    const userTerdaftar = localStorage.getItem('usernameAnggota');
-    const passTerdaftar = localStorage.getItem('passwordAnggota');
-    const namaAsli = localStorage.getItem('namaLengkapAnggota');
-    const genderAsli = localStorage.getItem('genderAnggota');
-
-    // Pengecekan Jika Kosong
-    if (!userMasker || !passMasker || !status) {
-        alert("Waduh Pak/Bu, tolong isi Username, Password, dan Pilih Status!");
-        return;
-    }
-
-    if (!userTerdaftar) {
-        alert("Sistem kosong! Belum ada data pendaftaran yang tersimpan.\nSilakan klik DAFTAR terlebih dahulu.");
-        return;
-    }
-
-    // 3. Logika Cek: Harus cocok dengan Username & Password buatan anggota
-    if (userTerdaftar && userMasker === userTerdaftar && passMasker === passTerdaftar) {
-        
-        // Simpan sesi login untuk dibawa ke halaman anggota.html
-        let sapaan = "Bpk/Ibu";
-        if (genderAsli) {
-            const g = genderAsli.toUpperCase();
-            sapaan = (g.includes("PEREMPUAN") || g.includes("WANITA")) ? "Ibu" : "Bpk";
+        // ==========================================
+        // 3. FUNGSI MODAL
+        // ==========================================
+        const modalLogin = document.getElementById('loginModal');
+        function openLogin() {
+            if(modalLogin) {
+                modalLogin.style.display = 'flex';
+                modalLogin.classList.remove('hidden');
+            }
+        }
+        function closeLogin() {
+            if(modalLogin) modalLogin.style.display = 'none';
         }
 
-        const sessionData = { 
-            nama: namaAsli || userTerdaftar, 
-            sapaan: sapaan,
-            isLoggedIn: true 
-        };
-        localStorage.setItem("user_login", JSON.stringify(sessionData));
+        // ==========================================
+        // 4. FUNGSI LOGIN VIA SUPABASE (CLOUD)
+        // ==========================================
+        async function validaSiLogin() {
+            const inputEmail = document.getElementById('email').value.trim();
+            const inputPassword = document.getElementById('password').value.trim();
+            const status = document.getElementById('user-status').value;
+            const btnLogin = document.getElementById('btn-login');
 
-        alert(`Login Sukses! Selamat Datang ${sapaan} ${(namaAsli || userTerdaftar).toUpperCase()}`);
-        window.location.href = "anggota.html"; 
-    } 
-    // 4. Cadangan Login Admin tetap berfungsi
-    else if (userMasker === "admin" && passMasker === "admin123" && status === "admin") {
-        alert("Login Admin Berhasil!");
-        window.location.href = "admin.html";
-    }
-    // 5. FITUR DETEKTIF: Kalau Gagal, kasih tau perbedaannya
-    else {
-        alert(`❌ LOGIN GAGAL!\n\nMari kita cek bedanya:\n\nYang Anda Ketik:\nUser: [${userMasker}]\nPass: [${passMasker}]\n\nYang Terdaftar di Sistem:\nUser: [${userTerdaftar}]\nPass: [${passTerdaftar}]\n\nKelihatan bedanya? Silakan samakan ketikannya.`);
-    }
-}
+            // Cek jika inputan kosong
+            if (!inputEmail || !inputPassword || !status) {
+                alert("Waduh, tolong isi Email, Password, dan Status Jabatan terlebih dahulu!");
+                return;
+            }
+
+            // Ubah teks tombol saat memproses agar anggota tahu sistem sedang bekerja
+            const teksAsli = btnLogin.innerText;
+            btnLogin.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
+            btnLogin.disabled = true;
+
+            // Proses Lempar Data ke Supabase
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: inputEmail,
+                password: inputPassword,
+            });
+
+            // Kembalikan tombol seperti semula
+            btnLogin.innerText = teksAsli;
+            btnLogin.disabled = false;
+
+            if (error) {
+                // Jika password salah atau email tidak terdaftar di server
+                alert(`❌ LOGIN GAGAL!\nKeterangan dari Server:\n${error.message}`);
+            } else {
+                // Jika Berhasil Login
+                
+                // Simpan token login sukses di browser
+                const sessionData = { 
+                    email: data.user.email,
+                    id: data.user.id,
+                    isLoggedIn: true 
+                };
+                localStorage.setItem("user_login", JSON.stringify(sessionData));
+
+                alert(`✅ Login Sukses!\nSelamat datang kembali, ${data.user.email}`);
+                
+                // Arahkan ke halaman sesuai jabatan
+                if(status === "admin") {
+                    window.location.href = "admin.html";
+                } else if (status === "anggota") {
+                    window.location.href = "anggota.html"; 
+                } else {
+                    window.location.href = "kolektor.html"; // Jika nanti ada halaman kolektor
+                }
+            }
+        }
     </script>
 </body>
 </html>
