@@ -178,8 +178,8 @@
 
     </div>
 
-  <script>
-        // PERBAIKAN: Menghubungkan variabel agar fungsi Supabase tidak error "Undefined"
+ <script>
+        // PERBAIKAN: Menghubungkan variabel agar fungsi Supabase tidak error
         const supabase = supabaseClient; 
 
         let emailTerdaftar = ""; 
@@ -187,19 +187,19 @@
         let currentMode = 'face'; 
         let tempFace, tempKtp;
 
-        // FUNGSI LIHAT PASSWORD (SESUAI ASLI BAPAK)
+        // FUNGSI LIHAT PASSWORD (VERSI FIX 100%)
         function togglePassword(inputId, iconId) {
             const passInput = document.getElementById(inputId);
             const toggleIcon = document.getElementById(iconId);
             
             if (passInput.type === 'password') {
-                passInput.type = 'text'; 
+                passInput.setAttribute('type', 'text');
                 toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash'); 
+                toggleIcon.classList.add('fa-eye-slash');
             } else {
-                passInput.type = 'password'; 
+                passInput.setAttribute('type', 'password');
                 toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye'); 
+                toggleIcon.classList.add('fa-eye');
             }
         }
 
@@ -293,7 +293,6 @@
             if (stream) stream.getTracks().forEach(t => t.stop());
         }
 
-        // FUNGSI SIMPAN (DIKEMBALIKAN KE ASLI BAPAK)
         async function simpanKeDatabase() {
             if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
     
