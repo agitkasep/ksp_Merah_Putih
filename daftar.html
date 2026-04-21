@@ -8,21 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
 
     <style>
         body { background-color: #f1f5f9; font-family: sans-serif; margin: 0; }
         .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: white; margin: 0 auto; position: relative; }
         
-        /* Gaya Kamera Full Screen */
         .camera-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; flex-direction: column; }
         #camera-stream { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Bingkai Verifikasi */
         .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
         .frame-face { width: 260px; height: 350px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; transition: all 0.5s; }
         .frame-ktp { width: 320px; height: 200px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; display: none; transition: all 0.5s; }
         
-        /* Animasi Progress Merah Searah Jarum Jam */
         .active-scan { border-color: #ef4444 !important; border-style: solid !important; box-shadow: 0 0 20px #ef4444; }
         
         .hint-box { position: absolute; top: 15%; background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
@@ -31,7 +29,6 @@
         input, select { transition: all 0.3s; }
         input:focus { border-color: #4f46e5 !important; background: white !important; }
         
-        /* Input OTP Supabase */
         .otp-input { letter-spacing: 0.5em; text-align: center; font-size: 1.5rem; }
     </style>
 </head>
@@ -182,12 +179,7 @@
     </div>
 
     <script>
-        // ==========================================
-        // 0. INISIALISASI SUPABASE DATABASE
-        // ==========================================
-        const supabaseUrl = 'URL_SUPABASE_BAPAK'; 
-        const supabaseKey = 'KEY_SUPABASE_BAPAK'; 
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // INISIALISASI SUPABASE DATABASE DIHAPUS KARENA SUDAH ADA DI CONFIG.JS
 
         let emailTerdaftar = ""; 
 
@@ -314,7 +306,6 @@
             const passBaru = document.getElementById('reg_pass').value.trim();
             const gender = document.getElementById('gender').value;
 
-            // Loading Button
             btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
             btnFinal.disabled = true;
 
