@@ -178,16 +178,16 @@
 
     </div>
 
-   <script>
-        // PERBAIKAN UTAMA: Menghubungkan variabel agar tidak "Undefined"
+  <script>
+        // PERBAIKAN: Menghubungkan variabel agar fungsi Supabase tidak error "Undefined"
         const supabase = supabaseClient; 
 
         let emailTerdaftar = ""; 
-
         let stream;
         let currentMode = 'face'; 
         let tempFace, tempKtp;
 
+        // FUNGSI LIHAT PASSWORD (SESUAI ASLI BAPAK)
         function togglePassword(inputId, iconId) {
             const passInput = document.getElementById(inputId);
             const toggleIcon = document.getElementById(iconId);
@@ -293,7 +293,7 @@
             if (stream) stream.getTracks().forEach(t => t.stop());
         }
 
-        // FUNGSI SIMPAN (Hanya diperbaiki agar tidak undefined dan bisa upload)
+        // FUNGSI SIMPAN (DIKEMBALIKAN KE ASLI BAPAK)
         async function simpanKeDatabase() {
             if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
     
@@ -304,54 +304,48 @@
             const emailBaru = document.getElementById('reg_email').value.trim();
             const passBaru = document.getElementById('reg_pass').value.trim();
 
-            btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> SEDANG MENDAFTARKAN...';
+            btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
             btnFinal.disabled = true;
 
-            try {
-                // 1. DAFTAR AKUN
-                const { data, error: authError } = await supabase.auth.signUp({
-                    email: emailBaru,
-                    password: passBaru,
-                    options: { data: { full_name: nama, status_jabatan: 'anggota' } }
-                });
+            const { data, error: authError } = await supabase.auth.signUp({
+                email: emailBaru,
+                password: passBaru,
+                options: { data: { full_name: nama, status_jabatan: 'anggota' } }
+            });
 
-                if (authError) throw authError;
-
-                btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MENGUNGGAH FOTO...';
-
-                // 2. PROSES UPLOAD FOTO (Wajib ada agar foto masuk ke bucket)
-                const b64toBlob = (b64Data) => {
-                    const parts = b64Data.split(',');
-                    const byteCharacters = atob(parts[1]);
-                    const byteNumbers = new Array(byteCharacters.length);
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
-                    return new Blob([new Uint8Array(byteNumbers)], {type: 'image/jpeg'});
-                };
-
-                const fileFace = b64toBlob(tempFace);
-                const fileKtp = b64toBlob(tempKtp);
-                const prefix = emailBaru.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
-                const timestamp = Date.now();
-
-                // Upload ke Bucket 'berkas_anggota'
-                await supabase.storage.from('berkas_anggota').upload(`${prefix}_selfie_${timestamp}.jpg`, fileFace);
-                await supabase.storage.from('berkas_anggota').upload(`${prefix}_ktp_${timestamp}.jpg`, fileKtp);
-
-                // 3. SELESAI & TAMPILKAN MODAL OTP
-                emailTerdaftar = emailBaru;
-                localStorage.setItem('namaLengkapAnggota', nama);
-                document.getElementById('display-email').innerText = emailBaru;
-                document.getElementById('otpModal').classList.remove('hidden');
-                document.getElementById('otpModal').classList.add('flex');
-                
-            } catch (err) {
-                alert("Masalah: " + err.message);
-            } finally {
+            if (authError) {
+                alert(authError.message);
                 btnFinal.innerHTML = teksAsli;
                 btnFinal.disabled = false;
+                return;
             }
+
+            const b64toBlob = (b64Data) => {
+                const parts = b64Data.split(',');
+                const byteCharacters = atob(parts[1]);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                return new Blob([new Uint8Array(byteNumbers)], {type: 'image/jpeg'});
+            };
+
+            const fileFace = b64toBlob(tempFace);
+            const fileKtp = b64toBlob(tempKtp);
+            const prefix = emailBaru.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+            const timestamp = Date.now();
+
+            await supabase.storage.from('berkas_anggota').upload(`${prefix}_selfie_${timestamp}.jpg`, fileFace);
+            await supabase.storage.from('berkas_anggota').upload(`${prefix}_ktp_${timestamp}.jpg`, fileKtp);
+
+            emailTerdaftar = emailBaru;
+            localStorage.setItem('namaLengkapAnggota', nama);
+            document.getElementById('display-email').innerText = emailBaru;
+            document.getElementById('otpModal').classList.remove('hidden');
+            document.getElementById('otpModal').classList.add('flex');
+            
+            btnFinal.innerHTML = teksAsli;
+            btnFinal.disabled = false;
         }
 
         async function verifikasiOTP() {
