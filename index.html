@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     
     <style>
         /* [CSS UTAMA] */
@@ -197,14 +198,7 @@
     </div>
 
     <script>
-        // ==========================================
-        // 0. INISIALISASI SUPABASE DATABASE
-        // ==========================================
-        // Wajib Ganti URL dan KEY ini dengan milik Bapak di Dashboard Supabase!
-        const supabaseUrl = 'URL_SUPABASE_BAPAK'; 
-        const supabaseKey = 'KEY_SUPABASE_BAPAK'; 
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
+        // INISIALISASI SUPABASE DATABASE DIHAPUS KARENA SUDAH ADA DI CONFIG.JS
 
         // ==========================================
         // 1. FUNGSI JAM DIGITAL (WIB)
@@ -271,34 +265,26 @@
             const status = document.getElementById('user-status').value;
             const btnLogin = document.getElementById('btn-login');
 
-            // Cek jika inputan kosong
             if (!inputEmail || !inputPassword || !status) {
                 alert("Waduh, tolong isi Email, Password, dan Status Jabatan terlebih dahulu!");
                 return;
             }
 
-            // Ubah teks tombol saat memproses agar anggota tahu sistem sedang bekerja
             const teksAsli = btnLogin.innerText;
             btnLogin.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
             btnLogin.disabled = true;
 
-            // Proses Lempar Data ke Supabase
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: inputEmail,
                 password: inputPassword,
             });
 
-            // Kembalikan tombol seperti semula
             btnLogin.innerText = teksAsli;
             btnLogin.disabled = false;
 
             if (error) {
-                // Jika password salah atau email tidak terdaftar di server
                 alert(`❌ LOGIN GAGAL!\nKeterangan dari Server:\n${error.message}`);
             } else {
-                // Jika Berhasil Login
-                
-                // Simpan token login sukses di browser
                 const sessionData = { 
                     email: data.user.email,
                     id: data.user.id,
@@ -308,13 +294,12 @@
 
                 alert(`✅ Login Sukses!\nSelamat datang kembali, ${data.user.email}`);
                 
-                // Arahkan ke halaman sesuai jabatan
                 if(status === "admin") {
                     window.location.href = "admin.html";
                 } else if (status === "anggota") {
                     window.location.href = "anggota.html"; 
                 } else {
-                    window.location.href = "kolektor.html"; // Jika nanti ada halaman kolektor
+                    window.location.href = "kolektor.html"; 
                 }
             }
         }
