@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Pendaftaran Anggota - KSP Merah Putih</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        body { background-color: #f1f5f9; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: white; margin: 0 auto; position: relative; }
+        
+        .camera-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; flex-direction: column; }
+        #camera-stream { width: 100%; height: 100%; object-fit: cover; }
+        
+        .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+        .frame-face { width: 260px; height: 350px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; transition: all 0.5s; }
+        .frame-ktp { width: 320px; height: 200px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; display: none; transition: all 0.5s; }
+        
+        .active-scan { border-color: #ef4444 !important; border-style: solid !important; box-shadow: 0 0 20px #ef4444; }
+        
+        .hint-box { position: absolute; top: 15%; background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .hidden { display: none; }
+        input, select { transition: all 0.3s; }
+        input:focus { border-color: #4f46e5 !important; background: white !important; }
+        
+        .otp-input { letter-spacing: 0.5em; text-align: center; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div id="step-form" class="p-6">
+            <div class="mb-8">
+                <h1 class="text-2xl font-black text-indigo-950 italic uppercase tracking-tighter">PENDAFTARAN ANGGOTA</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Silahkan lengkapi data diri anda</p>
+            </div>
+
+            <form id="form-data" class="space-y-4">
+                <div>
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nama Lengkap Sesuai KTP</label>
+                    <input type="text" id="nama_lengkap" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase">
+                </div> 
+                
+                <div>
+                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Email Aktif (Ganti Username)</label>
+                    <input type="email" id="reg_email" required placeholder="Contoh: agit@gmail.com" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg_pass" required placeholder="****" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+                            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" id="icon-pass1" onclick="togglePassword('reg_pass', 'icon-pass1')"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Ulangi Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg_pass_confirm" required placeholder="****" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+                            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" id="icon-pass2" onclick="togglePassword('reg_pass_confirm', 'icon-pass2')"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Tempat Lahir</label>
+                        <input type="text" id="tmp_lahir" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Tgl Lahir</label>
+                        <input type="date" id="tgl_lahir" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Alamat Sesuai KTP</label>
+                    <textarea id="alamat" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" rows="2"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Jenis Kelamin</label>
+                        <select id="gender" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                            <option value="LAKI-LAKI">LAKI-LAKI</option>
+                            <option value="PEREMPUAN">PEREMPUAN</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Status Perkawinan</label>
+                        <select id="status_kawin" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                            <option value="BELUM KAWIN">BELUM KAWIN</option>
+                            <option value="KAWIN">KAWIN</option>
+                            <option value="CERAI">CERAI</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Pekerjaan</label>
+                    <input type="text" id="pekerjaan" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                </div>
+
+                <button type="button" onclick="startVerification()" class="w-full bg-indigo-600 text-white py-5 rounded-[25px] font-black italic shadow-xl mt-6 active:scale-95 transition-all">
+                    LANJUT VERIFIKASI <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <div id="step-camera" class="camera-screen">
+            <video id="camera-stream" autoplay playsinline></video>
+            <div class="overlay">
+                <div id="hint-text" class="hint-box">Posisikan wajah anda di tengah bidang</div>
+                <div id="main-frame" class="frame-face"></div>
+            </div>
+            <canvas id="capture-canvas" class="hidden"></canvas>
+        </div>
+
+        <div id="step-review-face" class="hidden p-6 text-center">
+            <h2 class="font-black text-indigo-900 uppercase italic mb-6">Verifikasi Wajah Berhasil</h2>
+            <img id="res-face" class="w-48 h-48 rounded-full object-cover mx-auto mb-6 border-4 border-indigo-600 p-1 shadow-2xl">
+            <p class="text-gray-500 font-bold text-xs uppercase mb-8 tracking-tighter">Tolong siapkan KTP anda untuk verifikasi tahap selanjutnya</p>
+            <button onclick="startKtpProcess()" class="w-full py-5 bg-indigo-600 text-white rounded-[25px] font-black uppercase italic shadow-lg">AMBIL FOTO KTP <i class="fa fa-id-card ml-2"></i></button>
+        </div>
+
+        <div id="step-final" class="hidden p-6">
+            <h2 class="font-black text-indigo-900 uppercase italic mb-6 text-center">Review Pendaftaran</h2>
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="text-center">
+                    <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Foto Selfie</p>
+                    <img id="final-face" class="rounded-2xl border aspect-square object-cover">
+                </div>
+                <div class="text-center">
+                    <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Foto KTP</p>
+                    <img id="final-ktp" class="rounded-2xl border aspect-square object-cover">
+                </div>
+            </div>
+            
+            <div class="bg-indigo-50 p-4 rounded-2xl mb-8 flex items-start gap-3">
+                <input type="checkbox" id="agree" class="mt-1 w-5 h-5 accent-indigo-600">
+                <label for="agree" class="text-[10px] font-bold text-indigo-900 leading-tight uppercase">Saya ijinkan kedua foto ini sebagai syarat pendaftaran menjadi anggota KSP MERAH PUTIH.</label>
+            </div>
+
+            <button id="btn-final" onclick="simpanKeDatabase()" class="w-full py-5 bg-red-600 text-white rounded-[25px] font-black uppercase italic shadow-2xl active:scale-95 transition-all">DAFTAR SEKARANG</button>
+        </div>
+
+        <div id="otpModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] items-center justify-center p-4 hidden">
+            <div class="bg-white w-full max-w-[340px] rounded-[35px] overflow-hidden shadow-2xl p-6 text-center border-4 border-indigo-50 relative">
+                
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-envelope-open-text text-green-600 text-2xl animate-bounce"></i>
+                </div>
+                
+                <h2 class="font-black text-gray-800 text-lg uppercase italic mb-1">Cek Email Anda</h2>
+                <p class="text-[10px] font-bold text-gray-500 mb-6">Kami mengirimkan 6 digit kode OTP ke <br> <span id="display-email" class="text-indigo-600 font-black"></span></p>
+
+                <div>
+                    <input type="number" id="otp-kode" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);" placeholder="------" class="otp-input w-full bg-slate-50 border-2 border-indigo-100 rounded-2xl py-4 font-black text-indigo-700 outline-none focus:border-indigo-500 transition-all shadow-inner">
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <button id="btn-verifikasi" onclick="verifikasiOTP()" class="w-full py-4 bg-green-500 text-white rounded-2xl text-[11px] font-black shadow-lg shadow-green-200 uppercase tracking-widest active:scale-95 transition-all">
+                        Verifikasi Kode
+                    </button>
+                    <button onclick="batalOTP()" class="w-full py-3 text-gray-400 text-[9px] font-black uppercase tracking-widest hover:text-gray-600">
+                        Batal / Ganti Email
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // INISIALISASI SUPABASE DATABASE DIHAPUS KARENA SUDAH ADA DI CONFIG.JS
+
+        let emailTerdaftar = ""; 
+
+        let stream;
+        let currentMode = 'face'; 
+        let tempFace, tempKtp;
+
+        function togglePassword(inputId, iconId) {
+            const passInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passInput.type === 'password') {
+                passInput.type = 'text'; 
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash'); 
+            } else {
+                passInput.type = 'password'; 
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye'); 
+            }
+        }
+
+        async function startVerification() {
+            const nama = document.getElementById('nama_lengkap').value.trim();
+            const email = document.getElementById('reg_email').value.trim();
+            const pass = document.getElementById('reg_pass').value.trim();
+            const passConfirm = document.getElementById('reg_pass_confirm').value.trim();
+
+            if(!nama || !email || !pass || !passConfirm) {
+                return alert("Isi data form dengan lengkap dulu Pak!");
+            }
+
+            if(pass !== passConfirm) {
+                return alert("Waduh Pak, 'Buat Password' dan 'Ulangi Password' tidak sama. Coba dicek lagi!");
+            }
+            if(pass.length < 6) {
+                return alert("Password minimal 6 karakter ya Pak!");
+            }
+            
+            document.getElementById('step-form').classList.add('hidden');
+            document.getElementById('step-camera').style.display = 'flex';
+            
+            await initCamera("user"); 
+            startScanning();
+        }
+
+        async function initCamera(mode) {
+            if (stream) stream.getTracks().forEach(t => t.stop());
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: mode }, 
+                audio: false 
+            });
+            document.getElementById('camera-stream').srcObject = stream;
+        }
+
+        function startScanning() {
+            const hint = document.getElementById('hint-text');
+            const frame = document.getElementById('main-frame');
+            
+            setTimeout(() => {
+                hint.innerText = "TAHAN! PERTAHANKAN POSISI";
+                frame.classList.add('active-scan');
+                
+                setTimeout(() => {
+                    captureImage();
+                }, 2000);
+            }, 3000);
+        }
+
+        function captureImage() {
+            const video = document.getElementById('camera-stream');
+            const canvas = document.getElementById('capture-canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            const data = canvas.toDataURL('image/jpeg');
+
+            if(currentMode === 'face') {
+                tempFace = data;
+                document.getElementById('step-camera').style.display = 'none';
+                document.getElementById('step-review-face').classList.remove('hidden');
+                document.getElementById('res-face').src = data;
+                if (stream) stream.getTracks().forEach(t => t.stop());
+            } else {
+                tempKtp = data;
+                showFinal();
+            }
+        }
+
+        async function startKtpProcess() {
+            currentMode = 'ktp';
+            document.getElementById('step-review-face').classList.add('hidden');
+            document.getElementById('step-camera').style.display = 'flex';
+            
+            const frame = document.getElementById('main-frame');
+            frame.className = 'frame-ktp';
+            frame.style.display = 'block';
+            frame.classList.remove('active-scan');
+            document.getElementById('hint-text').innerText = "Posisikan KTP di dalam bingkai kotak";
+
+            await initCamera("environment"); 
+            startScanning();
+        }
+
+        function showFinal() {
+            document.getElementById('step-camera').style.display = 'none';
+            document.getElementById('step-final').classList.remove('hidden');
+            document.getElementById('final-face').src = tempFace;
+            document.getElementById('final-ktp').src = tempKtp;
+            if (stream) stream.getTracks().forEach(t => t.stop());
+        }
+
+        // ==========================================
+        // FUNGSI DAFTAR KE SUPABASE
+        // ==========================================
+        async function simpanKeDatabase() {
+            if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
+    
+            const btnFinal = document.getElementById('btn-final');
+            const teksAsli = btnFinal.innerHTML;
+
+            const nama = document.getElementById('nama_lengkap').value.trim();
+            const emailBaru = document.getElementById('reg_email').value.trim();
+            const passBaru = document.getElementById('reg_pass').value.trim();
+            const gender = document.getElementById('gender').value;
+
+            btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
+            btnFinal.disabled = true;
+
+            const { data, error } = await supabase.auth.signUp({
+                email: emailBaru,
+                password: passBaru,
+                options: {
+                    data: {
+                        full_name: nama,
+                        status_jabatan: 'anggota'
+                    }
+                }
+            });
+
+            btnFinal.innerHTML = teksAsli;
+            btnFinal.disabled = false;
+
+            if (error) {
+                alert(`❌ PENDAFTARAN GAGAL!\n${error.message}`);
+            } else {
+                emailTerdaftar = emailBaru;
+
+                localStorage.setItem('namaLengkapAnggota', nama);
+                localStorage.setItem('emailAnggota', emailBaru);
+                localStorage.setItem('genderAnggota', gender);
+                localStorage.setItem('fotoWajah', tempFace);
+                localStorage.setItem('fotoKtp', tempKtp);
+
+                document.getElementById('display-email').innerText = emailBaru;
+                document.getElementById('otpModal').classList.remove('hidden');
+                document.getElementById('otpModal').classList.add('flex');
+            }
+        }
+
+        // ==========================================
+        // FUNGSI VERIFIKASI KODE OTP
+        // ==========================================
+        async function verifikasiOTP() {
+            const tokenOTP = document.getElementById('otp-kode').value.trim();
+            const btnVerif = document.getElementById('btn-verifikasi');
+
+            if (tokenOTP.length < 6) {
+                alert("Kode OTP harus 6 digit angka!");
+                return;
+            }
+
+            const teksAsli = btnVerif.innerHTML;
+            btnVerif.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Mengecek...';
+            btnVerif.disabled = true;
+
+            const { data, error } = await supabase.auth.verifyOtp({
+                email: emailTerdaftar,
+                token: tokenOTP,
+                type: 'signup'
+            });
+
+            btnVerif.innerHTML = teksAsli;
+            btnVerif.disabled = false;
+
+            if (error) {
+                alert(`❌ KODE SALAH!\nKode OTP salah atau sudah kedaluwarsa.\nSilakan cek kembali email Anda.`);
+                document.getElementById('otp-kode').value = ''; 
+                document.getElementById('otp-kode').focus();
+            } else {
+                const sapaan = (document.getElementById('gender').value === "LAKI-LAKI") ? "Bpk" : "Ibu";
+                alert(`✅ VERIFIKASI BERHASIL ${sapaan.toUpperCase()}!\nAkun Anda sudah aktif. Silakan Login.`);
+                window.location.href = "index.html";
+            }
+        }
+
+        function batalOTP() {
+            document.getElementById('otpModal').classList.add('hidden');
+            document.getElementById('otpModal').classList.remove('flex');
+            document.getElementById('otp-kode').value = '';
+        }
+    </script>
+</body>
+</html>

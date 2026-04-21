@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>E-Wallet KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
+        
+        /* EFEK SELEKSI WALLET */
+        .wallet-box { 
+            transition: all 0.2s ease; 
+            border: 2px solid #f1f5f9;
+            cursor: pointer;
+        }
+        .wallet-box:hover { transform: translateY(-3px); }
+        .wallet-box.active { 
+            border-color: #4f46e5; 
+            background-color: #f5f3ff;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* NOMINAL BUTTON */
+        .nominal-item {
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .nominal-item.selected {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-active:active { transform: scale(0.95); opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="bg-indigo-950 p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[25px] shadow-lg">
+            <i onclick="window.history.back()" class="fa fa-arrow-left text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">LAYANAN TOP UP SALDO</h1>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto pb-32">
+            
+            <div class="mb-8">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">ID Akun / No. HP Tujuan</label>
+                <div class="relative">
+                    <i class="fa fa-mobile-screen-button absolute left-4 top-1/2 -translate-y-1/2 text-indigo-300 text-lg"></i>
+                    <input type="number" id="id-tujuan" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-5 pl-12 pr-4 text-sm font-black text-slate-700 outline-none focus:border-indigo-500 transition-all shadow-inner">
+                </div>
+            </div>
+
+            <h3 class="text-[10px] font-black text-indigo-950 uppercase italic mb-4 flex items-center">
+                <i class="fa fa-wallet mr-2 text-indigo-500"></i> Pilih Dompet Digital :
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                
+                <div onclick="pilihEw(this, 'DANA', 'bg-blue-500')" class="wallet-box p-5 rounded-[25px] flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fa fa-money-bill-wave text-white text-xl"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-700">DANA</span>
+                </div>
+
+                <div onclick="pilihEw(this, 'OVO', 'bg-purple-700')" class="wallet-box p-5 rounded-[25px] flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-purple-700 rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fa fa-circle-dot text-white text-xl"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-700">OVO</span>
+                </div>
+
+                <div onclick="pilihEw(this, 'GOPAY', 'bg-emerald-600')" class="wallet-box p-5 rounded-[25px] flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fa fa-motorcycle text-white text-xl"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-700">GOPAY</span>
+                </div>
+
+                <div onclick="pilihEw(this, 'SHOPEEPAY', 'bg-orange-600')" class="wallet-box p-5 rounded-[25px] flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fa fa-bag-shopping text-white text-xl"></i>
+                    </div>
+                    <span class="text-[10px] font-black uppercase text-slate-700">SHOPEEPAY</span>
+                </div>
+
+            </div>
+
+            <div id="area-nominal" class="hidden">
+                <h3 id="label-opsi" class="text-[10px] font-black text-indigo-950 uppercase italic mb-4">Pilih Nominal :</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="pilihHarga(this, 10000)" class="nominal-item p-4 rounded-2xl text-[11px] font-black text-slate-700 italic">Rp 10.000</button>
+                    <button onclick="pilihHarga(this, 20000)" class="nominal-item p-4 rounded-2xl text-[11px] font-black text-slate-700 italic">Rp 20.000</button>
+                    <button onclick="pilihHarga(this, 50000)" class="nominal-item p-4 rounded-2xl text-[11px] font-black text-slate-700 italic">Rp 50.000</button>
+                    <button onclick="pilihHarga(this, 100000)" class="nominal-item p-4 rounded-2xl text-[11px] font-black text-slate-700 italic">Rp 100.000</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t p-5 rounded-t-[35px] shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
+            <div class="flex justify-between items-center mb-4 px-2">
+                <div class="flex flex-col">
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Biaya Admin: Rp 1.500</span>
+                    <span class="text-[9px] font-black text-indigo-900 uppercase">Total Bayar</span>
+                </div>
+                <span id="total-txt" class="text-base font-black text-indigo-600 italic">Rp 0</span>
+            </div>
+            <button onclick="kirimTopUp()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black uppercase italic tracking-widest shadow-xl shadow-indigo-100 btn-active">
+                PROSES SEKARANG <i class="fa fa-paper-plane ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        let dompetTerpilih = "";
+        let hargaPokok = 0;
+
+        function pilihEw(el, nama, warna) {
+            // Reset box lain
+            document.querySelectorAll('.wallet-box').forEach(b => b.classList.remove('active'));
+            // Aktifkan yang diklik
+            el.classList.add('active');
+            dompetTerpilih = nama;
+            
+            // Tampilkan nominal
+            document.getElementById('area-nominal').classList.remove('hidden');
+            document.getElementById('label-opsi').innerText = `Nominal ${nama} :`;
+            
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        function pilihHarga(el, harga) {
+            // Reset tombol lain
+            document.querySelectorAll('.nominal-item').forEach(b => b.classList.remove('selected'));
+            // Aktifkan yang diklik
+            el.classList.add('selected');
+            hargaPokok = harga;
+            
+            // Hitung Total (Admin Rp 1.500)
+            let total = harga + 1500;
+            document.getElementById('total-txt').innerText = 'Rp ' + total.toLocaleString('id-ID');
+            
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        function kirimTopUp() {
+            const id = document.getElementById('id-tujuan').value;
+            if(!dompetTerpilih || !id || hargaPokok === 0) {
+                alert("Waduh Pak, tolong lengkapi data dan pilih nominal dulu ya!");
+                return;
+            }
+            alert(`Siap Pak Agit!\nPesanan Top Up ${dompetTerpilih} ke nomor ${id} sedang diproses.`);
+        }
+    </script>
+</body>
+</html>

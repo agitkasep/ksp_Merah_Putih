@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Paket Data - KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
+        
+        /* =========================================
+           EFEK TERBARU: CYBER SCAN & DATA FLOW
+           ========================================= */
+        
+        /* Efek Kartu Provider */
+        .provider-card { 
+            transition: all 0.3s ease; 
+            border: 2px solid #f1f5f9; 
+            background: white;
+        }
+        .provider-card:hover { 
+            border-color: #06b6d4; /* Cyan 500 */
+            box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.3);
+            transform: translateY(-5px);
+            z-index: 10;
+        }
+        .provider-card:hover img { transform: scale(1.1); transition: 0.3s ease; }
+
+        /* Efek List Paket Data (Scanning Line) */
+        .data-card {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #f8fafc;
+            transition: all 0.3s ease;
+        }
+        .data-card::before {
+            content: "";
+            position: absolute;
+            top: -100%; left: 0;
+            width: 100%; height: 2px;
+            background: #06b6d4;
+            box-shadow: 0 0 15px 3px #06b6d4;
+            transition: top 0.4s ease;
+            opacity: 0;
+        }
+        .data-card:hover {
+            border-color: #cffafe;
+            background-color: #f8fafc;
+            transform: translateX(5px); /* Geser sedikit ke kanan */
+            box-shadow: -5px 5px 15px -5px rgba(6, 182, 212, 0.2);
+        }
+        .data-card:hover::before {
+            top: 100%; /* Efek scan dari atas ke bawah */
+            opacity: 1;
+            transition: top 0.6s linear;
+        }
+
+        /* Border Glow untuk Input */
+        .input-data { transition: all 0.3s; border: 2px solid #f1f5f9; }
+        .input-data:focus-within {
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.1);
+        }
+
+        .btn-active:active { transform: scale(0.96); }
+        input:focus { outline: none; }
+
+        /* Animasi Slide Masuk */
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeInSlide 0.4s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="bg-gradient-to-r from-cyan-600 to-blue-600 p-5 flex items-center text-white sticky top-0 z-50 rounded-b-[20px] shadow-lg">
+            <i onclick="window.history.back()" class="fa fa-arrow-left text-white text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] mr-8">PAKET INTERNET <i class="fa fa-wifi ml-1 text-cyan-200"></i></h1>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto">
+            
+            <div class="mb-6 animate-in">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor Tujuan Paket</label>
+                <div class="input-data bg-slate-50 rounded-2xl relative shadow-inner">
+                    <i class="fa fa-globe absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400 text-lg"></i>
+                    <input type="number" id="phone-data" placeholder="08xx xxxx xxxx" class="w-full bg-transparent py-5 pl-12 pr-4 text-sm font-black text-slate-700 tracking-widest">
+                    <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-cyan-100 text-cyan-700 p-2 rounded-xl text-[10px] font-black uppercase tracking-tighter btn-active shadow-sm"><i class="fa fa-address-book"></i></button>
+                </div>
+            </div>
+
+            <div class="animate-in" style="animation-delay: 0.1s">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-[10px] font-black text-cyan-900 uppercase italic">Pilih Operator :</h3>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div onclick="pilihOperator('Telkomsel')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-2 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/200px-Telkomsel_2021_icon.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <div onclick="pilihOperator('Indosat IM3')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-2 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Indosat_Ooredoo_logo_%282015%29.svg/300px-Indosat_Ooredoo_logo_%282015%29.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <div onclick="pilihOperator('XL Axiata')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-2 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/XL_Axiata_logo_%282020%29.svg/300px-XL_Axiata_logo_%282020%29.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <div onclick="pilihOperator('Three')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-2 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Tri_Indonesia_logo.svg/200px-Tri_Indonesia_logo.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <div onclick="pilihOperator('Smartfren')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-1 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Smartfren_logo.svg/300px-Smartfren_logo.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    <div onclick="pilihOperator('by.U')" class="provider-card flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm mb-1 border border-slate-100 p-2 overflow-hidden">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/By.U_logo.svg/300px-By.U_logo.svg.png" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="paket-section" class="hidden animate-in">
+                
+                <div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <span class="bg-cyan-600 text-white px-4 py-2 rounded-full text-[9px] font-black uppercase whitespace-nowrap cursor-pointer shadow-md">Semua</span>
+                    <span class="bg-slate-100 text-slate-500 px-4 py-2 rounded-full text-[9px] font-black uppercase whitespace-nowrap cursor-pointer hover:bg-slate-200">Bulanan</span>
+                    <span class="bg-slate-100 text-slate-500 px-4 py-2 rounded-full text-[9px] font-black uppercase whitespace-nowrap cursor-pointer hover:bg-slate-200">Harian/Mingguan</span>
+                    <span class="bg-slate-100 text-slate-500 px-4 py-2 rounded-full text-[9px] font-black uppercase whitespace-nowrap cursor-pointer hover:bg-slate-200">Promo</span>
+                </div>
+
+                <h3 id="label-paket" class="text-[11px] font-black text-cyan-700 uppercase italic mb-3 border-b border-cyan-100 pb-2">Katalog Paket:</h3>
+                
+                <div class="space-y-3 pb-6">
+                    
+                    <div class="data-card bg-white p-4 rounded-2xl cursor-pointer flex justify-between items-center shadow-sm">
+                        <div>
+                            <h4 class="text-[12px] font-black text-slate-800 uppercase leading-tight">Internet 5 GB</h4>
+                            <p class="text-[9px] font-bold text-slate-400 mt-1"><i class="fa fa-clock text-cyan-500 mr-1"></i> Masa Aktif: 7 Hari</p>
+                            <p class="text-[8px] text-slate-500 mt-1 leading-relaxed">3GB Kuota Utama + 2GB Kuota Malam</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-cyan-600">Rp 15.000</p>
+                            <button class="mt-2 bg-cyan-100 text-cyan-700 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase btn-active">Pilih</button>
+                        </div>
+                    </div>
+
+                    <div class="data-card bg-white p-4 rounded-2xl cursor-pointer flex justify-between items-center shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-[12px] font-black text-slate-800 uppercase leading-tight">Internet 15 GB</h4>
+                                <span class="bg-red-500 text-white text-[6px] px-1.5 py-0.5 rounded-sm font-bold uppercase animate-pulse">Hot</span>
+                            </div>
+                            <p class="text-[9px] font-bold text-slate-400 mt-1"><i class="fa fa-clock text-cyan-500 mr-1"></i> Masa Aktif: 30 Hari</p>
+                            <p class="text-[8px] text-slate-500 mt-1 leading-relaxed">10GB All Jaringan + 5GB Sosmed</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-cyan-600">Rp 45.000</p>
+                            <button class="mt-2 bg-cyan-100 text-cyan-700 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase btn-active">Pilih</button>
+                        </div>
+                    </div>
+
+                    <div class="data-card bg-white p-4 rounded-2xl cursor-pointer flex justify-between items-center shadow-sm">
+                        <div>
+                            <h4 class="text-[12px] font-black text-slate-800 uppercase leading-tight">Internet 35 GB</h4>
+                            <p class="text-[9px] font-bold text-slate-400 mt-1"><i class="fa fa-clock text-cyan-500 mr-1"></i> Masa Aktif: 30 Hari</p>
+                            <p class="text-[8px] text-slate-500 mt-1 leading-relaxed">Kuota Utama Full 24 Jam (Tanpa Dibagi)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-cyan-600">Rp 85.000</p>
+                            <button class="mt-2 bg-cyan-100 text-cyan-700 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase btn-active">Pilih</button>
+                        </div>
+                    </div>
+
+                    <div class="data-card bg-white p-4 rounded-2xl cursor-pointer flex justify-between items-center shadow-sm">
+                        <div>
+                            <h4 class="text-[12px] font-black text-slate-800 uppercase leading-tight">Combo Unlimited</h4>
+                            <p class="text-[9px] font-bold text-slate-400 mt-1"><i class="fa fa-clock text-cyan-500 mr-1"></i> Masa Aktif: 30 Hari</p>
+                            <p class="text-[8px] text-slate-500 mt-1 leading-relaxed">FUP 50GB + Unlimited Nelpon Sesama</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-black text-cyan-600">Rp 120.000</p>
+                            <button class="mt-2 bg-cyan-100 text-cyan-700 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase btn-active">Pilih</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-5 bg-white border-t rounded-t-[30px] shadow-[0_-15px_40px_rgba(0,0,0,0.06)] relative z-50">
+            <button onclick="prosesPaket()" class="w-full py-5 bg-cyan-600 hover:bg-cyan-700 transition-colors text-white rounded-[20px] text-[12px] font-black uppercase italic tracking-widest btn-active shadow-xl shadow-cyan-200 border border-cyan-500">
+                LANJUT PEMBAYARAN <i class="fa fa-rocket ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        function pilihOperator(namaProvider) {
+            // Tampilkan bagian daftar paket
+            const paketSection = document.getElementById('paket-section');
+            paketSection.classList.remove('hidden');
+            
+            // Ubah judul sesuai operator
+            document.getElementById('label-paket').innerText = `Katalog Paket ${namaProvider}:`;
+            
+            // Fokus otomatis ke input nomor biar efisien
+            document.getElementById('phone-data').focus();
+
+            // Efek Vibrate HP
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        function prosesPaket() {
+            const noHp = document.getElementById('phone-data').value;
+
+            if (!noHp) {
+                alert("Waduh, Nomor Tujuan Paket-nya jangan sampai terlewat Pak!");
+                return;
+            }
+
+            alert(`Sistem sedang memproses pembelian Paket Data untuk nomor: ${noHp}\nMohon tunggu sebentar...`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Isi Pulsa - KOPDESKEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; min-height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); overflow-x: hidden; }
+        
+        /* =========================================
+           EFEK GLOSSY SHIMMER & FLOAT
+           ========================================= */
+        .provider-card { 
+            position: relative; 
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 2px solid #f1f5f9;
+        }
+
+        /* Pantulan Cahaya (Shimmer) */
+        .provider-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.8);
+            transform: rotate(30deg);
+            transition: left 0.5s ease-in-out;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .provider-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+            border-color: #4f46e5;
+            background: #e0e7ff;
+        }
+
+        .provider-card:hover::after {
+            left: 130%; /* Cahaya menyapu ke kanan */
+        }
+
+        /* Animasi Logo Asli saat Hover */
+        .provider-img { transition: transform 0.3s ease; }
+        .provider-card:hover .provider-img { transform: scale(1.15); }
+
+        .btn-active:active { transform: scale(0.95); }
+        
+        input:focus { border-color: #4f46e5 !important; background: white !important; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="bg-white p-5 flex items-center border-b sticky top-0 z-50">
+            <i onclick="window.history.back()" class="fa fa-arrow-left text-indigo-600 text-lg cursor-pointer p-2 btn-active"></i>
+            <h1 class="flex-1 text-center font-black italic uppercase tracking-widest text-[11px] text-indigo-900 mr-8">ISI PULSA REGULER</h1>
+        </div>
+
+        <div class="flex-1 p-6 overflow-y-auto">
+            
+            <div class="mb-8">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 block">Nomor Handphone Anggota</label>
+                <div class="relative">
+                    <i class="fa fa-mobile-button absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xl"></i>
+                    <input type="number" id="phone-number" placeholder="08xx xxxx xxxx" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-5 pl-12 pr-4 text-sm font-black text-slate-700 transition-all shadow-inner tracking-widest">
+                    <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-indigo-100 text-indigo-600 p-2 rounded-xl text-[10px] font-black uppercase tracking-tighter btn-active shadow-sm"><i class="fa fa-address-book mr-1"></i> Kontak</button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-[10px] font-black text-indigo-900 uppercase italic">Pilih Operator :</h3>
+                <span class="text-[7px] font-bold text-gray-400 uppercase tracking-widest">Pilih salah satu</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                
+                <div onclick="selectProvider('Telkomsel')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-2 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/200px-Telkomsel_2021_icon.svg.png" alt="Telkomsel" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">Telkomsel</span>
+                </div>
+
+                <div onclick="selectProvider('Indosat IM3')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-2 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Indosat_Ooredoo_logo_%282015%29.svg/300px-Indosat_Ooredoo_logo_%282015%29.svg.png" alt="IM3" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">IM3 Ooredoo</span>
+                </div>
+
+                <div onclick="selectProvider('XL Axiata')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-2 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/XL_Axiata_logo_%282020%29.svg/300px-XL_Axiata_logo_%282020%29.svg.png" alt="XL" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">XL Axiata</span>
+                </div>
+
+                <div onclick="selectProvider('Three')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-2 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Tri_Indonesia_logo.svg/200px-Tri_Indonesia_logo.svg.png" alt="Three" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">Three (3)</span>
+                </div>
+
+                <div onclick="selectProvider('Smartfren')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-1 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Smartfren_logo.svg/300px-Smartfren_logo.svg.png" alt="Smartfren" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">Smartfren</span>
+                </div>
+
+                <div onclick="selectProvider('by.U')" class="provider-card flex flex-col items-center justify-center p-4 bg-slate-50 rounded-3xl cursor-pointer">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md mb-2 border border-slate-100 p-2 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/By.U_logo.svg/300px-By.U_logo.svg.png" alt="by.U" class="w-full h-full object-contain provider-img">
+                    </div>
+                    <span class="text-[8px] font-black uppercase text-slate-700">by.U</span>
+                </div>
+
+            </div>
+
+            <div id="nominal-section" class="hidden">
+                <h3 id="label-nominal" class="text-[10px] font-black text-indigo-900 uppercase italic mb-4 border-b pb-2">Pilih Nominal Pulsa:</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="p-4 bg-white border border-indigo-100 rounded-2xl text-[11px] font-black text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex flex-col items-center justify-center">Rp 5.000 <span class="text-[8px] font-bold mt-1 text-slate-400 opacity-80">Harga: Rp 6.000</span></button>
+                    <button class="p-4 bg-white border border-indigo-100 rounded-2xl text-[11px] font-black text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex flex-col items-center justify-center">Rp 10.000 <span class="text-[8px] font-bold mt-1 text-slate-400 opacity-80">Harga: Rp 11.000</span></button>
+                    <button class="p-4 bg-white border border-indigo-100 rounded-2xl text-[11px] font-black text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex flex-col items-center justify-center">Rp 25.000 <span class="text-[8px] font-bold mt-1 text-slate-400 opacity-80">Harga: Rp 26.000</span></button>
+                    <button class="p-4 bg-white border border-indigo-100 rounded-2xl text-[11px] font-black text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex flex-col items-center justify-center">Rp 50.000 <span class="text-[8px] font-bold mt-1 text-slate-400 opacity-80">Harga: Rp 51.000</span></button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-6 bg-white border-t rounded-t-[30px] shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+            <button onclick="prosesPulsa()" class="w-full py-5 bg-indigo-600 text-white rounded-[20px] text-[12px] font-black uppercase italic tracking-widest btn-active shadow-lg shadow-indigo-100">
+                LANJUT PEMBAYARAN <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        function selectProvider(name) {
+            // Tampilkan bagian nominal saat provider dipilih
+            document.getElementById('nominal-section').classList.remove('hidden');
+            document.getElementById('label-nominal').innerText = `Nominal Pulsa ${name} :`;
+            
+            // Tambahkan sedikit feedback getar kalau dibuka di HP Android
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        function prosesPulsa() {
+            const phone = document.getElementById('phone-number').value;
+            if (!phone) {
+                alert("Masukkan nomor HP yang mau diisi dulu, Pak!");
+                return;
+            }
+            if (phone.length < 10) {
+                alert("Nomor HP sepertinya kurang lengkap, Pak. Cek lagi ya!");
+                return;
+            }
+            alert("Memproses pesanan pulsa untuk nomor: " + phone);
+        }
+    </script>
+</body>
+</html>
