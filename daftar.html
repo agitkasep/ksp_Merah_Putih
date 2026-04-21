@@ -178,8 +178,9 @@
 
     </div>
 
-    <script>
-        // INISIALISASI SUPABASE DATABASE DIHAPUS KARENA SUDAH ADA DI CONFIG.JS
+   <script>
+        // PERBAIKAN UTAMA: Menghubungkan variabel agar tidak "Undefined"
+        const supabase = supabaseClient; 
 
         let emailTerdaftar = ""; 
 
@@ -292,10 +293,8 @@
             if (stream) stream.getTracks().forEach(t => t.stop());
         }
 
-        // ==========================================
-        // FUNGSI DAFTAR KE SUPABASE
-        // ==========================================
-       async function simpanKeDatabase() {
+        // FUNGSI SIMPAN (Hanya diperbaiki agar tidak undefined dan bisa upload)
+        async function simpanKeDatabase() {
             if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
     
             const btnFinal = document.getElementById('btn-final');
@@ -309,7 +308,7 @@
             btnFinal.disabled = true;
 
             try {
-                // 1. DAFTAR AKUN KE SUPABASE
+                // 1. DAFTAR AKUN
                 const { data, error: authError } = await supabase.auth.signUp({
                     email: emailBaru,
                     password: passBaru,
@@ -320,7 +319,7 @@
 
                 btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MENGUNGGAH FOTO...';
 
-                // 2. PROSES UPLOAD FOTO
+                // 2. PROSES UPLOAD FOTO (Wajib ada agar foto masuk ke bucket)
                 const b64toBlob = (b64Data) => {
                     const parts = b64Data.split(',');
                     const byteCharacters = atob(parts[1]);
@@ -336,11 +335,11 @@
                 const prefix = emailBaru.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
                 const timestamp = Date.now();
 
-                // Upload ke Brankas (Storage)
+                // Upload ke Bucket 'berkas_anggota'
                 await supabase.storage.from('berkas_anggota').upload(`${prefix}_selfie_${timestamp}.jpg`, fileFace);
                 await supabase.storage.from('berkas_anggota').upload(`${prefix}_ktp_${timestamp}.jpg`, fileKtp);
 
-                // 3. SELESAI & MUNCULKAN OTP
+                // 3. SELESAI & TAMPILKAN MODAL OTP
                 emailTerdaftar = emailBaru;
                 localStorage.setItem('namaLengkapAnggota', nama);
                 document.getElementById('display-email').innerText = emailBaru;
@@ -355,9 +354,6 @@
             }
         }
 
-        // ==========================================
-        // FUNGSI VERIFIKASI KODE OTP
-        // ==========================================
         async function verifikasiOTP() {
             const tokenOTP = document.getElementById('otp-kode').value.trim();
             const btnVerif = document.getElementById('btn-verifikasi');
@@ -382,11 +378,8 @@
 
             if (error) {
                 alert(`❌ KODE SALAH!\nKode OTP salah atau sudah kedaluwarsa.\nSilakan cek kembali email Anda.`);
-                document.getElementById('otp-kode').value = ''; 
-                document.getElementById('otp-kode').focus();
             } else {
-                const sapaan = (document.getElementById('gender').value === "LAKI-LAKI") ? "Bpk" : "Ibu";
-                alert(`✅ VERIFIKASI BERHASIL ${sapaan.toUpperCase()}!\nAkun Anda sudah aktif. Silakan Login.`);
+                alert(`✅ VERIFIKASI BERHASIL!\nAkun Anda sudah aktif. Silakan Login.`);
                 window.location.href = "index.html";
             }
         }
