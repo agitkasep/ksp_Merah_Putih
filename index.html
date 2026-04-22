@@ -139,50 +139,61 @@
         // ==========================================
         // FUNGSI LOGIN DENGAN DEBUGGING SUPER LENGKAP
         // ==========================================
-        async function validaSiLogin() {
-            const user = document.getElementById('login-username').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-            const btn = document.getElementById('btn-login');
+      // ==========================================
+// FUNGSI LOGIN YANG SUDAH DIPERBAIKI
+// ==========================================
+async function validaSiLogin() {
+    const user = document.getElementById('login-username').value.trim();
+    const pass = document.getElementById('login-password').value.trim();
+    const btn = document.getElementById('btn-login');
 
-            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> CEK KONEKSI...';
-            btn.disabled = true;
+    if (!user || !pass) {
+        alert("Silahkan isi Username dan Password!");
+        return;
+    }
 
-            try {
-                // DEBUG 1: Cek apakah file config.js terbaca
-                if (typeof supabase === 'undefined') {
-                    throw new Error("File 'config.js' gagal dimuat atau variabel 'supabase' tidak ada.");
-                }
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
+    btn.disabled = true;
 
-                // DEBUG 2: Cek koneksi ke tabel
-                const { data, error } = await supabase
-                    .from('berkas_anggota')
-                    .select('*')
-                    .eq('username', user)
-                    .eq('password', pass)
-                    .single();
-
-                if (error) {
-                    // Jika error dari Supabase (salah nama tabel/kolom)
-                    console.error("Supabase Error Detail:", error);
-                    alert("SUPABASE ERROR: " + error.message + "\n\nSaran: Cek apakah nama tabel 'berkas_anggota' sudah benar di dashboard.");
-                    btn.innerHTML = 'Masuk Sekarang';
-                } else if (!data) {
-                    alert("LOGIN GAGAL: Username atau Password salah.");
-                    btn.innerHTML = 'Masuk Sekarang';
-                } else {
-                    // BERHASIL
-                    localStorage.setItem("user_login", JSON.stringify({username: user, nama: data.nama_lengkap, isLoggedIn: true}));
-                    alert("LOGIN BERHASIL! Selamat datang " + data.nama_lengkap);
-                    window.location.href = "anggota.html";
-                }
-
-            } catch (err) {
-                // DEBUG 3: Jika ada kesalahan sistem / kodingan
-                console.error("Sistem Error Detail:", err);
-                alert("KESALAHAN SISTEM:\n" + err.message + "\n\nCek 'Inspect Element' -> 'Console' untuk detail.");
-                btn.innerHTML = 'Masuk Sekarang';
-            }
+    try {
+        // PENTING: Cek apakah config.js sudah dimuat dengan benar
+        if (typeof supabaseClient === 'undefined') {
+            throw new Error("File config.js belum terbaca atau variabel 'supabaseClient' tidak ditemukan.");
         }
+
+        // PENTING: Menggunakan 'supabaseClient', BUKAN 'supabase'
+        const { data, error } = await supabaseClient
+            .from('berkas_anggota')
+            .select('*')
+            .eq('username', user)
+            .eq('password', pass)
+            .single();
+
+        if (error) {
+            console.error("Detail Error Supabase:", error);
+            alert("LOGIN GAGAL: Username atau Password salah.");
+            generateCaptcha(); // Reset captcha
+            btn.innerHTML = 'Masuk Sekarang';
+        } else if (!data) {
+            alert("Username atau Password tidak terdaftar!");
+            generateCaptcha();
+            btn.innerHTML = 'Masuk Sekarang';
+        } else {
+            // JIKA SUKSES
+            localStorage.setItem("user_login", JSON.stringify({
+                username: user, 
+                nama: data.nama_lengkap, 
+                isLoggedIn: true
+            }));
+            alert(`✅ Login Sukses!\nSelamat datang, ${data.nama_lengkap}!`);
+            window.location.href = "anggota.html";
+        }
+    } catch (err) {
+        console.error("Error Sistem:", err);
+        alert("KESALAHAN SISTEM:\n" + err.message);
+        btn.innerHTML = 'Masuk Sekarang';
+    }
+}
     </script>
 </body>
 </html>
