@@ -146,54 +146,59 @@
         </div>
 
         <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden">
-            <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
-                <div class="bg-indigo-600 p-6 text-center">
-                    <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
-                    <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
+    <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
+        <div class="bg-indigo-600 p-6 text-center">
+            <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
+            <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Gunakan Username & Password Anda</p>
+        </div>
+
+        <div class="p-8 space-y-4">
+            <div>
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Username</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                    <i class="fa fa-user text-gray-300 mr-3"></i>
+                    <input type="text" id="login-username" placeholder="Masukkan Username" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
                 </div>
+            </div>
 
-                <div class="p-8 space-y-4">
-                    <div>
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Email Akun</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
-                            <i class="fa fa-envelope text-gray-300 mr-3"></i>
-                            <input type="email" id="email" placeholder="contoh@email.com" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
-                        </div>
-                    </div>
+            <div>
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
+                    <i class="fa fa-lock text-gray-300 mr-3"></i>
+                    <input type="password" id="login-password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                </div>
+            </div>
 
-                    <div>
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 transition-all">
-                            <i class="fa fa-lock text-gray-300 mr-3"></i>
-                            <input type="password" id="password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
-                        </div>
-                        <div class="text-right mt-2 px-1">
-                            <a href="#" onclick="alert('Silahkan hubungi Admin KOPDESKEL untuk reset password.')" class="text-[8px] font-black text-indigo-400 hover:text-indigo-600 uppercase tracking-tighter">
-                                Lupa Email / Password?
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500">
-                            <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
-                            <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none cursor-pointer">
-                                <option value="" disabled selected>-- PILIH STATUS --</option>
-                                <option value="anggota">ANGGOTA</option>
-                                <option value="admin">ADMIN</option>
-                                <option value="kolektor">KOLEKTOR</option>
-                            </select>
-                        </div>
+            <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <label class="text-[9px] font-black text-indigo-400 uppercase mb-2 block">Verifikasi Bukan Robot</label>
+                <div class="flex items-center justify-between">
+                    <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">-- + -- =</span>
+                    <div class="relative w-24">
+                        <input type="number" id="captcha-answer" placeholder="..." class="w-full p-2 bg-white border-2 border-indigo-200 rounded-xl text-center font-bold text-gray-700 outline-none focus:border-indigo-500">
+                        <i id="captcha-status" class="fa fa-check-circle absolute -right-6 top-3 text-green-500 hidden"></i>
                     </div>
                 </div>
+            </div>
 
-                <div class="px-8 pb-8">
-                    <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-[12px] font-black btn-active-effect shadow-lg shadow-indigo-200 uppercase">Masuk Sekarang</button>
-                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest hover:text-gray-600">Batal</button>
+            <div class="pt-2">
+                <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
+                <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500">
+                    <i class="fa fa-shield-halved text-gray-300 mr-3"></i>
+                    <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none cursor-pointer">
+                        <option value="anggota" selected>ANGGOTA</option>
+                        <option value="admin">ADMIN</option>
+                        <option value="kolektor">KOLEKTOR</option>
+                    </select>
                 </div>
             </div>
         </div>
+
+        <div class="px-8 pb-8">
+            <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-gray-300 text-white rounded-2xl text-[12px] font-black uppercase cursor-not-allowed" disabled>Masuk Sekarang</button>
+            <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest">Batal</button>
+        </div>
+    </div>
+</div>
 
     </div>
 
