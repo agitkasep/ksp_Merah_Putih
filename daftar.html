@@ -14,16 +14,13 @@
         body { background-color: #f1f5f9; font-family: sans-serif; margin: 0; }
         .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: white; margin: 0 auto; position: relative; }
         
-        /* Gaya Kamera Full Screen */
         .camera-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; flex-direction: column; }
         #camera-stream { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Bingkai Verifikasi */
         .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
         .frame-face { width: 260px; height: 350px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; transition: all 0.5s; }
         .frame-ktp { width: 320px; height: 200px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; display: none; transition: all 0.5s; }
         
-        /* Animasi Progress Merah Searah Jarum Jam */
         .active-scan { border-color: #ef4444 !important; border-style: solid !important; box-shadow: 0 0 20px #ef4444; }
         
         .hint-box { position: absolute; top: 15%; background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
@@ -31,6 +28,8 @@
         .hidden { display: none; }
         input, select { transition: all 0.3s; }
         input:focus { border-color: #4f46e5 !important; background: white !important; }
+        
+        .otp-input { letter-spacing: 0.5em; text-align: center; font-size: 1.5rem; }
     </style>
 </head>
 <body>
@@ -47,44 +46,43 @@
                 <div>
                     <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nama Lengkap Sesuai KTP</label>
                     <input type="text" id="nama_lengkap" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase">
-                </div> <div>
+                </div> 
+                
+                <div>
                     <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Email Aktif</label>
                     <input type="email" id="reg_email" required placeholder="Contoh: abcdef@gmail.com" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-    <div>
-        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Username</label>
-        <input type="text" id="reg_user" required placeholder="Contoh: agit2026" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
-    </div>
-    <div>
-       <div class="grid grid-cols-2 gap-3">
-    <div>
-        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
-        <div class="relative">
-            <input type="password" id="reg_pass" required placeholder="****" 
-                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
-            
-            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
-               id="icon-pass1" 
-               onclick="togglePassword('reg_pass', 'icon-pass1')">
-            </i>
-        </div>
-    </div>
+                <div>
+                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Username</label>
+                    <input type="text" id="reg_user" required placeholder="Contoh: agit2026" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+                </div>
 
-    <div>
-        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Ulangi Password</label>
-        <div class="relative">
-            <input type="password" id="reg_pass_confirm" required placeholder="****" 
-                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
-            
-            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
-               id="icon-pass2" 
-               onclick="togglePassword('reg_pass_confirm', 'icon-pass2')">
-            </i>
-        </div>
-    </div>
-</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg_pass" required placeholder="****" 
+                                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+                            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
+                               id="icon-pass1" 
+                               onclick="togglePassword('reg_pass', 'icon-pass1')">
+                            </i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Ulangi Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg_pass_confirm" required placeholder="****" 
+                                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+                            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
+                               id="icon-pass2" 
+                               onclick="togglePassword('reg_pass_confirm', 'icon-pass2')">
+                            </i>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -165,44 +163,83 @@
                 <label for="agree" class="text-[10px] font-bold text-indigo-900 leading-tight uppercase">Saya ijinkan kedua foto ini sebagai syarat pendaftaran menjadi anggota KSP MERAH PUTIH.</label>
             </div>
 
-            <button onclick="simpanKeDatabase()" class="w-full py-5 bg-red-600 text-white rounded-[25px] font-black uppercase italic shadow-2xl active:scale-95 transition-all">DAFTAR SEKARANG</button>
+            <button id="btn-final" onclick="simpanKeDatabase()" class="w-full py-5 bg-red-600 text-white rounded-[25px] font-black uppercase italic shadow-2xl active:scale-95 transition-all">DAFTAR SEKARANG</button>
+        </div>
+
+        <div id="otpModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] items-center justify-center p-4 hidden">
+            <div class="bg-white w-full max-w-[340px] rounded-[35px] overflow-hidden shadow-2xl p-6 text-center border-4 border-indigo-50 relative">
+                
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-envelope-open-text text-green-600 text-2xl animate-bounce"></i>
+                </div>
+                
+                <h2 class="font-black text-gray-800 text-lg uppercase italic mb-1">Cek Email Anda</h2>
+                <p class="text-[10px] font-bold text-gray-500 mb-6">Kami mengirimkan 6 digit kode OTP ke <br> <span id="display-email" class="text-indigo-600 font-black"></span></p>
+
+                <div>
+                    <input type="number" id="otp-kode" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);" placeholder="------" class="otp-input w-full bg-slate-50 border-2 border-indigo-100 rounded-2xl py-4 font-black text-indigo-700 outline-none focus:border-indigo-500 transition-all shadow-inner">
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <button id="btn-verifikasi" onclick="verifikasiOTP()" class="w-full py-4 bg-green-500 text-white rounded-2xl text-[11px] font-black shadow-lg shadow-green-200 uppercase tracking-widest active:scale-95 transition-all">
+                        Verifikasi Kode
+                    </button>
+                    <button onclick="batalOTP()" class="w-full py-3 text-gray-400 text-[9px] font-black uppercase tracking-widest hover:text-gray-600">
+                        Batal / Ganti Email
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
 
     <script>
+        // KONEKSI SUPABASE (Solusi Error Undefined)
+        const supabase = supabaseClient; 
+
+        let emailTerdaftar = ""; 
         let stream;
         let currentMode = 'face'; 
         let tempFace, tempKtp;
 
+        // FUNGSI INTIP PASSWORD
         function togglePassword(inputId, iconId) {
-    const passInput = document.getElementById(inputId);
-    const toggleIcon = document.getElementById(iconId);
-    
-    if (passInput.type === 'password') {
-        // Ubah jadi teks agar kelihatan
-        passInput.type = 'text'; 
-        // Ganti gambar ikon jadi mata dicoret
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash'); 
-    } else {
-        // Kembalikan jadi password agar jadi titik-titik
-        passInput.type = 'password'; 
-        // Kembalikan gambar ikon jadi mata biasa
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye'); 
-    }
-}
-       
-        // Fungsi Memulai Verifikasi (Wajah) - DITAMBAHKAN .trim()
+            const passInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            
+            if (passInput.type === 'password') {
+                passInput.type = 'text'; 
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash'); 
+            } else {
+                passInput.type = 'password'; 
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye'); 
+            }
+        }
+
         async function startVerification() {
             const nama = document.getElementById('nama_lengkap').value.trim();
-            if(!nama) return alert("Isi data form dulu Pak!");
+            const email = document.getElementById('reg_email').value.trim();
+            const userBaru = document.getElementById('reg_user').value.trim();
+            const pass = document.getElementById('reg_pass').value.trim();
+            const passConfirm = document.getElementById('reg_pass_confirm').value.trim();
+
+            if(!nama || !email || !userBaru || !pass || !passConfirm) {
+                return alert("Isi data form dengan lengkap dulu Pak!");
+            }
+
+            if(pass !== passConfirm) {
+                return alert("Waduh Pak, 'Buat Password' dan 'Ulangi Password' tidak sama. Coba dicek lagi!");
+            }
+            if(pass.length < 6) {
+                return alert("Password minimal 6 karakter ya Pak!");
+            }
             
             document.getElementById('step-form').classList.add('hidden');
             document.getElementById('step-camera').style.display = 'flex';
             
-            await initCamera("user"); // Kamera Depan
+            await initCamera("user"); 
             startScanning();
         }
 
@@ -219,12 +256,10 @@
             const hint = document.getElementById('hint-text');
             const frame = document.getElementById('main-frame');
             
-            // Simulasi deteksi sensor (Tunggu 3 detik posisi pas)
             setTimeout(() => {
                 hint.innerText = "TAHAN! PERTAHANKAN POSISI";
                 frame.classList.add('active-scan');
                 
-                // Jepret otomatis setelah bingkai merah penuh (2 detik)
                 setTimeout(() => {
                     captureImage();
                 }, 2000);
@@ -256,14 +291,13 @@
             document.getElementById('step-review-face').classList.add('hidden');
             document.getElementById('step-camera').style.display = 'flex';
             
-            // Ganti Bingkai ke Kotak
             const frame = document.getElementById('main-frame');
             frame.className = 'frame-ktp';
             frame.style.display = 'block';
             frame.classList.remove('active-scan');
             document.getElementById('hint-text').innerText = "Posisikan KTP di dalam bingkai kotak";
 
-            await initCamera("environment"); // Kamera Belakang
+            await initCamera("environment"); 
             startScanning();
         }
 
@@ -275,28 +309,108 @@
             if (stream) stream.getTracks().forEach(t => t.stop());
         }
 
-        function simpanKeDatabase() {
+        // ==========================================
+        // FUNGSI DAFTAR KE SUPABASE (SUDAH DIKEMBALIKAN!)
+        // ==========================================
+       async function simpanKeDatabase() {
             if(!document.getElementById('agree').checked) return alert("Centang persetujuan dulu Pak!");
     
-            // Ambil semua data dari input - DITAMBAHKAN .trim() DISINI AGAR BERSIH DARI SPASI HP
+            const btnFinal = document.getElementById('btn-final');
+            const teksAsli = btnFinal.innerHTML;
+
             const nama = document.getElementById('nama_lengkap').value.trim();
+            const emailBaru = document.getElementById('reg_email').value.trim();
             const userBaru = document.getElementById('reg_user').value.trim();
             const passBaru = document.getElementById('reg_pass').value.trim();
-            const gender = document.getElementById('gender').value;
 
-            if(!userBaru || !passBaru) return alert("Username dan Password harus diisi Pak!");
+            btnFinal.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
+            btnFinal.disabled = true;
 
-            // SIMPAN KE DATABASE LOKAL (LocalStorage)
-            localStorage.setItem('namaLengkapAnggota', nama);
-            localStorage.setItem('usernameAnggota', userBaru);
-            localStorage.setItem('passwordAnggota', passBaru);
-            localStorage.setItem('genderAnggota', gender);
-            localStorage.setItem('fotoWajah', tempFace);
-            
-            const sapaan = (gender === "LAKI-LAKI") ? "Bpk" : "Ibu";
-            
-            alert(`SELAMAT BERGABUNG ${sapaan} ${nama.toUpperCase()}!\nSekarang silakan login menggunakan Username & Password yang Anda buat.`);
-            window.location.href = 'index.html';
+            try {
+                // 1. DAFTAR AKUN KE SUPABASE (Menyimpan Nama, Email, dan Username baru Bapak)
+                const { data, error: authError } = await supabase.auth.signUp({
+                    email: emailBaru,
+                    password: passBaru,
+                    options: { data: { full_name: nama, username: userBaru, status_jabatan: 'anggota' } }
+                });
+
+                if (authError) throw authError;
+
+                // 2. PROSES UPLOAD FOTO
+                const b64toBlob = (b64Data) => {
+                    const parts = b64Data.split(',');
+                    const byteCharacters = atob(parts[1]);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    return new Blob([new Uint8Array(byteNumbers)], {type: 'image/jpeg'});
+                };
+
+                const fileFace = b64toBlob(tempFace);
+                const fileKtp = b64toBlob(tempKtp);
+                const prefix = emailBaru.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+                const timestamp = Date.now();
+
+                // Upload ke Brankas (Storage)
+                await supabase.storage.from('berkas_anggota').upload(`${prefix}_selfie_${timestamp}.jpg`, fileFace);
+                await supabase.storage.from('berkas_anggota').upload(`${prefix}_ktp_${timestamp}.jpg`, fileKtp);
+
+                // 3. SELESAI & MUNCULKAN OTP
+                emailTerdaftar = emailBaru;
+                localStorage.setItem('namaLengkapAnggota', nama);
+                document.getElementById('display-email').innerText = emailBaru;
+                document.getElementById('otpModal').classList.remove('hidden');
+                document.getElementById('otpModal').classList.add('flex');
+                
+            } catch (err) {
+                alert("Masalah: " + err.message);
+            } finally {
+                btnFinal.innerHTML = teksAsli;
+                btnFinal.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // FUNGSI VERIFIKASI KODE OTP
+        // ==========================================
+        async function verifikasiOTP() {
+            const tokenOTP = document.getElementById('otp-kode').value.trim();
+            const btnVerif = document.getElementById('btn-verifikasi');
+
+            if (tokenOTP.length < 6) {
+                alert("Kode OTP harus 6 digit angka!");
+                return;
+            }
+
+            const teksAsli = btnVerif.innerHTML;
+            btnVerif.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Mengecek...';
+            btnVerif.disabled = true;
+
+            const { data, error } = await supabase.auth.verifyOtp({
+                email: emailTerdaftar,
+                token: tokenOTP,
+                type: 'signup'
+            });
+
+            btnVerif.innerHTML = teksAsli;
+            btnVerif.disabled = false;
+
+            if (error) {
+                alert(`❌ KODE SALAH!\nKode OTP salah atau sudah kedaluwarsa.\nSilakan cek kembali email Anda.`);
+                document.getElementById('otp-kode').value = ''; 
+                document.getElementById('otp-kode').focus();
+            } else {
+                const sapaan = (document.getElementById('gender').value === "LAKI-LAKI") ? "Bpk" : "Ibu";
+                alert(`✅ VERIFIKASI BERHASIL ${sapaan.toUpperCase()}!\nAkun Anda sudah aktif. Silakan Login.`);
+                window.location.href = "index.html";
+            }
+        }
+
+        function batalOTP() {
+            document.getElementById('otpModal').classList.add('hidden');
+            document.getElementById('otpModal').classList.remove('flex');
+            document.getElementById('otp-kode').value = '';
         }
     </script>
 </body>
