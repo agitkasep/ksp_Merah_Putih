@@ -22,10 +22,6 @@
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         .promo-wrapper { display: flex; gap: 14px; padding: 10px 16px 25px 16px; overflow-x: auto; scroll-snap-type: x mandatory; }
-        .promo-wrapper::-webkit-scrollbar { height: 8px; }
-        .promo-wrapper::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .promo-wrapper::-webkit-scrollbar-thumb { background: #818cf8; border-radius: 10px; }
-
         .footer-nav { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding-top: 15px; padding-bottom: 40px; border-radius: 35px 35px 0 0; z-index: 100; }
         .qr-center { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: linear-gradient(135deg, #4338ca, #6366f1); border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 4px solid white; box-shadow: 0 8px 20px rgba(67, 56, 202, 0.3); }
     </style>
@@ -33,6 +29,7 @@
 <body>
 
     <div class="app-container">
+        
         <div class="p-4 bg-white flex justify-between items-center z-50">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg border overflow-hidden">
@@ -82,23 +79,6 @@
                     <p class="text-[8px] font-black text-gray-500 uppercase">Info KSP</p>
                 </div>
             </div>
-
-            <div class="px-5 mb-2 flex justify-between items-end">
-                <h2 class="text-[12px] font-black text-gray-800 uppercase italic">Produk Promo 🔥</h2>
-                <span class="text-[8px] font-black text-indigo-600 border-b border-indigo-200 cursor-pointer">SEMUA</span>
-            </div>
-            <div class="promo-wrapper">
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
-                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" class="w-full h-full object-cover"></div>
-                    <p class="text-[10px] font-black text-gray-700 uppercase">Smart Watch X1</p>
-                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 150rb</p>
-                </div>
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
-                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" class="w-full h-full object-cover"></div>
-                    <p class="text-[10px] font-black text-gray-700 uppercase">Bass Headset</p>
-                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 85rb</p>
-                </div>
-            </div>
         </div>
 
         <div class="footer-nav">
@@ -118,105 +98,67 @@
         </div>
 
         <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden">
-            <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
+            <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl">
                 <div class="bg-indigo-600 p-6 text-center">
                     <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
-                    <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
                 </div>
 
                 <div class="p-8 space-y-4">
-                    <div>
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Username</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500">
-                            <i class="fa fa-user text-gray-300 mr-3"></i>
-                            <input type="text" id="login-username" placeholder="Username Anda" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                    <div class="flex items-center bg-gray-50 border-2 rounded-2xl px-4 py-3">
+                        <i class="fa fa-user text-gray-300 mr-3"></i>
+                        <input type="text" id="login-username" placeholder="Username" class="bg-transparent w-full text-[11px] font-bold outline-none">
+                    </div>
+
+                    <div class="flex items-center bg-gray-50 border-2 rounded-2xl px-4 py-3 relative">
+                        <i class="fa fa-lock text-gray-300 mr-3"></i>
+                        <input type="password" id="login-password" placeholder="Password" class="bg-transparent w-full text-[11px] font-bold outline-none pr-10">
+                        <div id="toggle-password" class="absolute right-4 cursor-pointer text-gray-400">
+                            <i class="fa fa-eye"></i>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 relative">
-                            <i class="fa fa-lock text-gray-300 mr-3"></i>
-                            <input type="password" id="login-password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 pr-10">
-                            <div id="toggle-password" class="absolute right-4 cursor-pointer text-gray-400 hover:text-indigo-600 transition">
-                                <i class="fa fa-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
-                        <label class="text-[9px] font-black text-indigo-400 uppercase mb-2 block text-center">Verifikasi Manusia</label>
-                        <div class="flex items-center justify-between px-2">
-                            <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">... + ... =</span>
-                            <input type="number" id="captcha-answer" placeholder="?" class="w-16 p-2 bg-white border-2 border-indigo-200 rounded-xl text-center font-bold text-gray-700 outline-none">
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Status / Jabatan</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3">
-                            <select id="user-status" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 appearance-none">
-                                <option value="anggota" selected>ANGGOTA</option>
-                                <option value="admin">ADMIN</option>
-                                <option value="kolektor">KOLEKTOR</option>
-                            </select>
-                        </div>
+                    <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 flex justify-between items-center px-4">
+                        <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">... + ... =</span>
+                        <input type="number" id="captcha-answer" placeholder="?" class="w-16 p-2 bg-white border-2 rounded-xl text-center font-bold outline-none">
                     </div>
                 </div>
 
                 <div class="px-8 pb-8">
                     <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-gray-300 text-white rounded-2xl text-[12px] font-black uppercase cursor-not-allowed" disabled>Masuk Sekarang</button>
-                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest text-center">Batal</button>
+                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 text-center">Batal</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // INISIALISASI JAM & LOKASI
+        // INISIALISASI WAKTU
         function updateTime() {
             const now = new Date();
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
             document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
-            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} WIB`;
+            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
         }
         setInterval(updateTime, 1000); updateTime();
 
-        async function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-                        const data = await res.json();
-                        const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
-                        document.getElementById('user-location').innerHTML = `<i class="fa fa-location-dot"></i> ${city}, Indonesia`;
-                    } catch { document.getElementById('user-location').innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`; }
-                });
-            }
-        }
-        getLocation();
-
-        // LOGIKA MATA INTIP PASSWORD
+        // MATA INTIP PASSWORD
         document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('login-password');
+            const passInput = document.getElementById('login-password');
             const icon = this.querySelector('i');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
                 icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                passwordInput.type = 'password';
+                passInput.type = 'password';
                 icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         });
 
-        // LOGIKA MODAL & CAPTCHA
+        // MODAL & CAPTCHA
         let captchaResult = 0;
-        const modalLogin = document.getElementById('loginModal');
-
         function openLogin() {
-            modalLogin.style.display = 'flex';
-            modalLogin.classList.remove('hidden');
+            document.getElementById('loginModal').style.display = 'flex';
             const n1 = Math.floor(Math.random() * 9) + 1;
             const n2 = Math.floor(Math.random() * 9) + 1;
             captchaResult = n1 + n2;
@@ -224,11 +166,7 @@
             document.getElementById('captcha-answer').value = '';
             checkCaptcha();
         }
-
-        function closeLogin() { 
-            modalLogin.style.display = 'none'; 
-            modalLogin.classList.add('hidden');
-        }
+        function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
 
         document.getElementById('captcha-answer').addEventListener('input', checkCaptcha);
 
@@ -246,20 +184,18 @@
             }
         }
 
-        // LOGIN KE SUPABASE
+        // LOGIN DATABASE (MENGGUNAKAN VARIABEL 'supabase' DARI config.js)
         async function validaSiLogin() {
             const user = document.getElementById('login-username').value.trim();
             const pass = document.getElementById('login-password').value.trim();
-            const role = document.getElementById('user-status').value;
             const btn = document.getElementById('btn-login');
 
-            if(!user || !pass) return alert("Isi Username dan Password!");
-
-            btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
+            btn.innerHTML = 'VERIFIKASI...';
             btn.disabled = true;
 
             try {
-                const { data, error } = await _supabase
+                // Perhatikan: Menggunakan 'supabase' sesuai config.js Bapak
+                const { data, error } = await supabase
                     .from('berkas_anggota')
                     .select('*')
                     .eq('username', user)
@@ -267,15 +203,19 @@
                     .single();
 
                 if (error || !data) {
-                    alert("❌ Username/Password Salah!");
-                    openLogin(); // Reset captcha
+                    alert("❌ Login Gagal! Periksa Username/Password.");
                     btn.innerHTML = 'Masuk Sekarang';
+                    generateCaptcha();
                 } else {
                     localStorage.setItem("user_login", JSON.stringify({username: user, nama: data.nama_lengkap, isLoggedIn: true}));
                     alert(`Selamat Datang, ${data.nama_lengkap}!`);
-                    window.location.href = (role === "admin") ? "admin.html" : "anggota.html";
+                    window.location.href = "anggota.html";
                 }
-            } catch { alert("Koneksi Error."); btn.innerHTML = 'Masuk Sekarang'; }
+            } catch (err) {
+                console.error(err);
+                alert("Koneksi Database Error. Pastikan config.js sudah benar.");
+                btn.innerHTML = 'Masuk Sekarang';
+            }
         }
     </script>
 </body>
