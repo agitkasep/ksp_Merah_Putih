@@ -3,194 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - KSP Merah Putih</title>
-
+    <title>Pendaftaran - KSP Merah Putih</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         body { background:#f1f5f9; font-family:sans-serif; }
-        .container { max-width:480px; margin:auto; background:white; min-height:100vh; padding:20px; }
-        
-        .camera-box {
-            width:100%;
-            height:240px;
-            background:#000;
-            border-radius:16px;
-            overflow:hidden;
-            position:relative;
-            border: 2px solid #e2e8f0;
-        }
-
+        .container { max-width:500px; margin:auto; background:white; min-height:100vh; padding:20px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .camera-box { width:100%; height:280px; background:#000; border-radius:16px; overflow:hidden; position:relative; display:none; }
         video { width:100%; height:100%; object-fit:cover; }
-
-        .overlay-guide {
-            position:absolute;
-            inset:0;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border:2px dashed rgba(255,255,255,0.5);
-            margin: 20px;
-            border-radius:12px;
-            pointer-events: none;
-            color: white;
-            font-size: 0.8rem;
-        }
-
-        .preview {
-            width:100%;
-            border-radius:12px;
-            margin-top:10px;
-            border: 2px solid #4f46e5;
-        }
+        .preview-img { width:100%; border-radius:12px; margin-top:10px; border: 2px solid #4f46e5; }
+        .loading-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999; color:white; flex-direction:column; align-items:center; justify-content:center; }
     </style>
 </head>
-
 <body>
 
-<div class="container space-y-5">
-    <h1 class="text-2xl font-bold text-center text-indigo-700">Pendaftaran Anggota</h1>
-    <p class="text-center text-gray-500 -mt-4 text-sm">KSP Merah Putih</p>
+<div id="loader" class="loading-overlay">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mb-4"></div>
+    <p id="loader-text">Memproses data...</p>
+</div>
 
+<div class="container space-y-4">
+    <h1 class="text-2xl font-bold text-center text-indigo-700">Berkas Anggota</h1>
+    
     <div class="space-y-3">
-        <input type="text" id="nama" placeholder="Nama lengkap sesuai KTP" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
-        <input type="email" id="email" placeholder="Alamat Email" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
-
-        <div class="relative">
-            <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded-xl pr-12 focus:ring-2 focus:ring-indigo-400 outline-none">
-            <div id="togglePass" class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400">
-                <i class="fas fa-eye"></i>
+        <label class="block text-sm font-semibold">Data Pribadi</label>
+        <input type="text" id="nama" placeholder="Nama Lengkap (Sesuai KTP)" class="w-full p-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-400">
+        <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="username" placeholder="Username" class="p-3 border rounded-xl">
+            <div class="relative">
+                <input type="password" id="password" placeholder="Password" class="w-full p-3 border rounded-xl pr-10">
+                <i id="togglePass" class="fas fa-eye absolute right-3 top-4 cursor-pointer text-gray-400"></i>
             </div>
         </div>
-    </div>
-
-    <hr>
-
-    <div>
-        <p class="font-bold mb-2"><i class="fa-solid fa-address-card mr-2"></i>Foto KTP</p>
-        <div class="camera-box">
-            <video id="videoKTP" autoplay playsinline muted></video>
-            <div class="overlay-guide">Posisikan KTP di sini</div>
+        <input type="text" id="ttl" placeholder="Tempat, Tanggal Lahir" class="w-full p-3 border rounded-xl">
+        <textarea id="alamat" placeholder="Alamat Lengkap (Sesuai KTP)" class="w-full p-3 border rounded-xl"></textarea>
+        <input type="text" id="ibu" placeholder="Nama Ibu Kandung" class="w-full p-3 border rounded-xl">
+        
+        <div class="grid grid-cols-2 gap-2">
+            <select id="agama" class="p-3 border rounded-xl">
+                <option value="">Pilih Agama</option>
+                <option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Khonghucu</option>
+            </select>
+            <select id="gender" class="p-3 border rounded-xl">
+                <option value="">Jenis Kelamin</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+            </select>
         </div>
-        <button onclick="capture('ktp')" class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl font-semibold transition">
-            <i class="fa-solid fa-camera mr-2"></i>Ambil Foto KTP
-        </button>
-        <img id="previewKTP" class="preview hidden">
+        <input type="text" id="pekerjaan" placeholder="Pekerjaan" class="w-full p-3 border rounded-xl">
     </div>
 
-    <div>
-        <p class="font-bold mb-2"><i class="fa-solid fa-user-check mr-2"></i>Verifikasi Wajah</p>
-        <div class="camera-box">
-            <video id="videoFace" autoplay playsinline muted></video>
-            <div class="overlay-guide" style="border-radius: 50%; aspect-ratio: 1/1; width: 180px; margin: auto;"></div>
+    <hr class="my-4">
+
+    <div class="space-y-2">
+        <p class="font-bold text-gray-700"><i class="fa-solid fa-id-card mr-2"></i>Verifikasi KTP</p>
+        <button id="btnPrepareKTP" onclick="initCamera('ktp', 'environment')" class="w-full bg-blue-100 text-blue-700 p-3 rounded-xl font-semibold border-2 border-blue-200">
+            1. Siapkan KTP
+        </button>
+        <div id="boxKTP" class="camera-box">
+            <video id="videoKTP" autoplay playsinline></video>
+            <button onclick="takeSnapshot('ktp')" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-2 rounded-full font-bold shadow-lg">
+                <i class="fa-solid fa-circle-dot mr-2"></i>Ambil Foto KTP
+            </button>
         </div>
-        <button onclick="capture('face')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-xl font-semibold transition">
-            <i class="fa-solid fa-face-smile mr-2"></i>Ambil Selfie
+        <img id="resKTP" class="preview-img hidden">
+        <input type="hidden" id="nik_hidden"> </div>
+
+    <div class="space-y-2">
+        <p class="font-bold text-gray-700"><i class="fa-solid fa-face-smile mr-2"></i>Verifikasi Wajah</p>
+        <button id="btnPrepareSelfie" onclick="initCamera('face', 'user')" class="w-full bg-emerald-100 text-emerald-700 p-3 rounded-xl font-semibold border-2 border-emerald-200">
+            2. Foto Selfie
         </button>
-        <img id="previewFace" class="preview hidden">
+        <div id="boxFace" class="camera-box">
+            <video id="videoFace" autoplay playsinline></video>
+            <button onclick="takeSnapshot('face')" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-2 rounded-full font-bold shadow-lg">
+                <i class="fa-solid fa-camera mr-2"></i>Ambil Selfie
+            </button>
+        </div>
+        <img id="resFace" class="preview-img hidden">
     </div>
 
-    <div class="pt-4">
-        <button onclick="submitData()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-2xl font-bold text-lg shadow-lg transition">
-            Daftar Sekarang
-        </button>
-    </div>
+    <button onclick="submitAllData()" class="w-full bg-indigo-600 text-white p-4 rounded-2xl font-bold text-lg mt-6 shadow-indigo-200 shadow-xl">
+        SIMPAN DATA KE DATABASE
+    </button>
 </div>
 
 <script>
-let ktpData = null;
-let faceData = null;
+// --- KONFIGURASI SUPABASE ---
+const supabaseUrl = 'YOUR_SUPABASE_URL';
+const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// START CAMERA (Satu stream untuk semua video)
-async function startCamera() {
+let currentStream = null;
+let ktpBase64 = null;
+let faceBase64 = null;
+
+// 1. FUNGSI AKTIFKAN KAMERA (Berdasarkan Perintah)
+async function initCamera(type, mode) {
+    // Matikan stream sebelumnya jika ada
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+
+    const box = type === 'ktp' ? document.getElementById('boxKTP') : document.getElementById('boxFace');
+    const video = type === 'ktp' ? document.getElementById('videoKTP') : document.getElementById('videoFace');
+    const btn = type === 'ktp' ? document.getElementById('btnPrepareKTP') : document.getElementById('btnPrepareSelfie');
+
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment" } 
+        currentStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: mode } 
         });
-        
-        document.getElementById('videoKTP').srcObject = stream;
-        document.getElementById('videoFace').srcObject = stream;
+        video.srcObject = currentStream;
+        box.style.display = 'block';
+        btn.classList.add('hidden'); // Sembunyikan tombol "Siapkan"
     } catch (err) {
-        console.error("Error akses kamera: ", err);
-        alert("Gagal mengakses kamera. Pastikan izin diberikan.");
+        alert("Gagal akses kamera: " + err);
     }
 }
 
-// Jalankan kamera saat load
-window.onload = startCamera;
-
-// CAPTURE FOTO
-function capture(type) {
+// 2. FUNGSI AMBIL FOTO
+async function takeSnapshot(type) {
     const video = document.getElementById(type === 'ktp' ? 'videoKTP' : 'videoFace');
     const canvas = document.createElement('canvas');
-    
-    // Set resolusi canvas sesuai video
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, 0, 0);
     
-    const imgBase64 = canvas.toDataURL('image/jpeg', 0.8);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
 
     if(type === 'ktp') {
-        ktpData = imgBase64;
-        const preview = document.getElementById('previewKTP');
-        preview.src = imgBase64;
-        preview.classList.remove('hidden');
+        ktpBase64 = dataUrl;
+        document.getElementById('resKTP').src = dataUrl;
+        document.getElementById('resKTP').classList.remove('hidden');
+        document.getElementById('boxKTP').style.display = 'none';
+        extractNIK(dataUrl); // Jalankan OCR Tersembunyi
     } else {
-        faceData = imgBase64;
-        const preview = document.getElementById('previewFace');
-        preview.src = imgBase64;
-        preview.classList.remove('hidden');
+        faceBase64 = dataUrl;
+        document.getElementById('resFace').src = dataUrl;
+        document.getElementById('resFace').classList.remove('hidden');
+        document.getElementById('boxFace').style.display = 'none';
     }
-    
-    // Efek feedback visual sederhana
-    video.style.opacity = "0.5";
-    setTimeout(() => video.style.opacity = "1", 100);
+
+    // Matikan kamera setelah ambil foto
+    currentStream.getTracks().forEach(track => track.stop());
 }
 
-// PASSWORD TOGGLE
+// 3. FUNGSI OCR TERSEMBUNYI (Ambil NIK)
+async function extractNIK(image) {
+    console.log("Memulai ekstraksi NIK...");
+    Tesseract.recognize(image, 'ind').then(({ data: { text } }) => {
+        // Regex mencari 16 digit angka (format NIK)
+        const match = text.match(/\d{16}/);
+        if (match) {
+            document.getElementById('nik_hidden').value = match[0];
+            console.log("NIK Terdeteksi: " + match[0]);
+        }
+    });
+}
+
+// 4. SUBMIT KE SUPABASE
+async function submitAllData() {
+    const loader = document.getElementById('loader');
+    const data = {
+        nama_lengkap: document.getElementById('nama').value,
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        ttl: document.getElementById('ttl').value,
+        alamat: document.getElementById('alamat').value,
+        ibu_kandung: document.getElementById('ibu').value,
+        agama: document.getElementById('agama').value,
+        jenis_kelamin: document.getElementById('gender').value,
+        pekerjaan: document.getElementById('pekerjaan').value,
+        nik: document.getElementById('nik_hidden').value,
+        foto_ktp: ktpBase64,
+        foto_selfie: faceBase64,
+        created_at: new Date()
+    };
+
+    if (!data.nama_lengkap || !ktpBase64 || !faceBase64) {
+        return alert("Mohon lengkapi form dan foto!");
+    }
+
+    loader.style.display = 'flex';
+
+    const { error } = await _supabase
+        .from('Berkas Anggota')
+        .insert([data]);
+
+    loader.style.display = 'none';
+
+    if (error) {
+        alert("Gagal simpan ke Supabase: " + error.message);
+    } else {
+        alert("Data Berhasil Tersimpan ke Database Berkas Anggota!");
+        location.reload();
+    }
+}
+
+// Toggle Password
 document.getElementById('togglePass').addEventListener('click', function() {
     const input = document.getElementById('password');
-    const icon = this.querySelector('i');
-
     if(input.type === 'password') {
         input.type = 'text';
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        this.classList.replace('fa-eye', 'fa-eye-slash');
     } else {
         input.type = 'password';
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        this.classList.replace('fa-eye-slash', 'fa-eye');
     }
 });
-
-// SUBMIT DATA
-function submitData() {
-    const nama = document.getElementById('nama').value;
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('password').value;
-
-    // Validasi Sederhana
-    if (!nama || !email || !pass) {
-        return alert("Mohon lengkapi nama, email, dan password!");
-    }
-    
-    if (!ktpData || !faceData) {
-        return alert("Mohon ambil foto KTP dan Wajah terlebih dahulu!");
-    }
-
-    // Simulasi Pengiriman
-    console.log("Data siap dikirim:", {
-        nama,
-        email,
-        password: pass,
-        foto_ktp: ktpData.substring(0, 50) + "...", // Dipotong agar console tidak penuh
-        foto_wajah: faceData.substring(0, 50) + "..."
-    });
-
-    alert("Pendaftaran berhasil! Data sedang diproses oleh sistem KSP Merah Putih.");
-}
 </script>
 
 </body>
