@@ -7,6 +7,10 @@
     <meta name="description" content="Aplikasi Dashboard Anggota KSP Merah Putih - Digitalisasi Koperasi Desa">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    
     <style>
         body { background-color: #f8fafc; display: flex; justify-content: center; min-height: 100vh; font-family: sans-serif; overflow: hidden; }
         .app-container { width: 100%; max-width: 480px; background-color: #ffffff; position: relative; height: 100vh; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.1); }
@@ -301,42 +305,62 @@ document.addEventListener("DOMContentLoaded", function() {
     updateClock();
 
     // ==========================================
-    // 2. LOGIKA DATA ANGGOTA & SAPAAN PERSONAL
+    // 2. SUNTIKAN 2, 3, & 4: KEAMANAN & TARIK DATA SUPABASE
     // ==========================================
     const session = JSON.parse(localStorage.getItem("user_login"));
-    const fotoTerdaftar = localStorage.getItem("fotoWajah");
-    const genderTerdaftar = localStorage.getItem("genderAnggota");
-    const usernameTerdaftar = localStorage.getItem("usernameAnggota");
-
-    if (session) {
-        const jamSkrg = new Date().getHours();
-        let sapaanWaktu = "Selamat Malam";
-        if (jamSkrg >= 5 && jamSkrg < 11) sapaanWaktu = "Selamat Pagi";
-        else if (jamSkrg >= 11 && jamSkrg < 15) sapaanWaktu = "Selamat Siang";
-        else if (jamSkrg >= 15 && jamSkrg < 18) sapaanWaktu = "Selamat Sore";
-
-        let sapaanGender = (genderTerdaftar === "PEREMPUAN") ? "Ibu" : "Bpk";
-        
-        const elGreeting = document.getElementById("greeting");
-        const elDisplayName = document.getElementById("display-name");
-
-        if(elGreeting) elGreeting.innerText = `${sapaanWaktu} ${sapaanGender} ${usernameTerdaftar || 'Anggota'},`;
-        if(elDisplayName) elDisplayName.innerText = "selamat datang kembali yah..";
-
-        const imgProfile = document.getElementById("profile-photo");
-        const iconDefault = document.getElementById("default-icon");
-
-        if (fotoTerdaftar && imgProfile) {
-            imgProfile.src = fotoTerdaftar;
-            imgProfile.classList.remove("hidden");
-            if(iconDefault) iconDefault.classList.add("hidden");
-        }
-    } else {
+    
+    // SUNTIKAN 4: Proteksi Keamanan Berlapis (Tendang ke index jika tidak login)
+    if (!session || !session.isLoggedIn) {
         window.location.href = "index.html";
+        return; // Hentikan eksekusi kode selanjutnya
     }
 
+    // SUNTIKAN 2 & 3: Tarik data dari database dan ganti foto dinamis
+    async function fetchDatabaseAnggota() {
+        try {
+            // Memanggil supabaseClient yang sudah Bapak buat di config.js
+            const { data, error } = await supabaseClient
+                .from('berkas_anggota')
+                .select('*')
+                .eq('username', session.username)
+                .single();
+
+            if (data) {
+                const jamSkrg = new Date().getHours();
+                let sapaanWaktu = "Selamat Malam";
+                if (jamSkrg >= 5 && jamSkrg < 11) sapaanWaktu = "Selamat Pagi";
+                else if (jamSkrg >= 11 && jamSkrg < 15) sapaanWaktu = "Selamat Siang";
+                else if (jamSkrg >= 15 && jamSkrg < 18) sapaanWaktu = "Selamat Sore";
+
+                let sapaanGender = (data.jenis_kelamin === "PEREMPUAN") ? "Ibu" : "Bpk";
+                
+                // Ambil kata pertama dari nama lengkap
+                let namaPanggilan = data.nama_lengkap.split(' ')[0];
+                
+                const elGreeting = document.getElementById("greeting");
+                const elDisplayName = document.getElementById("display-name");
+
+                if(elGreeting) elGreeting.innerText = `${sapaanWaktu} ${sapaanGender} ${namaPanggilan},`;
+                if(elDisplayName) elDisplayName.innerText = "selamat datang kembali yah..";
+
+                const imgProfile = document.getElementById("profile-photo");
+                const iconDefault = document.getElementById("default-icon");
+
+                if (data.foto_selfie && imgProfile) {
+                    imgProfile.src = data.foto_selfie;
+                    imgProfile.classList.remove("hidden");
+                    if(iconDefault) iconDefault.classList.add("hidden");
+                }
+            }
+        } catch (err) {
+            console.error("Gagal menarik data dari database", err);
+        }
+    }
+    
+    fetchDatabaseAnggota();
+
     // ==========================================
-    // 3. FITUR GESER PROMO (CODINGAN LAMA BAPAK)
+    // 3. FITUR GESER PROMO (CODINGAN LAMA BAPAK - TIDAK DIUBAH)
     // ==========================================
     const slider = document.querySelector('.promo-slider');
     
@@ -377,7 +401,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // ==========================================
-// 4. FUNGSI TOMBOL (LOGOUT & AI)
+// 4. FUNGSI TOMBOL (LOGOUT & AI - TIDAK DIUBAH)
 // ==========================================
 function logout() {
     if(confirm("Pak/Bu, yakin ingin keluar aplikasi?")) {
