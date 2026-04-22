@@ -6,113 +6,240 @@
     <title>Pendaftaran Anggota - KSP Merah Putih</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
 
     <style>
-        body { background-color: #f1f5f9; font-family: sans-serif; margin: 0; }
-        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: white; margin: 0 auto; position: relative; }
+        body { 
+            background-color: #f1f5f9; 
+            font-family: sans-serif; 
+            margin: 0; 
+        }
+        .app-container { 
+            width: 100%; 
+            max-width: 480px; 
+            min-height: 100vh; 
+            background: white; 
+            margin: 0 auto; 
+            position: relative; 
+        }
         
-        .camera-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; flex-direction: column; }
-        #camera-stream { width: 100%; height: 100%; object-fit: cover; }
+        .camera-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: #000; 
+            z-index: 1000; 
+            display: none; 
+            flex-direction: column; 
+        }
+        #camera-stream { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
         
-        .overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-        .frame-face { width: 260px; height: 350px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; transition: all 0.5s; }
-        .frame-ktp { width: 320px; height: 200px; border: 4px dashed rgba(255,255,255,0.5); border-radius: 150px; display: none; transition: all 0.5s; }
+        .overlay { 
+            position: absolute; 
+            inset: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            pointer-events: none; 
+        }
+        .frame-face { 
+            width: 260px; 
+            height: 350px; 
+            border: 4px dashed rgba(255,255,255,0.5); 
+            border-radius: 150px; 
+            transition: all 0.5s; 
+        }
+        .frame-ktp { 
+            width: 320px; 
+            height: 200px; 
+            border: 4px dashed rgba(255,255,255,0.5); 
+            border-radius: 15px; 
+            display: none; 
+            transition: all 0.5s; 
+        }
         
-        .active-scan { border-color: #ef4444 !important; border-style: solid !important; box-shadow: 0 0 20px #ef4444; }
+        .active-scan { 
+            border-color: #ef4444 !important; 
+            border-style: solid !important; 
+            box-shadow: 0 0 20px #ef4444; 
+        }
         
-        .hint-box { position: absolute; top: 15%; background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .hint-box { 
+            position: absolute; 
+            top: 15%; 
+            background: rgba(0,0,0,0.8); 
+            color: white; 
+            padding: 12px 24px; 
+            border-radius: 30px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
         
         .hidden { display: none; }
-        input, select { transition: all 0.3s; }
-        input:focus { border-color: #4f46e5 !important; background: white !important; }
+        input, select, textarea { 
+            transition: all 0.3s; 
+        }
+        input:focus, select:focus, textarea:focus { 
+            border-color: #4f46e5 !important; 
+            background: white !important; 
+        }
         
-        .otp-input { letter-spacing: 0.5em; text-align: center; font-size: 1.5rem; }
+        .otp-input { 
+            letter-spacing: 0.5em; 
+            text-align: center; 
+            font-size: 1.5rem; 
+        }
+
+        /* Password Toggle Hover Effect */
+        .password-toggle {
+            transition: all 0.2s ease;
+        }
+        .password-toggle:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 50%;
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
 <body>
-
     <div class="app-container">
-        
+        <!-- STEP 1: FORM -->
         <div id="step-form" class="p-6">
             <div class="mb-8">
-                <h1 class="text-2xl font-black text-indigo-950 italic uppercase tracking-tighter">PENDAFTARAN ANGGOTA</h1>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Silahkan lengkapi data diri anda</p>
+                <h1 class="text-2xl font-black text-indigo-950 italic uppercase tracking-tighter">
+                    PENDAFTARAN ANGGOTA
+                </h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Silahkan lengkapi data diri anda
+                </p>
             </div>
 
             <form id="form-data" class="space-y-4">
+                <!-- Nama Lengkap -->
                 <div>
-                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nama Lengkap Sesuai KTP</label>
-                    <input type="text" id="nama_lengkap" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase">
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                        Nama Lengkap Sesuai KTP
+                    </label>
+                    <input type="text" id="nama_lengkap" required 
+                           class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase"
+                           placeholder="Nama Lengkap Anda">
                 </div> 
 
+                <!-- Email -->
                 <div>
-                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Email Aktif</label>
-                    <input type="email" id="reg_email" required placeholder="Contoh: abcdef@gmail.com" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">
+                        Email Aktif
+                    </label>
+                    <input type="email" id="reg_email" required 
+                           placeholder="Contoh: abcdef@gmail.com" 
+                           class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
                 </div>
 
+                <!-- Username -->
                 <div>
-                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Username</label>
-                    <input type="text" id="reg_user" required placeholder="Contoh: agit2026" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">
+                        Buat Username
+                    </label>
+                    <input type="text" id="reg_user" required 
+                           placeholder="Contoh: agit2026" 
+                           class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
                 </div>
 
+                <!-- Password Grid -->
                 <div class="grid grid-cols-2 gap-3">
+                    <!-- Password -->
                     <div>
-                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">
+                            Buat Password
+                        </label>
                         <div class="relative">
-                            <input type="password" id="reg_pass" required placeholder="****" 
+                            <input type="password" id="reg_pass" required 
+                                   placeholder="Minimal 6 karakter" 
                                    class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-12 text-sm font-bold outline-none">
-                            
-                            <div onclick="togglePassword('reg_pass', 'icon-pass1')" 
-                                 class="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center cursor-pointer z-50">
+                            <div class="password-toggle absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center cursor-pointer z-50"
+                                 onclick="togglePassword('reg_pass', 'icon-pass1')">
                                 <i class="fa fa-eye text-indigo-400 text-lg" id="icon-pass1"></i>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Confirm Password -->
                     <div>
-                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Ulangi Password</label>
+                        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">
+                            Ulangi Password
+                        </label>
                         <div class="relative">
-                            <input type="password" id="reg_pass_confirm" required placeholder="****" 
+                            <input type="password" id="reg_pass_confirm" required 
+                                   placeholder="Ulangi password" 
                                    class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-12 text-sm font-bold outline-none">
-                            
-                            <div onclick="togglePassword('reg_pass_confirm', 'icon-pass2')" 
-                                 class="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center cursor-pointer z-50">
+                            <div class="password-toggle absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center cursor-pointer z-50"
+                                 onclick="togglePassword('reg_pass_confirm', 'icon-pass2')">
                                 <i class="fa fa-eye text-indigo-400 text-lg" id="icon-pass2"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Tempat & Tanggal Lahir -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Tempat Lahir</label>
-                        <input type="text" id="tmp_lahir" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                            Tempat Lahir
+                        </label>
+                        <input type="text" id="tmp_lahir" required 
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
                     </div>
                     <div>
-                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Tgl Lahir</label>
-                        <input type="date" id="tgl_lahir" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                            Tgl Lahir
+                        </label>
+                        <input type="date" id="tgl_lahir" required 
+                               class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
                     </div>
                 </div>
 
+                <!-- Alamat -->
                 <div>
-                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Alamat Sesuai KTP</label>
-                    <textarea id="alamat" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" rows="2"></textarea>
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                        Alamat Sesuai KTP
+                    </label>
+                    <textarea id="alamat" required 
+                              class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
+                              rows="2" 
+                              placeholder="Alamat lengkap sesuai KTP"></textarea>
                 </div>
 
+                <!-- Gender & Status Kawin -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Jenis Kelamin</label>
-                        <select id="gender" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                            Jenis Kelamin
+                        </label>
+                        <select id="gender" required 
+                                class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                            <option value="">Pilih Jenis Kelamin</option>
                             <option value="LAKI-LAKI">LAKI-LAKI</option>
                             <option value="PEREMPUAN">PEREMPUAN</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Status Perkawinan</label>
-                        <select id="status_kawin" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                        <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                            Status Perkawinan
+                        </label>
+                        <select id="status_kawin" required 
+                                class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none appearance-none">
+                            <option value="">Pilih Status</option>
                             <option value="BELUM KAWIN">BELUM KAWIN</option>
                             <option value="KAWIN">KAWIN</option>
                             <option value="CERAI">CERAI</option>
@@ -120,19 +247,26 @@
                     </div>
                 </div>
 
+                <!-- Pekerjaan -->
                 <div>
-                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Pekerjaan</label>
-                    <input type="text" id="pekerjaan" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none">
+                    <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">
+                        Pekerjaan
+                    </label>
+                    <input type="text" id="pekerjaan" required 
+                           class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none"
+                           placeholder="Pekerjaan Anda saat ini">
                 </div>
 
-                <button type="button" onclick="startVerification()" class="w-full bg-indigo-600 text-white py-5 rounded-[25px] font-black italic shadow-xl mt-6 active:scale-95 transition-all">
+                <button type="button" onclick="startVerification()" 
+                        class="w-full bg-indigo-600 text-white py-5 rounded-[25px] font-black italic shadow-xl mt-6 active:scale-95 transition-all hover:bg-indigo-700">
                     LANJUT VERIFIKASI <i class="fa fa-arrow-right ml-2"></i>
                 </button>
             </form>
         </div>
 
+        <!-- STEP 2: CAMERA -->
         <div id="step-camera" class="camera-screen">
-            <video id="camera-stream" autoplay playsinline></video>
+            <video id="camera-stream" autoplay playsinline muted></video>
             <div class="overlay">
                 <div id="hint-text" class="hint-box">Posisikan wajah anda di tengah bidang</div>
                 <div id="main-frame" class="frame-face"></div>
@@ -140,33 +274,117 @@
             <canvas id="capture-canvas" class="hidden"></canvas>
         </div>
 
+        <!-- STEP 3: REVIEW FACE -->
         <div id="step-review-face" class="hidden p-6 text-center">
             <h2 class="font-black text-indigo-900 uppercase italic mb-6">Verifikasi Wajah Berhasil</h2>
             <img id="res-face" class="w-48 h-48 rounded-full object-cover mx-auto mb-6 border-4 border-indigo-600 p-1 shadow-2xl">
-            <p class="text-gray-500 font-bold text-xs uppercase mb-8 tracking-tighter">Tolong siapkan KTP anda untuk verifikasi tahap selanjutnya</p>
-            <button onclick="startKtpProcess()" class="w-full py-5 bg-indigo-600 text-white rounded-[25px] font-black uppercase italic shadow-lg">AMBIL FOTO KTP <i class="fa fa-id-card ml-2"></i></button>
+            <p class="text-gray-500 font-bold text-xs uppercase mb-8 tracking-tighter">
+                Tolong siapkan KTP anda untuk verifikasi tahap selanjutnya
+            </p>
+            <button onclick="startKtpProcess()" 
+                    class="w-full py-5 bg-indigo-600 text-white rounded-[25px] font-black uppercase italic shadow-lg hover:bg-indigo-700 active:scale-95">
+                AMBIL FOTO KTP <i class="fa fa-id-card ml-2"></i>
+            </button>
         </div>
 
+        <!-- STEP 4: FINAL REVIEW -->
         <div id="step-final" class="hidden p-6">
             <h2 class="font-black text-indigo-900 uppercase italic mb-6 text-center">Review Pendaftaran</h2>
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="text-center">
                     <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Foto Selfie</p>
-                    <img id="final-face" class="rounded-2xl border aspect-square object-cover">
+                    <img id="final-face" class="rounded-2xl border-4 border-indigo-200 aspect-square object-cover w-full shadow-lg">
                 </div>
                 <div class="text-center">
                     <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Foto KTP</p>
-                    <img id="final-ktp" class="rounded-2xl border aspect-square object-cover">
+                    <img id="final-ktp" class="rounded-2xl border-4 border-indigo-200 aspect-square object-cover w-full shadow-lg">
                 </div>
             </div>
             
             <div class="bg-indigo-50 p-4 rounded-2xl mb-8 flex items-start gap-3">
                 <input type="checkbox" id="agree" class="mt-1 w-5 h-5 accent-indigo-600">
-                <label for="agree" class="text-[10px] font-bold text-indigo-900 leading-tight uppercase">Saya ijinkan kedua foto ini sebagai syarat pendaftaran menjadi anggota KSP MERAH PUTIH.</label>
+                <label for="agree" class="text-[10px] font-bold text-indigo-900 leading-tight uppercase cursor-pointer">
+                    Saya ijinkan kedua foto ini sebagai syarat pendaftaran menjadi anggota KSP MERAH PUTIH.
+                </label>
             </div>
 
-            <button id="btn-final" onclick="simpanKeDatabase()" class="w-full py-5 bg-red-600 text-white rounded-[25px] font-black uppercase italic shadow-2xl active:scale-95 transition-all">DAFTAR SEKARANG</button>
+            <button id="btn-final" onclick="simpanKeDatabase()" 
+                    class="w-full py-5 bg-red-600 text-white rounded-[25px] font-black uppercase italic shadow-2xl active:scale-95 transition-all hover:bg-red-700">
+                DAFTAR SEKARANG
+            </button>
         </div>
 
-        <div id="otpModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] items-center justify-center p-4 hidden">
-            <div class="bg-white w-full max-w-[340px] rounded-[35px
+        <!-- OTP MODAL -->
+        <div id="otpModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[2000] hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-[340px] rounded-[35px] overflow-hidden shadow-2xl p-6 text-center border-4 border-indigo-50 relative animate-in slide-in-from-bottom-4 duration-300">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa fa-envelope-open-text text-green-600 text-2xl animate-bounce"></i>
+                </div>
+                
+                <h2 class="font-black text-gray-800 text-lg uppercase italic mb-1">Cek Email Anda</h2>
+                <p class="text-[10px] font-bold text-gray-500 mb-6">
+                    Kami mengirimkan 6 digit kode OTP ke <br> 
+                    <span id="display-email" class="text-indigo-600 font-black"></span>
+                </p>
+
+                <div>
+                    <input type="number" id="otp-kode" 
+                           oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);"
+                           placeholder="------" 
+                           class="otp-input w-full bg-slate-50 border-2 border-indigo-100 rounded-2xl py-4 font-black text-indigo-700 outline-none focus:border-indigo-500 transition-all shadow-inner">
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <button id="btn-verifikasi" onclick="verifikasiOTP()" 
+                            class="w-full py-4 bg-green-500 text-white rounded-2xl text-[11px] font-black shadow-lg shadow-green-200 uppercase tracking-widest active:scale-95 transition-all hover:bg-green-600">
+                        Verifikasi Kode
+                    </button>
+                    <button onclick="batalOTP()" 
+                            class="w-full py-3 text-gray-400 text-[9px] font-black uppercase tracking-widest hover:text-gray-600 transition-colors">
+                        Batal / Ganti Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GLOBAL VARIABLES
+        const supabase = supabaseClient;
+        let emailTerdaftar = "";
+        let stream = null;
+        let currentMode = 'face';
+        let tempFace = null;
+        let tempKtp = null;
+
+        // 🔑 FUNGSI INTIP PASSWORD (Sudah Diperbaiki & Dioptimasi)
+        function togglePassword(inputId, iconId) {
+            try {
+                const passInput = document.getElementById(inputId);
+                const toggleIcon = document.getElementById(iconId);
+                
+                if (!passInput || !toggleIcon) {
+                    console.error('Element tidak ditemukan:', inputId, iconId);
+                    return;
+                }
+                
+                if (passInput.type === 'password') {
+                    passInput.type = 'text';
+                    toggleIcon.className = 'fa fa-eye-slash text-indigo-400 text-lg';
+                } else {
+                    passInput.type = 'password';
+                    toggleIcon.className = 'fa fa-eye text-indigo-400 text-lg';
+                }
+            } catch (error) {
+                console.error('Error toggle password:', error);
+            }
+        }
+
+        // VALIDASI FORM LENGKAP
+        async function startVerification() {
+            // Ambil semua data form
+            const formData = {
+                nama: document.getElementById('nama_lengkap').value.trim(),
+                email: document.getElementById('reg_email').value.trim(),
+                username: document.getElementById('reg_user').value.trim(),
+                password: document
