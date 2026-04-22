@@ -93,40 +93,40 @@
 
 <script>
 // --- KONFIGURASI SUPABASE ---
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://dhtezbjltciwqytgkbma.supabase.co';
+const supabaseKey = 'sb_publishable_fe28rSS0YMz9Ld2OLJGi8w_jDV7uswE'; 
 const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let currentStream = null;
 let ktpBase64 = null;
 let faceBase64 = null;
 
-// 1. FUNGSI AKTIFKAN KAMERA (Berdasarkan Perintah)
+// 1. AKTIFKAN KAMERA (Berdasarkan Perintah)
 async function initCamera(type, mode) {
-    // Matikan stream sebelumnya jika ada
     if (currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
     }
 
-    const box = type === 'ktp' ? document.getElementById('boxKTP') : document.getElementById('boxFace');
-    const video = type === 'ktp' ? document.getElementById('videoKTP') : document.getElementById('videoFace');
-    const btn = type === 'ktp' ? document.getElementById('btnPrepareKTP') : document.getElementById('btnPrepareSelfie');
+    const boxId = type === 'ktp' ? 'boxKTP' : 'boxFace';
+    const videoId = type === 'ktp' ? 'videoKTP' : 'videoFace';
+    const btnId = type === 'ktp' ? 'btnPrepareKTP' : 'btnPrepareSelfie';
 
     try {
         currentStream = await navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: mode } 
         });
-        video.srcObject = currentStream;
-        box.style.display = 'block';
-        btn.classList.add('hidden'); // Sembunyikan tombol "Siapkan"
+        document.getElementById(videoId).srcObject = currentStream;
+        document.getElementById(boxId).style.display = 'block';
+        document.getElementById(btnId).classList.add('hidden');
     } catch (err) {
-        alert("Gagal akses kamera: " + err);
+        alert("Gagal akses kamera: " + err.message);
     }
 }
 
-// 2. FUNGSI AMBIL FOTO
+// 2. AMBIL FOTO
 async function takeSnapshot(type) {
-    const video = document.getElementById(type === 'ktp' ? 'videoKTP' : 'videoFace');
+    const videoId = type === 'ktp' ? 'videoKTP' : 'videoFace';
+    const video = document.getElementById(videoId);
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -141,7 +141,10 @@ async function takeSnapshot(type) {
         document.getElementById('resKTP').src = dataUrl;
         document.getElementById('resKTP').classList.remove('hidden');
         document.getElementById('boxKTP').style.display = 'none';
-        extractNIK(dataUrl); // Jalankan OCR Tersembunyi
+        
+        // Jalankan OCR Ambil NIK secara tersembunyi
+        tungguProses("Membaca NIK KTP...");
+        extractNIK(dataUrl);
     } else {
         faceBase64 = dataUrl;
         document.getElementById('resFace').src = dataUrl;
@@ -149,26 +152,33 @@ async function takeSnapshot(type) {
         document.getElementById('boxFace').style.display = 'none';
     }
 
-    // Matikan kamera setelah ambil foto
-    currentStream.getTracks().forEach(track => track.stop());
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
 }
 
-// 3. FUNGSI OCR TERSEMBUNYI (Ambil NIK)
+// 3. FUNGSI OCR (NIK)
 async function extractNIK(image) {
-    console.log("Memulai ekstraksi NIK...");
-    Tesseract.recognize(image, 'ind').then(({ data: { text } }) => {
-        // Regex mencari 16 digit angka (format NIK)
-        const match = text.match(/\d{16}/);
+    try {
+        const result = await Tesseract.recognize(image, 'ind');
+        const text = result.data.text;
+        const match = text.match(/\d{16}/); // Mencari 16 digit angka
         if (match) {
             document.getElementById('nik_hidden').value = match[0];
-            console.log("NIK Terdeteksi: " + match[0]);
+            console.log("NIK ditemukan: " + match[0]);
         }
-    });
+    } catch (e) {
+        console.error("Gagal membaca NIK");
+    } finally {
+        tutupLoader();
+    }
 }
 
-// 4. SUBMIT KE SUPABASE
+// 4. KIRIM SEMUA DATA KE SUPABASE
 async function submitAllData() {
     const loader = document.getElementById('loader');
+    
+    // Ambil semua value input
     const data = {
         nama_lengkap: document.getElementById('nama').value,
         username: document.getElementById('username').value,
@@ -179,30 +189,41 @@ async function submitAllData() {
         agama: document.getElementById('agama').value,
         jenis_kelamin: document.getElementById('gender').value,
         pekerjaan: document.getElementById('pekerjaan').value,
-        nik: document.getElementById('nik_hidden').value,
+        nik: document.getElementById('nik_hidden').value || "Tidak Terdeteksi",
         foto_ktp: ktpBase64,
-        foto_selfie: faceBase64,
-        created_at: new Date()
+        foto_selfie: faceBase64
     };
 
+    // Validasi Dasar
     if (!data.nama_lengkap || !ktpBase64 || !faceBase64) {
-        return alert("Mohon lengkapi form dan foto!");
+        return alert("Lengkapi Form dan Foto terlebih dahulu!");
     }
 
-    loader.style.display = 'flex';
+    tungguProses("Menyimpan ke Database Berkas Anggota...");
 
+    // Insert ke tabel berkas_anggota
     const { error } = await _supabase
-        .from('Berkas_Anggota')
+        .from('berkas_anggota')
         .insert([data]);
 
-    loader.style.display = 'none';
+    tutupLoader();
 
     if (error) {
-        alert("Gagal simpan ke Supabase: " + error.message);
+        alert("Gagal: " + error.message);
+        console.error(error);
     } else {
-        alert("Data Berhasil Tersimpan ke Database Berkas_Anggota!");
-        location.reload();
+        alert("BERHASIL! Data Anda sudah tersimpan di KSP Merah Putih.");
+        location.reload(); // Refresh halaman
     }
+}
+
+function tungguProses(pesan) {
+    document.getElementById('loader').style.display = 'flex';
+    document.getElementById('loader-text').innerText = pesan;
+}
+
+function tutupLoader() {
+    document.getElementById('loader').style.display = 'none';
 }
 
 // Toggle Password
