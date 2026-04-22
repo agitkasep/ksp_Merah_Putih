@@ -97,119 +97,113 @@
         </div>
     </div>
 
-    <script>
-        // UPDATE WAKTU
-        function updateTime() {
-            const now = new Date();
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} April`;
-            document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
-        }
-        setInterval(updateTime, 1000); updateTime();
-
-        // MATA PASSWORD
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passInput = document.getElementById('login-password');
-            const icon = this.querySelector('i');
-            if (passInput.type === 'password') {
-                passInput.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                passInput.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        });
-
-        // CAPTCHA
-        let captchaResult = 0;
-        function openLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-            const n1 = Math.floor(Math.random() * 9) + 1;
-            const n2 = Math.floor(Math.random() * 9) + 1;
-            captchaResult = n1 + n2;
-            document.getElementById('captcha-question').innerText = `${n1} + ${n2} =`;
-            document.getElementById('captcha-answer').value = '';
-            checkCaptcha();
-        }
-        function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
-        document.getElementById('captcha-answer').addEventListener('input', checkCaptcha);
-      function checkCaptcha() {
-    const inputVal = document.getElementById('captcha-answer').value;
-    const ans = parseInt(inputVal);
-    const btn = document.getElementById('btn-login');
-    const icon = document.getElementById('captcha-status');
-
-    if (ans === captchaResult) {
-        // Jika jawaban benar: Munculkan centang dan ubah tombol jadi biru
-        if(icon) icon.classList.remove('hidden');
-        btn.disabled = false;
-        btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-        btn.classList.add('bg-indigo-600', 'shadow-lg');
-    } else {
-        // Jika jawaban salah/kosong: Sembunyikan centang dan matikan tombol
-        if(icon) icon.classList.add('hidden');
-        btn.disabled = true;
-        btn.classList.remove('bg-indigo-600', 'shadow-lg');
-        btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+   <script>
+    // 1. UPDATE WAKTU LOKASI
+    function updateTime() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        document.getElementById('current-day').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+        document.getElementById('current-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
     }
-}
+    setInterval(updateTime, 1000); updateTime();
 
-        // ==========================================
-        // FUNGSI LOGIN DENGAN DEBUGGING SUPER LENGKAP
-        // ==========================================
-      // ==========================================
-// FUNGSI LOGIN YANG SUDAH DIPERBAIKI
-// ==========================================
-async function validaSiLogin() {
-    const user = document.getElementById('login-username').value.trim();
-    const pass = document.getElementById('login-password').value.trim();
-    const btn = document.getElementById('btn-login');
-
-    if (!user || !pass) {
-        alert("Silahkan isi Username dan Password!");
-        return;
-    }
-
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
-    btn.disabled = true;
-
-    try {
-        // PENTING: Cek apakah config.js sudah dimuat dengan benar
-        if (typeof supabaseClient === 'undefined') {
-            throw new Error("File config.js belum terbaca atau variabel 'supabaseClient' tidak ditemukan.");
-        }
-
-        // PENTING: Menggunakan 'supabaseClient', BUKAN 'supabase'
-        const { data, error } = await supabaseClient
-            .from('berkas_anggota')
-            .select('*')
-            .eq('username', user)
-            .eq('password', pass)
-            .single();
-
-        if (error) {
-            console.error("Detail Error Supabase:", error);
-            alert("LOGIN GAGAL: Username atau Password salah.");
-            generateCaptcha(); // Reset captcha
-            btn.innerHTML = 'Masuk Sekarang';
-        } else if (!data) {
-            alert("Username atau Password tidak terdaftar!");
-            generateCaptcha();
-            btn.innerHTML = 'Masuk Sekarang';
+    // 2. MATA PASSWORD
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const passInput = document.getElementById('login-password');
+        const icon = this.querySelector('i');
+        if (passInput.type === 'password') {
+            passInput.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash');
         } else {
-            // JIKA SUKSES
-            localStorage.setItem("user_login", JSON.stringify({
-                username: user, 
-                nama: data.nama_lengkap, 
-                isLoggedIn: true
-            }));
-            alert(`✅ Login Sukses!\nSelamat datang, ${data.nama_lengkap}!`);
-            window.location.href = "anggota.html";
+            passInput.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye');
         }
-    } catch (err) {
-        console.error("Error Sistem:", err);
-        alert("KESALAHAN SISTEM:\n" + err.message);
-        btn.innerHTML = 'Masuk Sekarang';
+    });
+
+    // 3. CAPTCHA LENGKAP
+    let captchaResult = 0;
+    
+    function generateCaptcha() {
+        const n1 = Math.floor(Math.random() * 9) + 1;
+        const n2 = Math.floor(Math.random() * 9) + 1;
+        captchaResult = n1 + n2;
+        document.getElementById('captcha-question').innerText = `${n1} + ${n2} =`;
+        document.getElementById('captcha-answer').value = '';
+        checkCaptcha(); // Panggil pengecekan awal
     }
-}
-    </script>
+
+    function openLogin() {
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('loginModal').classList.remove('hidden');
+        generateCaptcha();
+    }
+    
+    function closeLogin() { 
+        document.getElementById('loginModal').style.display = 'none'; 
+    }
+
+    function checkCaptcha() {
+        const ans = parseInt(document.getElementById('captcha-answer').value);
+        const btn = document.getElementById('btn-login');
+        const icon = document.getElementById('captcha-status');
+
+        if (ans === captchaResult) {
+            if(icon) icon.classList.remove('hidden');
+            btn.disabled = false; 
+            btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+            btn.classList.add('bg-indigo-600');
+        } else {
+            if(icon) icon.classList.add('hidden');
+            btn.disabled = true; 
+            btn.classList.remove('bg-indigo-600');
+            btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+        }
+    }
+
+    // 4. FUNGSI LOGIN DATABASE
+    async function validaSiLogin() {
+        const user = document.getElementById('login-username').value.trim();
+        const pass = document.getElementById('login-password').value.trim();
+        const btn = document.getElementById('btn-login');
+
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> PROSES...';
+        btn.disabled = true;
+
+        try {
+            if (typeof supabaseClient === 'undefined') {
+                throw new Error("Koneksi config.js belum siap.");
+            }
+
+            const { data, error } = await supabaseClient
+                .from('berkas_anggota')
+                .select('*')
+                .eq('username', user)
+                .eq('password', pass)
+                .single();
+
+            if (error) {
+                alert("GAGAL LOGIN: Cek pengaturan RLS 'SELECT' di Supabase Anda.");
+                console.error(error);
+                btn.innerHTML = 'Masuk Sekarang';
+                generateCaptcha(); 
+            } else if (!data) {
+                alert("Username atau Password salah!");
+                btn.innerHTML = 'Masuk Sekarang';
+                generateCaptcha();
+            } else {
+                localStorage.setItem("user_login", JSON.stringify({
+                    username: data.username,
+                    nama: data.nama_lengkap,
+                    isLoggedIn: true
+                }));
+                alert("LOGIN BERHASIL!\nSelamat datang, " + data.nama_lengkap);
+                window.location.href = "anggota.html";
+            }
+        } catch (err) {
+            alert("KESALAHAN SISTEM:\n" + err.message);
+            btn.innerHTML = 'Masuk Sekarang';
+            generateCaptcha();
+        }
+    }
+</script>
 </body>
 </html>
