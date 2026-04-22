@@ -26,7 +26,7 @@
 </div>
 
 <div class="container space-y-4">
-    <h1 class="text-2xl font-bold text-center text-indigo-700">Berkas Anggota</h1>
+    <h1 class="text-2xl font-bold text-center text-indigo-700">Berkas_Anggota</h1>
     
     <div class="space-y-3">
         <label class="block text-sm font-semibold">Data Pribadi</label>
@@ -192,7 +192,7 @@ async function submitAllData() {
     loader.style.display = 'flex';
 
     const { error } = await _supabase
-        .from('Berkas Anggota')
+        .from('Berkas_Anggota')
         .insert([data]);
 
     loader.style.display = 'none';
@@ -200,7 +200,7 @@ async function submitAllData() {
     if (error) {
         alert("Gagal simpan ke Supabase: " + error.message);
     } else {
-        alert("Data Berhasil Tersimpan ke Database Berkas Anggota!");
+        alert("Data Berhasil Tersimpan ke Database Berkas_Anggota!");
         location.reload();
     }
 }
