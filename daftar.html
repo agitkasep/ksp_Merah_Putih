@@ -6,7 +6,220 @@
 <title>Daftar - KSP Merah Putih</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflar<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar - KSP Merah Putih</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body { background:#f1f5f9; font-family:sans-serif; }
+.container { max-width:480px; margin:auto; background:white; min-height:100vh; padding:20px; }
+
+.camera-box {
+    width:100%;
+    height:220px;
+    background:#000;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+}
+
+video { width:100%; height:100%; object-fit:cover; }
+
+.overlay {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:3px dashed rgba(255,255,255,0.6);
+    border-radius:16px;
+    color:white;
+    font-weight:bold;
+    text-align:center;
+    padding:10px;
+}
+
+.preview {
+    width:100%;
+    border-radius:12px;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container space-y-5">
+
+<h1 class="text-xl font-bold text-center">Pendaftaran Anggota</h1>
+
+<input type="text" id="nama" placeholder="Nama lengkap" class="w-full p-3 border rounded-xl">
+<input type="email" id="email" placeholder="Email" class="w-full p-3 border rounded-xl">
+
+<!-- PASSWORD -->
+<div class="relative">
+    <input type="password" id="password" placeholder="Password"
+        class="w-full p-3 border rounded-xl pr-12">
+
+    <button type="button" id="togglePass"
+        class="absolute right-3 top-1/2 -translate-y-1/2 z-50">
+        <i class="fas fa-eye"></i>
+    </button>
+</div>
+
+<!-- KTP -->
+<div>
+    <p class="font-bold">Foto KTP</p>
+    <div class="camera-box">
+        <video id="videoKTP" autoplay playsinline></video>
+        <div class="overlay">Posisikan KTP di dalam frame</div>
+    </div>
+    <button onclick="capture('ktp')" class="w-full mt-2 bg-blue-500 text-white p-2 rounded-xl">Ambil KTP</button>
+    <img id="previewKTP" class="preview hidden">
+</div>
+
+<!-- WAJAH -->
+<div>
+    <p class="font-bold">Verifikasi Wajah</p>
+    <div class="camera-box">
+        <video id="videoFace" autoplay playsinline></video>
+        <div class="overlay">Hadapkan wajah Anda</div>
+    </div>
+    <button onclick="capture('face')" class="w-full mt-2 bg-green-500 text-white p-2 rounded-xl">Ambil Selfie</button>
+    <img id="previewFace" class="preview hidden">
+</div>
+
+<button onclick="submitData()" class="w-full bg-indigo-600 text-white p-3 rounded-xl font-bold">
+Daftar
+</button>
+
+</div>
+
+<script>
+let ktpImage = null;
+let faceImage = null;
+
+// START CAMERA
+async function startCamera() {
+    try {
+        const stream1 = await navigator.mediaDevices.getUserMedia({ video:true });
+        document.getElementById('videoKTP').srcObject = stream1;
+
+        const stream2 = await navigator.mediaDevices.getUserMedia({ video:true });
+        document.getElementById('videoFace').srcObject = stream2;
+    } catch(e) {
+        alert("Kamera tidak diizinkan!");
+    }
+}
+startCamera();
+
+// CAPTURE
+function capture(type) {
+    const video = document.getElementById(type === 'ktp' ? 'videoKTP' : 'videoFace');
+    const canvas = document.createElement('canvas');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+
+    const img = canvas.toDataURL('image/jpeg');
+
+    if(type === 'ktp') {
+        ktpImage = img;
+        const el = document.getElementById('previewKTP');
+        el.src = img;
+        el.classList.remove('hidden');
+    } else {
+        faceImage = img;
+        const el = document.getElementById('previewFace');
+        el.src = img;
+        el.classList.remove('hidden');
+    }
+}
+
+// PASSWORD TOGGLE
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("togglePass");
+    const input = document.getElementById("password");
+    const icon = toggle.querySelector("i");
+
+    toggle.addEventListener("click", () => {
+        if(input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("fa-eye","fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.replace("fa-eye-slash","fa-eye");
+        }
+    });
+});
+
+// OCR + FACE MATCH (CALL BACKEND)
+async function verifyData() {
+    const res = await fetch("http://localhost:3000/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            ktp: ktpImage,
+            face: faceImage
+        })
+    });
+
+    return await res.json();
+}
+
+// SUBMIT
+async function submitData() {
+    const nama = document.getElementById('nama').value;
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+
+    if(!nama || !email || !pass) {
+        alert("Lengkapi data!");
+        return;
+    }
+
+    if(pass.length < 6) {
+        alert("Password minimal 6 karakter!");
+        return;
+    }
+
+    if(!ktpImage || !faceImage) {
+        alert("Foto belum lengkap!");
+        return;
+    }
+
+    alert("Memproses verifikasi...");
+
+    try {
+        const result = await verifyData();
+
+        if(result.nik) {
+            alert("NIK: " + result.nik);
+        }
+
+        if(result.faceMatch) {
+            alert("Wajah cocok ✅");
+        } else {
+            alert("Wajah tidak cocok ❌");
+        }
+
+    } catch(e) {
+        alert("Gagal koneksi ke server!");
+    }
+}
+</script>
+
+</body>
+</html>e.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 body { background:#f1f5f9; font-family:sans-serif; }
