@@ -48,8 +48,8 @@
                     <label class="text-[9px] font-black text-slate-400 uppercase ml-2 mb-1 block">Nama Lengkap Sesuai KTP</label>
                     <input type="text" id="nama_lengkap" required class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl p-4 text-sm font-bold outline-none uppercase">
                 </div> <div>
-                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Email Aktif (Ganti Username)</label>
-                    <input type="email" id="reg_email" required placeholder="Contoh: agit@gmail.com" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+                    <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Email Aktif</label>
+                    <input type="email" id="reg_email" required placeholder="Contoh: abcdef@gmail.com" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -58,8 +58,31 @@
         <input type="text" id="reg_user" required placeholder="Contoh: agit2026" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
     </div>
     <div>
+       <div class="grid grid-cols-2 gap-3">
+    <div>
         <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Buat Password</label>
-        <input type="password" id="reg_pass" required placeholder="****" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 text-sm font-bold outline-none">
+        <div class="relative">
+            <input type="password" id="reg_pass" required placeholder="****" 
+                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+            
+            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
+               id="icon-pass1" 
+               onclick="togglePassword('reg_pass', 'icon-pass1')">
+            </i>
+        </div>
+    </div>
+
+    <div>
+        <label class="text-[9px] font-black text-indigo-600 uppercase ml-2 mb-1 block">Ulangi Password</label>
+        <div class="relative">
+            <input type="password" id="reg_pass_confirm" required placeholder="****" 
+                   class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl p-4 pr-10 text-sm font-bold outline-none">
+            
+            <i class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 cursor-pointer text-lg" 
+               id="icon-pass2" 
+               onclick="togglePassword('reg_pass_confirm', 'icon-pass2')">
+            </i>
+        </div>
     </div>
 </div>
 
@@ -152,6 +175,25 @@
         let currentMode = 'face'; 
         let tempFace, tempKtp;
 
+        function togglePassword(inputId, iconId) {
+    const passInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    
+    if (passInput.type === 'password') {
+        // Ubah jadi teks agar kelihatan
+        passInput.type = 'text'; 
+        // Ganti gambar ikon jadi mata dicoret
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash'); 
+    } else {
+        // Kembalikan jadi password agar jadi titik-titik
+        passInput.type = 'password'; 
+        // Kembalikan gambar ikon jadi mata biasa
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye'); 
+    }
+}
+       
         // Fungsi Memulai Verifikasi (Wajah) - DITAMBAHKAN .trim()
         async function startVerification() {
             const nama = document.getElementById('nama_lengkap').value.trim();
