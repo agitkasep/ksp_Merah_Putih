@@ -205,19 +205,32 @@
         let tempFace, tempKtp;
 
         // FUNGSI INTIP PASSWORD
-        function togglePassword(inputId, iconId) {
+          function togglePassword(inputId, iconId) {
+
             const passInput = document.getElementById(inputId);
+
             const toggleIcon = document.getElementById(iconId);
+
             
+
             if (passInput.type === 'password') {
+
                 passInput.type = 'text'; 
+
                 toggleIcon.classList.remove('fa-eye');
+
                 toggleIcon.classList.add('fa-eye-slash'); 
+
             } else {
+
                 passInput.type = 'password'; 
+
                 toggleIcon.classList.remove('fa-eye-slash');
+
                 toggleIcon.classList.add('fa-eye'); 
+
             }
+
         }
 
         async function startVerification() {
