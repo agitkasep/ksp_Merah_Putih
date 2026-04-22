@@ -78,11 +78,16 @@
                         <div id="toggle-password" class="absolute right-4 cursor-pointer text-gray-400"><i class="fa fa-eye"></i></div>
                     </div>
 
-                    <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 flex justify-between items-center px-4">
-                        <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">? + ? =</span>
-                        <input type="number" id="captcha-answer" placeholder="?" class="w-16 p-2 bg-white border-2 rounded-xl text-center font-bold outline-none">
-                    </div>
-                </div>
+                  <div class="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+    <label class="text-[9px] font-black text-indigo-400 uppercase mb-2 block text-center">Verifikasi Keamanan</label>
+    <div class="flex items-center justify-between px-4">
+        <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">... + ... =</span>
+        <div class="relative w-20">
+            <input type="number" id="captcha-answer" oninput="checkCaptcha()" placeholder="?" class="w-full p-2 bg-white border-2 border-indigo-200 rounded-xl text-center font-bold text-gray-700 outline-none focus:border-indigo-500">
+            <i id="captcha-status" class="fa fa-check-circle absolute -right-6 top-3 text-green-500 hidden"></i>
+        </div>
+    </div>
+</div>
 
                 <div class="px-8 pb-8">
                     <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-gray-300 text-white rounded-2xl text-[12px] font-black uppercase" disabled>Masuk Sekarang</button>
@@ -126,15 +131,26 @@
         }
         function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
         document.getElementById('captcha-answer').addEventListener('input', checkCaptcha);
-        function checkCaptcha() {
-            const ans = parseInt(document.getElementById('captcha-answer').value);
-            const btn = document.getElementById('btn-login');
-            if (ans === captchaResult) {
-                btn.disabled = false; btn.classList.replace('bg-gray-300', 'bg-indigo-600');
-            } else {
-                btn.disabled = true; btn.classList.replace('bg-indigo-600', 'bg-gray-300');
-            }
-        }
+      function checkCaptcha() {
+    const inputVal = document.getElementById('captcha-answer').value;
+    const ans = parseInt(inputVal);
+    const btn = document.getElementById('btn-login');
+    const icon = document.getElementById('captcha-status');
+
+    if (ans === captchaResult) {
+        // Jika jawaban benar: Munculkan centang dan ubah tombol jadi biru
+        if(icon) icon.classList.remove('hidden');
+        btn.disabled = false;
+        btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+        btn.classList.add('bg-indigo-600', 'shadow-lg');
+    } else {
+        // Jika jawaban salah/kosong: Sembunyikan centang dan matikan tombol
+        if(icon) icon.classList.add('hidden');
+        btn.disabled = true;
+        btn.classList.remove('bg-indigo-600', 'shadow-lg');
+        btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+    }
+}
 
         // ==========================================
         // FUNGSI LOGIN DENGAN DEBUGGING SUPER LENGKAP
