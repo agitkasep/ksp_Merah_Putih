@@ -33,7 +33,6 @@
 <body>
 
     <div class="app-container">
-        
         <div class="p-4 bg-white flex justify-between items-center z-50">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg border overflow-hidden">
@@ -86,12 +85,18 @@
 
             <div class="px-5 mb-2 flex justify-between items-end">
                 <h2 class="text-[12px] font-black text-gray-800 uppercase italic">Produk Promo 🔥</h2>
+                <span class="text-[8px] font-black text-indigo-600 border-b border-indigo-200 cursor-pointer">SEMUA</span>
             </div>
             <div class="promo-wrapper">
-                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm">
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
                     <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" class="w-full h-full object-cover"></div>
                     <p class="text-[10px] font-black text-gray-700 uppercase">Smart Watch X1</p>
                     <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 150rb</p>
+                </div>
+                <div class="flex-shrink-0 bg-white p-3 rounded-3xl w-[170px] border shadow-sm cursor-pointer">
+                    <div class="h-28 bg-gray-100 rounded-2xl mb-2 overflow-hidden"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" class="w-full h-full object-cover"></div>
+                    <p class="text-[10px] font-black text-gray-700 uppercase">Bass Headset</p>
+                    <p class="text-[12px] font-black text-indigo-600 uppercase">Rp 85rb</p>
                 </div>
             </div>
         </div>
@@ -112,11 +117,11 @@
             </div>
         </div>
 
-        <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden" style="display: none;">
+        <div id="loginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] items-center justify-center p-4 hidden">
             <div class="bg-white w-full max-w-[340px] rounded-[40px] overflow-hidden shadow-2xl border border-white/20">
                 <div class="bg-indigo-600 p-6 text-center">
                     <h2 class="text-white font-black text-xl uppercase italic tracking-wider">L O G I N</h2>
-                    <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Gunakan Username & Password</p>
+                    <p class="text-indigo-200 text-[9px] font-bold uppercase mt-1">Silahkan masukkan kredensial anda</p>
                 </div>
 
                 <div class="p-8 space-y-4">
@@ -130,9 +135,12 @@
 
                     <div>
                         <label class="text-[9px] font-black text-gray-400 uppercase ml-2">Password</label>
-                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500">
+                        <div class="flex items-center bg-gray-50 border-2 border-gray-100 rounded-2xl px-4 py-3 focus-within:border-indigo-500 relative">
                             <i class="fa fa-lock text-gray-300 mr-3"></i>
-                            <input type="password" id="login-password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700">
+                            <input type="password" id="login-password" placeholder="********" class="bg-transparent w-full text-[11px] font-bold outline-none text-gray-700 pr-10">
+                            <div id="toggle-password" class="absolute right-4 cursor-pointer text-gray-400 hover:text-indigo-600 transition">
+                                <i class="fa fa-eye"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -140,9 +148,7 @@
                         <label class="text-[9px] font-black text-indigo-400 uppercase mb-2 block text-center">Verifikasi Manusia</label>
                         <div class="flex items-center justify-between px-2">
                             <span id="captcha-question" class="text-sm font-black text-indigo-700 italic">... + ... =</span>
-                            <div class="relative w-20">
-                                <input type="number" id="captcha-answer" placeholder="?" class="w-full p-2 bg-white border-2 border-indigo-200 rounded-xl text-center font-bold text-gray-700 outline-none">
-                            </div>
+                            <input type="number" id="captcha-answer" placeholder="?" class="w-16 p-2 bg-white border-2 border-indigo-200 rounded-xl text-center font-bold text-gray-700 outline-none">
                         </div>
                     </div>
 
@@ -160,14 +166,14 @@
 
                 <div class="px-8 pb-8">
                     <button id="btn-login" onclick="validaSiLogin()" class="w-full py-4 bg-gray-300 text-white rounded-2xl text-[12px] font-black uppercase cursor-not-allowed" disabled>Masuk Sekarang</button>
-                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest hover:text-gray-600 text-center">Batal</button>
+                    <button onclick="closeLogin()" class="w-full text-[10px] font-black text-gray-400 uppercase mt-4 tracking-widest text-center">Batal</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // LOGIKA WAKTU & LOKASI
+        // INISIALISASI JAM & LOKASI
         function updateTime() {
             const now = new Date();
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -183,7 +189,7 @@
                     try {
                         const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
                         const data = await res.json();
-                        const city = data.address.city || data.address.town || data.address.village || "Jakarta";
+                        const city = data.address.city || data.address.town || data.address.village || "Lokasi Aktif";
                         document.getElementById('user-location').innerHTML = `<i class="fa fa-location-dot"></i> ${city}, Indonesia`;
                     } catch { document.getElementById('user-location').innerHTML = `<i class="fa fa-location-dot"></i> Lokasi Aktif`; }
                 });
@@ -191,21 +197,37 @@
         }
         getLocation();
 
+        // LOGIKA MATA INTIP PASSWORD
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('login-password');
+            const icon = this.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
         // LOGIKA MODAL & CAPTCHA
         let captchaResult = 0;
-        function openLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-            generateCaptcha();
-        }
-        function closeLogin() { document.getElementById('loginModal').style.display = 'none'; }
+        const modalLogin = document.getElementById('loginModal');
 
-        function generateCaptcha() {
+        function openLogin() {
+            modalLogin.style.display = 'flex';
+            modalLogin.classList.remove('hidden');
             const n1 = Math.floor(Math.random() * 9) + 1;
             const n2 = Math.floor(Math.random() * 9) + 1;
             captchaResult = n1 + n2;
             document.getElementById('captcha-question').innerText = `${n1} + ${n2} =`;
             document.getElementById('captcha-answer').value = '';
             checkCaptcha();
+        }
+
+        function closeLogin() { 
+            modalLogin.style.display = 'none'; 
+            modalLogin.classList.add('hidden');
         }
 
         document.getElementById('captcha-answer').addEventListener('input', checkCaptcha);
@@ -216,7 +238,6 @@
             if (ans === captchaResult) {
                 btn.disabled = false;
                 btn.classList.replace('bg-gray-300', 'bg-indigo-600');
-                btn.classList.add('btn-active-effect');
                 btn.classList.remove('cursor-not-allowed');
             } else {
                 btn.disabled = true;
@@ -225,6 +246,7 @@
             }
         }
 
+        // LOGIN KE SUPABASE
         async function validaSiLogin() {
             const user = document.getElementById('login-username').value.trim();
             const pass = document.getElementById('login-password').value.trim();
@@ -233,7 +255,7 @@
 
             if(!user || !pass) return alert("Isi Username dan Password!");
 
-            btn.innerHTML = 'VERIFIKASI...';
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> MEMPROSES...';
             btn.disabled = true;
 
             try {
@@ -246,12 +268,12 @@
 
                 if (error || !data) {
                     alert("❌ Username/Password Salah!");
-                    generateCaptcha();
+                    openLogin(); // Reset captcha
                     btn.innerHTML = 'Masuk Sekarang';
                 } else {
                     localStorage.setItem("user_login", JSON.stringify({username: user, nama: data.nama_lengkap, isLoggedIn: true}));
                     alert(`Selamat Datang, ${data.nama_lengkap}!`);
-                    window.location.href = "anggota.html";
+                    window.location.href = (role === "admin") ? "admin.html" : "anggota.html";
                 }
             } catch { alert("Koneksi Error."); btn.innerHTML = 'Masuk Sekarang'; }
         }
